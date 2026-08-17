@@ -61,6 +61,14 @@ export function parseOptions(search: URLSearchParams): CardOptions {
 
   const label = search.get("label")?.slice(0, 32) || undefined;
 
+  const wRaw = search.get("w") ?? search.get("width");
+  const width =
+    wRaw === "full"
+      ? ("full" as const)
+      : wRaw !== null && Number.isFinite(Number.parseInt(wRaw, 10))
+        ? clampInt(wRaw, 200, 1600, 0)
+        : undefined;
+
   const waveRaw = search.get("wave");
   const wave = (WAVE_STYLES as string[]).includes(waveRaw ?? "")
     ? (waveRaw as WaveStyle)
@@ -76,6 +84,7 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     label,
     hide,
     wave,
+    width,
   };
 }
 

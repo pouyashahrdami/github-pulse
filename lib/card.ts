@@ -23,6 +23,8 @@ export interface CardOptions {
   label?: string;
   hide: ReadonlySet<HideKey>;
   wave: WaveStyle;
+  /** rendered width: px (200..1600) or "full" to stretch to the container */
+  width?: number | "full";
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -483,10 +485,32 @@ function renderMonitor(
 </svg>`;
 }
 
+/**
+ * Rewrites the root <svg> width/height so the card renders at a custom width.
+ * The viewBox is untouched, so the browser scales everything proportionally;
+ * "full" drops the fixed height and stretches to the container (e.g. a README).
+ */
+function applyWidth(svg: string, width: CardOptions["width"]): string {
+  if (width === undefined) return svg;
+  return svg.replace(/width="(\d+)" height="(\d+)"/, (_, w, h) =>
+    width === "full"
+      ? `width="100%"`
+      : `width="${width}" height="${Math.round((Number(h) / Number(w)) * width)}"`,
+  );
+}
+
 export function renderCard(
   pulse: Pulse,
   theme: Theme,
   options: CardOptions = DEFAULT_OPTIONS,
+): string {
+  return applyWidth(renderCardAtSize(pulse, theme, options), options.width);
+}
+
+function renderCardAtSize(
+  pulse: Pulse,
+  theme: Theme,
+  options: CardOptions,
 ): string {
   if (options.size === "badge") return renderBadge(pulse, theme, options);
   if (options.size === "monitor") return renderMonitor(pulse, theme, options);
@@ -642,7 +666,8 @@ export function renderErrorCard(
   options: CardOptions = DEFAULT_OPTIONS,
 ): string {
   const lay = LAYOUTS[options.size];
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
+  return applyWidth(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
      viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-label="GitHub user ${esc(login)} not found">
   <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
         rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
@@ -652,5 +677,7 @@ export function renderErrorCard(
         font-family="${MONO}" font-size="12" fill="${theme.muted}">patient not found: @${esc(
           login,
         )}</text>
-</svg>`;
+</svg>`,
+    options.width,
+  );
 }

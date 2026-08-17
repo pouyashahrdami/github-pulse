@@ -128,6 +128,7 @@ And shape/behavior params:
 | param | values | default |
 |---|---|---|
 | `size` | `card` `monitor` `wide` `compact` `badge` | `card` |
+| `w` | rendered width: `200`–`1600` px, or `full` to stretch to your README's width | native |
 | `radius` | corner rounding `0`–`24` | `12` |
 | `grid` | `0` hides the ECG grid | `1` |
 | `glow` | `0` disables the glow filter | `1` |
@@ -141,6 +142,13 @@ And shape/behavior params:
 | `tz` | UTC offset in hours (e.g. `3.5`) so late-night commits count to your local day | `0` |
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
+
+**Want it edge-to-edge?** Profile READMEs are wider than the default card. Use the
+wide banner and let it stretch:
+
+```md
+![GitHub Pulse](https://github-pulse-topaz.vercel.app/u/YOUR_USERNAME?size=wide&w=full)
+```
 
 ## Light & dark mode
 
