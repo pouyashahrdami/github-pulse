@@ -280,6 +280,20 @@ h1 .beat {
   align-items: center;
 }
 
+.adaptive-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.adaptive-toggle input {
+  accent-color: var(--violet);
+}
+
 .snippet {
   display: flex;
   align-items: center;

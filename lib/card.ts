@@ -1,7 +1,7 @@
 import type { Pulse, PulseState } from "./pulse";
 import type { Theme } from "./themes";
 
-export type CardSize = "card" | "wide" | "compact";
+export type CardSize = "card" | "wide" | "compact" | "badge";
 
 export type HideKey = "pill" | "bpm" | "stats" | "status";
 export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status"];
@@ -59,6 +59,10 @@ const LAYOUTS: Record<CardSize, Layout> = {
   compact: {
     w: 340, h: 130, waveX0: 20, waveX1: 320, baseline: 66, ampMax: 22,
     bandTop: 38, bandH: 52, headerY: 26, pillY: 12, footerY: 112, statsX: null,
+  },
+  badge: {
+    w: 260, h: 70, waveX0: 104, waveX1: 246, baseline: 40, ampMax: 13,
+    bandTop: 18, bandH: 40, headerY: 20, pillY: 8, footerY: 48, statsX: null,
   },
 };
 
@@ -141,11 +145,91 @@ function footerRight(pulse: Pulse, theme: Theme): { text: string; color: string 
   }
 }
 
+function renderBadge(
+  pulse: Pulse,
+  theme: Theme,
+  options: CardOptions,
+): string {
+  const lay = LAYOUTS.badge;
+  const look = STATE_LOOK[pulse.state];
+  const stateColor = look.color(theme);
+  const alive = pulse.state !== "flatline";
+
+  const period = alive ? 60 / pulse.bpm / options.speed : 0;
+  const sweepDur = alive ? Math.min(10, Math.max(2.5, period * 4)) : 0;
+  const path = wavePath({ ...pulse, beats: pulse.beats.slice(-7) }, lay);
+  const header = options.label?.trim() || `@${pulse.login}`;
+
+  const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
+  const gradientDef = theme.traceGradient
+    ? `<linearGradient id="gp-tg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="${theme.traceGradient[0]}"/>
+        <stop offset="0.5" stop-color="${theme.traceGradient[1]}"/>
+        <stop offset="1" stop-color="${theme.traceGradient[2]}"/>
+      </linearGradient>`
+    : "";
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+  const bpmText = alive ? String(pulse.bpm) : "—";
+
+  const anim = !options.anim
+    ? ""
+    : alive
+      ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
+       .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+       @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
+       @keyframes gp-blink{50%{opacity:.25}}`
+      : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
+       @keyframes gp-dim{50%{opacity:.45}}`;
+
+  const trace = !alive
+    ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
+             stroke-width="1.6" ${glowFilter}/>`
+    : options.anim
+      ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.4" opacity="0.22"/>
+       <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
+             stroke="${strokeRef}" stroke-width="1.8" stroke-linecap="round"
+             stroke-dasharray="140 860" ${glowFilter}/>`
+      : `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.8"
+             stroke-linecap="round" ${glowFilter}/>`;
+
+  const liveNow = pulse.state === "radiant" && pulse.daysSinceBeat === 0;
+  const title = `${pulse.login}'s pulse — ${
+    alive ? `${pulse.bpm} bpm` : "flatlined"
+  }`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
+     viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-label="${esc(title)}">
+  <style>${anim}</style>
+  <defs>
+    ${gradientDef}
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
+        rx="${Math.min(options.radius, lay.h / 2)}" fill="${theme.bg}" stroke="${theme.grid}"/>
+  <text x="14" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
+        fill="${theme.muted}">${esc(header)}</text>
+  <circle cx="${lay.w - 16}" cy="16" r="4" fill="${stateColor}"
+          ${liveNow ? 'class="gp-dot"' : ""}/>
+  <text class="gp-heart" x="14" y="${lay.footerY}" font-family="${MONO}"
+        font-size="13" fill="${alive ? theme.trace : theme.danger}">♥</text>
+  <text x="30" y="${lay.footerY}" font-family="${MONO}" font-size="18"
+        font-weight="700" fill="${theme.text}">${bpmText}<tspan font-size="9"
+        font-weight="400" fill="${theme.muted}" dx="3">bpm</tspan></text>
+  ${trace}
+</svg>`;
+}
+
 export function renderCard(
   pulse: Pulse,
   theme: Theme,
   options: CardOptions = DEFAULT_OPTIONS,
 ): string {
+  if (options.size === "badge") return renderBadge(pulse, theme, options);
   const lay = LAYOUTS[options.size];
   const look = STATE_LOOK[pulse.state];
   const stateColor = look.color(theme);

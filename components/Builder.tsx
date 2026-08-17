@@ -15,6 +15,7 @@ const SIZES: { name: CardSize; w: number; h: number }[] = [
   { name: "card", w: 520, h: 190 },
   { name: "wide", w: 830, h: 150 },
   { name: "compact", w: 340, h: 130 },
+  { name: "badge", w: 260, h: 70 },
 ];
 
 export default function Builder() {
@@ -23,6 +24,7 @@ export default function Builder() {
   const [theme, setTheme] = useState(DEFAULT_THEME);
   const [size, setSize] = useState<CardSize>("card");
   const [custom, setCustom] = useState<CustomColors>({});
+  const [adaptive, setAdaptive] = useState(false);
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -38,9 +40,23 @@ export default function Builder() {
   const path = username ? `/u/${username}${query}` : "";
   const origin =
     typeof window !== "undefined" ? window.location.origin : "";
-  const markdown = username
-    ? `[![GitHub Pulse](${origin}${path})](${origin})`
-    : "";
+
+  const lightQuery = useMemo(() => {
+    const params = new URLSearchParams(query.replace(/^\?/, ""));
+    params.set("theme", "paper");
+    return `?${params.toString()}`;
+  }, [query]);
+
+  const markdown = !username
+    ? ""
+    : adaptive
+      ? [
+          "<picture>",
+          `  <source media="(prefers-color-scheme: dark)" srcset="${origin}/u/${username}${query}">`,
+          `  <img alt="GitHub Pulse" src="${origin}/u/${username}${lightQuery}">`,
+          "</picture>",
+        ].join("\n")
+      : `[![GitHub Pulse](${origin}${path})](${origin})`;
 
   const [copied, setCopied] = useState(false);
 
@@ -155,6 +171,14 @@ export default function Builder() {
       {username && (
         <div className="embed">
           <span className="control-label">Add it to your README</span>
+          <label className="adaptive-toggle">
+            <input
+              type="checkbox"
+              checked={adaptive}
+              onChange={(e) => setAdaptive(e.target.checked)}
+            />
+            adaptive: this theme in dark mode, paper in light mode
+          </label>
           <div className="snippet">
             <code>{markdown}</code>
             <button type="button" className="copy" onClick={copy}>
