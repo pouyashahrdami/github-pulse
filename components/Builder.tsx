@@ -145,14 +145,20 @@ export default function Builder() {
 
         <span className="control-label">Wave</span>
         <div className="chips">
-          {(["ecg", "smooth"] as const).map((w) => (
+          {(
+            [
+              ["ecg", "ecg · heartbeat"],
+              ["smooth", "smooth · aura wave"],
+              ["bars", "bars · equalizer"],
+            ] as const
+          ).map(([w, label]) => (
             <button
               key={w}
               type="button"
               className={`chip${wave === w ? " active" : ""}`}
               onClick={() => setWave(w)}
             >
-              {w === "ecg" ? "ecg · heartbeat" : "smooth · aura wave"}
+              {label}
             </button>
           ))}
         </div>

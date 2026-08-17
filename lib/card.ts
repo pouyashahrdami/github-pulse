@@ -3,11 +3,11 @@ import type { Theme } from "./themes";
 
 export type CardSize = "card" | "wide" | "compact" | "badge" | "monitor";
 
-export type HideKey = "pill" | "bpm" | "stats" | "status";
-export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status"];
+export type HideKey = "pill" | "bpm" | "stats" | "status" | "header";
+export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status", "header"];
 
-export type WaveStyle = "ecg" | "smooth";
-export const WAVE_STYLES: WaveStyle[] = ["ecg", "smooth"];
+export type WaveStyle = "ecg" | "smooth" | "bars";
+export const WAVE_STYLES: WaveStyle[] = ["ecg", "smooth", "bars"];
 
 export interface CardOptions {
   size: CardSize;
@@ -144,6 +144,35 @@ function wavePath(pulse: Pulse, lay: Layout, style: WaveStyle = "ecg"): string {
   return d;
 }
 
+/** Equalizer-style bars: one per day, pulsing from the baseline. */
+function barsMarkup(
+  pulse: Pulse,
+  lay: Layout,
+  theme: Theme,
+  options: CardOptions,
+): string {
+  const beats = pulse.beats;
+  const seg = (lay.waveX1 - lay.waveX0) / beats.length;
+  const bw = Math.min(10, Math.max(3, seg * 0.45));
+  const rects = beats
+    .map((amp, i) => {
+      const h = amp === 0 ? 3 : round(4 + amp * lay.ampMax * 1.25);
+      const x = round(lay.waveX0 + i * seg + (seg - bw) / 2);
+      const y = round(lay.baseline - h);
+      const cls =
+        options.anim && amp > 0
+          ? ` class="gp-eq" style="animation-delay:${(-i * 0.13).toFixed(2)}s"`
+          : "";
+      return `<rect${cls} x="${x}" y="${y}" width="${round(bw)}" height="${h}" rx="1.5" fill="${theme.trace}" opacity="${amp === 0 ? 0.25 : 0.85}"/>`;
+    })
+    .join("");
+  return `<line x1="${lay.waveX0}" y1="${lay.baseline + 1}" x2="${lay.waveX1}" y2="${lay.baseline + 1}" stroke="${theme.trace}" stroke-width="1" opacity="0.3"/>${rects}`;
+}
+
+const EQ_CSS = (speed: number) =>
+  `.gp-eq{animation:gp-eq ${round(1.6 / speed)}s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
+   @keyframes gp-eq{0%,100%{transform:scaleY(.7)}50%{transform:scaleY(1.06)}}`;
+
 function footerRight(pulse: Pulse, theme: Theme): { text: string; color: string } {
   switch (pulse.state) {
     case "radiant":
@@ -205,14 +234,16 @@ function renderBadge(
        .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
-       @keyframes gp-blink{50%{opacity:.25}}`
+       @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
       : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
        @keyframes gp-dim{50%{opacity:.45}}`;
 
   const trace = !alive
     ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
              stroke-width="1.6" ${glowFilter}/>`
-    : options.anim
+    : options.wave === "bars"
+      ? barsMarkup({ ...pulse, beats: pulse.beats.slice(-7) }, lay, theme, options)
+      : options.anim
       ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.4" opacity="0.22"/>
        <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
              stroke="${strokeRef}" stroke-width="1.8" stroke-linecap="round"
@@ -237,8 +268,12 @@ function renderBadge(
   </defs>
   <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
         rx="${Math.min(options.radius, lay.h / 2)}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
-  <text x="14" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
-        fill="${theme.muted}">${esc(header)}</text>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="14" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
+        fill="${theme.muted}">${esc(header)}</text>`
+  }
   <circle cx="${lay.w - 16}" cy="16" r="4" fill="${stateColor}"
           ${liveNow ? 'class="gp-dot"' : ""}/>
   <text class="gp-heart" x="14" y="${lay.footerY}" font-family="${MONO}"
@@ -320,14 +355,16 @@ function renderMonitor(
        .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
-       @keyframes gp-blink{50%{opacity:.25}}`
+       @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
       : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
        @keyframes gp-dim{50%{opacity:.45}}`;
 
   const mainTrace = !alive
     ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
              stroke-width="1.8" ${glowFilter}/>`
-    : options.anim
+    : options.wave === "bars"
+      ? barsMarkup(pulse, lay, theme, options)
+      : options.anim
       ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.6" opacity="0.22"/>
        <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
              stroke="${strokeRef}" stroke-width="2.2" stroke-linecap="round"
@@ -398,10 +435,14 @@ function renderMonitor(
       : ""
   }
 
-  <text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
         letter-spacing="2" fill="${theme.muted}">PULSE/ONE · PATIENT ${esc(
           header.toUpperCase(),
-        )} · LEAD: MAIN</text>
+        )} · LEAD: MAIN</text>`
+  }
 
   <rect x="${round(pillX)}" y="${lay.pillY}" width="${round(pillW)}" height="19"
         rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
@@ -492,14 +533,16 @@ export function renderCard(
        .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
-       @keyframes gp-blink{50%{opacity:.25}}`
+       @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
       : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
        @keyframes gp-dim{50%{opacity:.45}}`;
 
   const trace = !alive
     ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
              stroke-width="1.8" ${glowFilter}/>`
-    : options.anim
+    : options.wave === "bars"
+      ? barsMarkup(pulse, lay, theme, options)
+      : options.anim
       ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.6" opacity="0.22"/>
        <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
              stroke="${strokeRef}" stroke-width="2.2" stroke-linecap="round"
@@ -577,8 +620,12 @@ export function renderCard(
         rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
   ${gridRect}
 
-  <text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="13"
-        font-weight="600" fill="${theme.text}">${esc(header)}</text>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="13"
+        font-weight="600" fill="${theme.text}">${esc(header)}</text>`
+  }
 
   ${pill}
   ${trace}

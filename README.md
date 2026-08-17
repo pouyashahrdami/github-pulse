@@ -131,11 +131,11 @@ And shape/behavior params:
 | `glow` | `0` disables the glow filter | `1` |
 | `days` | beat window `7`–`30` | `14` |
 | `label` | custom header text (max 32 chars) | `@username` |
-| `hide` | comma list: `pill` `bpm` `stats` `status` | — |
+| `hide` | comma list: `pill` `bpm` `stats` `status` `header` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `speed` | animation speed `0.25`–`3` | `1` |
 | `state` | preview a life state (see above) | live |
-| `wave` | `ecg` heartbeat or `smooth` aura wave | `ecg` |
+| `wave` | `ecg` heartbeat, `smooth` aura wave, `bars` equalizer | `ecg` |
 | `tz` | UTC offset in hours (e.g. `3.5`) so late-night commits count to your local day | `0` |
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
