@@ -3,12 +3,22 @@ import type { Theme } from "./themes";
 
 export type CardSize = "card" | "wide" | "compact";
 
+export type HideKey = "pill" | "bpm" | "stats" | "status";
+export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status"];
+
 export interface CardOptions {
   size: CardSize;
   /** corner radius 0..24 */
   radius: number;
   grid: boolean;
   glow: boolean;
+  /** false renders a fully static card (no CSS animation) */
+  anim: boolean;
+  /** animation speed multiplier 0.25..3 */
+  speed: number;
+  /** custom header text instead of @login */
+  label?: string;
+  hide: ReadonlySet<HideKey>;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -16,6 +26,9 @@ export const DEFAULT_OPTIONS: CardOptions = {
   radius: 12,
   grid: true,
   glow: true,
+  anim: true,
+  speed: 1,
+  hide: new Set<HideKey>(),
 };
 
 interface Layout {
@@ -138,10 +151,11 @@ export function renderCard(
   const stateColor = look.color(theme);
   const alive = pulse.state !== "flatline";
 
-  const period = alive ? 60 / pulse.bpm : 0;
+  const period = alive ? 60 / pulse.bpm / options.speed : 0;
   const sweepDur = alive ? Math.min(12, Math.max(3, period * 6)) : 0;
   const path = wavePath(pulse, lay);
   const right = footerRight(pulse, theme);
+  const header = options.label?.trim() || `@${pulse.login}`;
 
   const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
   const gradientDef = theme.traceGradient
@@ -167,23 +181,28 @@ export function renderCard(
     .filter(Boolean)
     .join("  ·  ");
 
-  const anim = alive
-    ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
+  const anim = !options.anim
+    ? ""
+    : alive
+      ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
        .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
        .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
        @keyframes gp-blink{50%{opacity:.25}}`
-    : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
+      : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
        @keyframes gp-dim{50%{opacity:.45}}`;
 
-  const trace = alive
-    ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.6" opacity="0.22"/>
+  const trace = !alive
+    ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
+             stroke-width="1.8" ${glowFilter}/>`
+    : options.anim
+      ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.6" opacity="0.22"/>
        <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
              stroke="${strokeRef}" stroke-width="2.2" stroke-linecap="round"
              stroke-dasharray="140 860" ${glowFilter}/>`
-    : `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
-             stroke-width="1.8" ${glowFilter}/>`;
+      : `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="2.2"
+             stroke-linecap="round" ${glowFilter}/>`;
 
   const revivedStamp =
     pulse.state === "revived"
@@ -199,10 +218,34 @@ export function renderCard(
     : "";
 
   const statsText =
-    lay.statsX !== null
+    lay.statsX !== null && !options.hide.has("stats") && alive
       ? `<text x="${lay.statsX}" y="${lay.footerY - 2}" font-family="${MONO}"
            font-size="10.5" fill="${theme.muted}">${esc(statsLeft)}</text>`
       : "";
+
+  const pill = options.hide.has("pill")
+    ? ""
+    : `<rect x="${round(pillX)}" y="${lay.pillY}" width="${round(pillW)}" height="19"
+        rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
+  <text x="${round(pillX + pillW / 2)}" y="${lay.pillY + 13}" text-anchor="middle"
+        font-family="${MONO}" font-size="10" font-weight="600"
+        fill="${stateColor}" letter-spacing="1">${pillLabel}</text>`;
+
+  const bpmCluster = options.hide.has("bpm")
+    ? ""
+    : `<text class="gp-heart" x="${lay.waveX0}" y="${lay.footerY}" font-family="${MONO}"
+        font-size="16" fill="${alive ? theme.trace : theme.danger}">♥</text>
+  <text x="${lay.waveX0 + 20}" y="${lay.footerY}" font-family="${MONO}"
+        font-size="22" font-weight="700" fill="${theme.text}">${bpmText}<tspan
+        font-size="10" font-weight="400" fill="${theme.muted}" dx="4">bpm</tspan></text>`;
+
+  const statusText = options.hide.has("status")
+    ? ""
+    : `<text x="${lay.w - lay.waveX0}" y="${lay.footerY - 2}" text-anchor="end"
+        font-family="${MONO}" font-size="10.5" fill="${right.color}"
+        ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
+          right.text,
+        )}</text>`;
 
   const title = `${pulse.login}'s pulse — ${
     alive ? `${pulse.bpm} bpm` : "flatlined"
@@ -232,29 +275,14 @@ export function renderCard(
   ${gridRect}
 
   <text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="13"
-        font-weight="600" fill="${theme.text}">@${esc(pulse.login)}</text>
+        font-weight="600" fill="${theme.text}">${esc(header)}</text>
 
-  <rect x="${round(pillX)}" y="${lay.pillY}" width="${round(pillW)}" height="19"
-        rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
-  <text x="${round(pillX + pillW / 2)}" y="${lay.pillY + 13}" text-anchor="middle"
-        font-family="${MONO}" font-size="10" font-weight="600"
-        fill="${stateColor}" letter-spacing="1">${pillLabel}</text>
-
+  ${pill}
   ${trace}
   ${revivedStamp}
-
-  <text class="gp-heart" x="${lay.waveX0}" y="${lay.footerY}" font-family="${MONO}"
-        font-size="16" fill="${alive ? theme.trace : theme.danger}">♥</text>
-  <text x="${lay.waveX0 + 20}" y="${lay.footerY}" font-family="${MONO}"
-        font-size="22" font-weight="700" fill="${theme.text}">${bpmText}<tspan
-        font-size="10" font-weight="400" fill="${theme.muted}" dx="4">bpm</tspan></text>
+  ${bpmCluster}
   ${statsText}
-
-  <text x="${lay.w - lay.waveX0}" y="${lay.footerY - 2}" text-anchor="end"
-        font-family="${MONO}" font-size="10.5" fill="${right.color}"
-        ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
-          right.text,
-        )}</text>
+  ${statusText}
 </svg>`;
 }
 

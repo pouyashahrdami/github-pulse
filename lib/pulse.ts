@@ -78,6 +78,49 @@ function daysBetween(isoA: string, isoB: string): number {
   return Math.round((b - a) / 86_400_000);
 }
 
+export const PULSE_STATES: PulseState[] = [
+  "radiant",
+  "steady",
+  "fading",
+  "critical",
+  "flatline",
+  "revived",
+];
+
+/** Force a display state — used by the ?state= preview param so people can see
+ *  FLATLINE/REVIVED without actually dying for two weeks. */
+export function forceState(pulse: Pulse, state: PulseState): Pulse {
+  const forced: Pulse = { ...pulse, state };
+  switch (state) {
+    case "flatline":
+      forced.bpm = 0;
+      forced.daysSinceBeat = Math.max(pulse.daysSinceBeat, 16);
+      break;
+    case "revived":
+      forced.bpm = Math.max(pulse.bpm, 72);
+      forced.daysSinceBeat = 0;
+      break;
+    case "radiant":
+      forced.bpm = Math.max(pulse.bpm, 96);
+      forced.daysSinceBeat = 0;
+      break;
+    case "steady":
+      forced.daysSinceBeat = Math.min(Math.max(pulse.daysSinceBeat, 2), 3);
+      break;
+    case "fading":
+      forced.daysSinceBeat = Math.min(Math.max(pulse.daysSinceBeat, 5), 7);
+      break;
+    case "critical":
+      forced.daysSinceBeat = Math.min(Math.max(pulse.daysSinceBeat, 9), 13);
+      break;
+  }
+  if (state !== "flatline" && forced.bpm === 0) forced.bpm = 60;
+  if (state !== "flatline" && forced.beats.every((b) => b === 0)) {
+    forced.beats = [0.5, 0, 0.8, 0.4, 0, 1, 0.6, 0, 0.7, 0.3, 0, 0.9, 0.5, 0.8];
+  }
+  return forced;
+}
+
 export function computePulse(
   data: GithubData,
   now = new Date(),
