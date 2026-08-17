@@ -97,6 +97,8 @@ Add `?theme=<name>`:
 <br>
 <img src="./assets/sample-paper.svg" width="520" height="190" alt="paper theme">
 
+**[→ See all 13 themes in the gallery](./docs/THEMES.md)**
+
 *(Samples above are snapshots committed to this repo — your embed is generated live.)*
 
 ## Custom colors
@@ -129,6 +131,8 @@ And shape/behavior params:
 | `anim` | `0` renders a fully static card | `1` |
 | `speed` | animation speed `0.25`–`3` | `1` |
 | `state` | preview a life state (see above) | live |
+| `wave` | `ecg` heartbeat or `smooth` aura wave | `ecg` |
+| `tz` | UTC offset in hours (e.g. `3.5`) so late-night commits count to your local day | `0` |
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
 
