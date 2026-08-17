@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "GitHub Pulse",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "GitHub Pulse — a living EKG for your README",
     description,
   },

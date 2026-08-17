@@ -6,6 +6,9 @@ export type CardSize = "card" | "wide" | "compact" | "badge";
 export type HideKey = "pill" | "bpm" | "stats" | "status";
 export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status"];
 
+export type WaveStyle = "ecg" | "smooth";
+export const WAVE_STYLES: WaveStyle[] = ["ecg", "smooth"];
+
 export interface CardOptions {
   size: CardSize;
   /** corner radius 0..24 */
@@ -19,6 +22,7 @@ export interface CardOptions {
   /** custom header text instead of @login */
   label?: string;
   hide: ReadonlySet<HideKey>;
+  wave: WaveStyle;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -29,6 +33,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   anim: true,
   speed: 1,
   hide: new Set<HideKey>(),
+  wave: "ecg",
 };
 
 interface Layout {
@@ -95,12 +100,25 @@ const STATE_LOOK: Record<PulseState, StateLook> = {
   revived: { label: "REVIVED", color: (t) => t.trace },
 };
 
-function wavePath(pulse: Pulse, lay: Layout): string {
+function wavePath(pulse: Pulse, lay: Layout, style: WaveStyle = "ecg"): string {
   const { beats, fingerprint: fp, state } = pulse;
   if (state === "flatline" || beats.length === 0 || beats.every((b) => b === 0)) {
     return `M${lay.waveX0} ${lay.baseline} H${lay.waveX1}`;
   }
   const seg = (lay.waveX1 - lay.waveX0) / beats.length;
+  if (style === "smooth") {
+    // Soft rolling aura-wave: one rounded swell per active day.
+    let d = `M${lay.waveX0} ${lay.baseline}`;
+    beats.forEach((amp) => {
+      if (amp === 0) {
+        d += ` h${round(seg)}`;
+        return;
+      }
+      const h = round(6 + amp * lay.ampMax * 1.15);
+      d += ` q${round(seg / 2)} ${-h} ${round(seg)} 0`;
+    });
+    return d;
+  }
   const compact = seg < 30;
   let d = `M${lay.waveX0} ${lay.baseline}`;
   beats.forEach((amp, i) => {
@@ -157,7 +175,11 @@ function renderBadge(
 
   const period = alive ? 60 / pulse.bpm / options.speed : 0;
   const sweepDur = alive ? Math.min(10, Math.max(2.5, period * 4)) : 0;
-  const path = wavePath({ ...pulse, beats: pulse.beats.slice(-7) }, lay);
+  const path = wavePath(
+    { ...pulse, beats: pulse.beats.slice(-7) },
+    lay,
+    options.wave,
+  );
   const header = options.label?.trim() || `@${pulse.login}`;
 
   const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
@@ -237,7 +259,7 @@ export function renderCard(
 
   const period = alive ? 60 / pulse.bpm / options.speed : 0;
   const sweepDur = alive ? Math.min(12, Math.max(3, period * 6)) : 0;
-  const path = wavePath(pulse, lay);
+  const path = wavePath(pulse, lay, options.wave);
   const right = footerRight(pulse, theme);
   const header = options.label?.trim() || `@${pulse.login}`;
 

@@ -14,9 +14,11 @@ import {
   renderErrorCard,
   DEFAULT_OPTIONS,
   HIDE_KEYS,
+  WAVE_STYLES,
   type CardOptions,
   type CardSize,
   type HideKey,
+  type WaveStyle,
 } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
 
@@ -61,6 +63,11 @@ function parseOptions(search: URLSearchParams): CardOptions {
 
   const label = search.get("label")?.slice(0, 32) || undefined;
 
+  const waveRaw = search.get("wave");
+  const wave = (WAVE_STYLES as string[]).includes(waveRaw ?? "")
+    ? (waveRaw as WaveStyle)
+    : DEFAULT_OPTIONS.wave;
+
   return {
     size,
     radius: clampInt(search.get("radius"), 0, 24, DEFAULT_OPTIONS.radius),
@@ -70,6 +77,7 @@ function parseOptions(search: URLSearchParams): CardOptions {
     speed,
     label,
     hide,
+    wave,
   };
 }
 
@@ -95,6 +103,14 @@ export async function GET(
     DEFAULT_BEAT_WINDOW,
   );
 
+  // ?tz= shifts the "today" boundary in hours (e.g. tz=3.5 for Tehran) so
+  // late-night commits land on the right local day.
+  const tzRaw = Number.parseFloat(search.get("tz") ?? "");
+  const tzHours = Number.isFinite(tzRaw)
+    ? Math.min(14, Math.max(-12, tzRaw))
+    : 0;
+  const now = new Date(Date.now() + tzHours * 3_600_000);
+
   if (!USERNAME_RE.test(username)) {
     return new NextResponse(
       renderErrorCard(username.slice(0, 39), theme, options),
@@ -104,7 +120,7 @@ export async function GET(
 
   try {
     const data = await fetchGithubData(username);
-    let pulse = computePulse(data, new Date(), days);
+    let pulse = computePulse(data, now, days);
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);
     return new NextResponse(renderCard(pulse, theme, options), {

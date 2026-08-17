@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { THEMES, DEFAULT_THEME } from "@/lib/themes";
-import type { CardSize } from "@/lib/card";
+import type { CardSize, WaveStyle } from "@/lib/card";
 
 interface CustomColors {
   color?: string;
@@ -23,6 +23,7 @@ export default function Builder() {
   const [username, setUsername] = useState("");
   const [theme, setTheme] = useState(DEFAULT_THEME);
   const [size, setSize] = useState<CardSize>("card");
+  const [wave, setWave] = useState<WaveStyle>("ecg");
   const [custom, setCustom] = useState<CustomColors>({});
   const [adaptive, setAdaptive] = useState(false);
 
@@ -30,12 +31,13 @@ export default function Builder() {
     const params = new URLSearchParams();
     if (theme !== DEFAULT_THEME) params.set("theme", theme);
     if (size !== "card") params.set("size", size);
+    if (wave !== "ecg") params.set("wave", wave);
     for (const [k, v] of Object.entries(custom)) {
       if (v) params.set(k, v.replace(/^#/, ""));
     }
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [theme, size, custom]);
+  }, [theme, size, wave, custom]);
 
   const path = username ? `/u/${username}${query}` : "";
   const origin =
@@ -136,6 +138,20 @@ export default function Builder() {
               onClick={() => setSize(s.name)}
             >
               {s.name} · {s.w}×{s.h}
+            </button>
+          ))}
+        </div>
+
+        <span className="control-label">Wave</span>
+        <div className="chips">
+          {(["ecg", "smooth"] as const).map((w) => (
+            <button
+              key={w}
+              type="button"
+              className={`chip${wave === w ? " active" : ""}`}
+              onClick={() => setWave(w)}
+            >
+              {w === "ecg" ? "ecg · heartbeat" : "smooth · aura wave"}
             </button>
           ))}
         </div>
