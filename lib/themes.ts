@@ -1,6 +1,8 @@
 export interface Theme {
   /** card background; "none" renders transparent */
   bg: string;
+  /** card border; defaults to grid color, "none" hides it */
+  border?: string;
   /** main trace color (ignored when traceGradient is set) */
   trace: string;
   /** optional 3-stop gradient for the trace */
@@ -169,8 +171,12 @@ export function resolveTheme(params: URLSearchParams): Theme {
   const text = sanitizeColor(params.get("text"));
   const accent = sanitizeColor(params.get("accent"));
   const muted = sanitizeColor(params.get("muted"));
+  const borderRaw = params.get("border");
+  const border =
+    borderRaw === "0" ? "none" : sanitizeColor(borderRaw);
 
   if (bg) theme.bg = bg;
+  if (border) theme.border = border;
   if (trace) {
     theme.trace = trace;
     delete theme.traceGradient; // a custom color always wins over the gradient

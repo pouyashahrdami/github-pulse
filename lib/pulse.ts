@@ -23,6 +23,9 @@ export interface Pulse {
   beats: number[];
   totalContributions: number;
   stars: number;
+  prs: number;
+  issues: number;
+  reviews: number;
   /** deterministic per-user fingerprint seed, 0..1 values */
   fingerprint: { jitter: number; tWave: number; pWave: number };
   partial: boolean;
@@ -199,6 +202,9 @@ export function computePulse(
     beats,
     totalContributions: data.totalContributions,
     stars: data.stars,
+    prs: data.prs,
+    issues: data.issues,
+    reviews: data.reviews,
     fingerprint,
     partial: data.partial,
   };

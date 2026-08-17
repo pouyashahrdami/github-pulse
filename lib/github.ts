@@ -11,6 +11,9 @@ export interface GithubData {
   topLanguages: { name: string; pct: number }[];
   stars: number;
   followers: number;
+  prs: number;
+  issues: number;
+  reviews: number;
   /** true when built from the unauthenticated REST fallback (recent events only) */
   partial: boolean;
 }
@@ -63,6 +66,9 @@ interface GraphQLResponse {
       name: string | null;
       followers: { totalCount: number };
       contributionsCollection: {
+        totalPullRequestContributions: number;
+        totalIssueContributions: number;
+        totalPullRequestReviewContributions: number;
         contributionCalendar: {
           totalContributions: number;
           weeks: { contributionDays: GraphQLCalendarDay[] }[];
@@ -86,6 +92,9 @@ query ($login: String!) {
     name
     followers { totalCount }
     contributionsCollection {
+      totalPullRequestContributions
+      totalIssueContributions
+      totalPullRequestReviewContributions
       contributionCalendar {
         totalContributions
         weeks { contributionDays { date contributionCount } }
@@ -149,6 +158,9 @@ async function fetchViaGraphQL(login: string): Promise<GithubData> {
     ),
     stars: user.repositories.nodes.reduce((a, r) => a + r.stargazerCount, 0),
     followers: user.followers.totalCount,
+    prs: user.contributionsCollection.totalPullRequestContributions,
+    issues: user.contributionsCollection.totalIssueContributions,
+    reviews: user.contributionsCollection.totalPullRequestReviewContributions,
     partial: false,
   };
 }
@@ -199,6 +211,8 @@ async function fetchViaRest(login: string): Promise<GithubData> {
   }
 
   const own = repos.filter((r) => !r.fork);
+  const countType = (type: string) =>
+    events.filter((e) => e.type === type).length;
   return {
     login: user.login,
     name: user.name,
@@ -207,6 +221,9 @@ async function fetchViaRest(login: string): Promise<GithubData> {
     topLanguages: languagesFrom(own.map((r) => r.language)),
     stars: own.reduce((a, r) => a + r.stargazers_count, 0),
     followers: user.followers,
+    prs: countType("PullRequestEvent"),
+    issues: countType("IssuesEvent"),
+    reviews: countType("PullRequestReviewEvent"),
     partial: true,
   };
 }

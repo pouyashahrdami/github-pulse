@@ -13,6 +13,7 @@ interface CustomColors {
 
 const SIZES: { name: CardSize; w: number; h: number }[] = [
   { name: "card", w: 520, h: 190 },
+  { name: "monitor", w: 830, h: 260 },
   { name: "wide", w: 830, h: 150 },
   { name: "compact", w: 340, h: 130 },
   { name: "badge", w: 260, h: 70 },

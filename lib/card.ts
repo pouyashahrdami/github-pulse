@@ -1,7 +1,7 @@
 import type { Pulse, PulseState } from "./pulse";
 import type { Theme } from "./themes";
 
-export type CardSize = "card" | "wide" | "compact" | "badge";
+export type CardSize = "card" | "wide" | "compact" | "badge" | "monitor";
 
 export type HideKey = "pill" | "bpm" | "stats" | "status";
 export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status"];
@@ -68,6 +68,10 @@ const LAYOUTS: Record<CardSize, Layout> = {
   badge: {
     w: 260, h: 70, waveX0: 104, waveX1: 246, baseline: 40, ampMax: 13,
     bandTop: 18, bandH: 40, headerY: 20, pillY: 8, footerY: 48, statsX: null,
+  },
+  monitor: {
+    w: 830, h: 260, waveX0: 26, waveX1: 636, baseline: 118, ampMax: 42,
+    bandTop: 56, bandH: 118, headerY: 32, pillY: 18, footerY: 242, statsX: null,
   },
 };
 
@@ -232,7 +236,7 @@ function renderBadge(
     </filter>
   </defs>
   <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
-        rx="${Math.min(options.radius, lay.h / 2)}" fill="${theme.bg}" stroke="${theme.grid}"/>
+        rx="${Math.min(options.radius, lay.h / 2)}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
   <text x="14" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
         fill="${theme.muted}">${esc(header)}</text>
   <circle cx="${lay.w - 16}" cy="16" r="4" fill="${stateColor}"
@@ -246,12 +250,205 @@ function renderBadge(
 </svg>`;
 }
 
+function bumpsPath(
+  x0: number,
+  x1: number,
+  y: number,
+  n: number,
+  h: number,
+): string {
+  if (n <= 0) return `M${x0} ${y} H${x1}`;
+  const seg = (x1 - x0) / n;
+  let d = `M${x0} ${y}`;
+  for (let i = 0; i < n; i++) d += ` q${round(seg / 2)} ${-h} ${round(seg)} 0`;
+  return d;
+}
+
+function teethPath(
+  x0: number,
+  x1: number,
+  y: number,
+  n: number,
+  h: number,
+): string {
+  if (n <= 0) return `M${x0} ${y} H${x1}`;
+  const seg = (x1 - x0) / n;
+  let d = `M${x0} ${y}`;
+  for (let i = 0; i < n; i++)
+    d += ` h${round(seg - 12)} l6 ${-h} l6 ${h}`;
+  return d;
+}
+
+function renderMonitor(
+  pulse: Pulse,
+  theme: Theme,
+  options: CardOptions,
+): string {
+  const lay = LAYOUTS.monitor;
+  const look = STATE_LOOK[pulse.state];
+  const stateColor = look.color(theme);
+  const alive = pulse.state !== "flatline";
+
+  const period = alive ? 60 / pulse.bpm / options.speed : 0;
+  const sweepDur = alive ? Math.min(12, Math.max(3, period * 6)) : 0;
+  const path = wavePath(pulse, lay, options.wave);
+  const right = footerRight(pulse, theme);
+  const header = options.label?.trim() || `@${pulse.login}`;
+
+  const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
+  const gradientDef = theme.traceGradient
+    ? `<linearGradient id="gp-tg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="${theme.traceGradient[0]}"/>
+        <stop offset="0.5" stop-color="${theme.traceGradient[1]}"/>
+        <stop offset="1" stop-color="${theme.traceGradient[2]}"/>
+      </linearGradient>`
+    : "";
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+
+  const mrgN = Math.min(10, Math.ceil(pulse.prs / 2));
+  const revN = Math.min(12, Math.ceil(pulse.reviews / 2));
+  const mrgPath = bumpsPath(lay.waveX0, lay.waveX1, 202, mrgN, 12);
+  const revPath = teethPath(lay.waveX0, lay.waveX1, 234, revN, 10);
+
+  const anim = !options.anim
+    ? ""
+    : alive
+      ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
+       .gp-sweep2{animation:gp-sweep ${round(sweepDur * 1.6)}s linear infinite}
+       .gp-sweep3{animation:gp-sweep ${round(sweepDur * 2.2)}s linear infinite}
+       .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+       @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
+       @keyframes gp-blink{50%{opacity:.25}}`
+      : `.gp-flat{animation:gp-dim 3s ease-in-out infinite}
+       @keyframes gp-dim{50%{opacity:.45}}`;
+
+  const mainTrace = !alive
+    ? `<path class="gp-flat" d="${path}" fill="none" stroke="${theme.danger}"
+             stroke-width="1.8" ${glowFilter}/>`
+    : options.anim
+      ? `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="1.6" opacity="0.22"/>
+       <path class="gp-sweep" d="${path}" pathLength="1000" fill="none"
+             stroke="${strokeRef}" stroke-width="2.2" stroke-linecap="round"
+             stroke-dasharray="140 860" ${glowFilter}/>`
+      : `<path d="${path}" fill="none" stroke="${strokeRef}" stroke-width="2.2"
+             stroke-linecap="round" ${glowFilter}/>`;
+
+  const subTrace = (
+    d: string,
+    color: string,
+    cls: string,
+  ) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.2" opacity="0.16"/>
+    ${
+      options.anim && alive
+        ? `<path class="${cls}" d="${d}" pathLength="1000" fill="none"
+             stroke="${color}" stroke-width="1.5" stroke-linecap="round"
+             stroke-dasharray="90 910" opacity="0.85"/>`
+        : `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.5"
+             stroke-linecap="round" opacity="0.6"/>`
+    }`;
+
+  const vitalsX = 664;
+  const vital = (
+    y: number,
+    label: string,
+    value: string,
+    color: string,
+    extra = "",
+  ) => `<text x="${vitalsX}" y="${y}" font-family="${MONO}" font-size="9.5"
+        letter-spacing="1.5" fill="${theme.muted}">${label}</text>
+  <text x="${vitalsX}" y="${y + 26}" font-family="${MONO}" font-size="24"
+        font-weight="700" fill="${color}">${esc(value)}${extra}</text>`;
+
+  const bpmText = alive ? String(pulse.bpm) : "—";
+  const pillLabel = look.label;
+  const pillW = pillLabel.length * 6.6 + 20;
+  const pillX = lay.w - 26 - pillW;
+
+  const title = `${pulse.login}'s pulse monitor — ${
+    alive ? `${pulse.bpm} bpm` : "flatlined"
+  } (${look.label.toLowerCase()})`;
+  const desc = `GitHub vitals for @${pulse.login}: ${pulse.bpm} bpm, ${pulse.prs} pull requests, ${pulse.reviews} reviews, ${pulse.streak}-day streak.${
+    pulse.partial ? " Based on recent public events only." : ""
+  }`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
+     viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-labelledby="gp-title gp-desc">
+  <title id="gp-title">${esc(title)}</title>
+  <desc id="gp-desc">${esc(desc)}</desc>
+  <style>${anim}</style>
+  <defs>
+    ${gradientDef}
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gp-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="${theme.grid}" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
+  ${
+    options.grid
+      ? `<rect x="16" y="${lay.bandTop}" width="${lay.waveX1 - 6}" height="190"
+        fill="url(#gp-grid)" opacity="0.9"/>`
+      : ""
+  }
+
+  <text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="10.5"
+        letter-spacing="2" fill="${theme.muted}">PULSE/ONE · PATIENT ${esc(
+          header.toUpperCase(),
+        )} · LEAD: MAIN</text>
+
+  <rect x="${round(pillX)}" y="${lay.pillY}" width="${round(pillW)}" height="19"
+        rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
+  <text x="${round(pillX + pillW / 2)}" y="${lay.pillY + 13}" text-anchor="middle"
+        font-family="${MONO}" font-size="10" font-weight="600"
+        fill="${stateColor}" letter-spacing="1">${pillLabel}</text>
+
+  ${mainTrace}
+  ${subTrace(mrgPath, theme.accent, "gp-sweep2")}
+  ${subTrace(revPath, theme.warn, "gp-sweep3")}
+
+  <line x1="650" y1="52" x2="650" y2="${lay.footerY}" stroke="${theme.grid}"/>
+
+  ${vital(
+    76,
+    "HEART RATE",
+    bpmText,
+    alive ? theme.trace : theme.danger,
+    `<tspan font-size="11" font-weight="400" fill="${theme.muted}" dx="4">bpm</tspan>`,
+  )}
+  <text class="gp-heart" x="${lay.w - 44}" y="102" font-family="${MONO}"
+        font-size="18" fill="${alive ? theme.trace : theme.danger}">♥</text>
+  ${vital(126, "MERGES / YR", String(pulse.prs), theme.accent)}
+  ${vital(176, "REVIEWS / YR", String(pulse.reviews), theme.warn)}
+  ${vital(
+    226,
+    "STREAK · TYPE",
+    `${pulse.streak}d`,
+    theme.text,
+    `<tspan fill="${theme.muted}" font-size="16" dx="8">${esc(pulse.bloodType)}</tspan>`,
+  )}
+
+  <text x="${lay.waveX0}" y="${lay.footerY}" font-family="${MONO}"
+        font-size="10.5" fill="${right.color}"
+        ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
+          right.text,
+        )}</text>
+</svg>`;
+}
+
 export function renderCard(
   pulse: Pulse,
   theme: Theme,
   options: CardOptions = DEFAULT_OPTIONS,
 ): string {
   if (options.size === "badge") return renderBadge(pulse, theme, options);
+  if (options.size === "monitor") return renderMonitor(pulse, theme, options);
   const lay = LAYOUTS[options.size];
   const look = STATE_LOOK[pulse.state];
   const stateColor = look.color(theme);
@@ -377,7 +574,7 @@ export function renderCard(
   </defs>
 
   <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
-        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.grid}"/>
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
   ${gridRect}
 
   <text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="13"
@@ -401,7 +598,7 @@ export function renderErrorCard(
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
      viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-label="GitHub user ${esc(login)} not found">
   <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
-        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.grid}"/>
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
   <path d="M${lay.waveX0} ${lay.baseline} H${lay.waveX1}" fill="none"
         stroke="${theme.danger}" stroke-width="1.8" opacity="0.8"/>
   <text x="${lay.w / 2}" y="${lay.footerY - 22}" text-anchor="middle"

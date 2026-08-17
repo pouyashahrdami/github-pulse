@@ -62,9 +62,12 @@ Add `?size=<name>` to fit your README layout:
 | size | dimensions | good for |
 |---|---|---|
 | `card` *(default)* | 520×190 | next to other stat cards |
+| `monitor` | 830×260 | the full vitals monitor — three traces + numbers column |
 | `wide` | 830×150 | full-width banner across the README |
 | `compact` | 340×130 | sidebars, small profiles |
 | `badge` | 260×70 | one-liners, project READMEs, bios |
+
+<img src="./assets/sample-monitor.svg" width="830" height="260" alt="full vitals monitor">
 
 <img src="./assets/sample-phosphor-wide.svg" width="830" height="150" alt="wide banner, phosphor theme">
 <br>
@@ -116,6 +119,7 @@ Every color is overridable with hex query params (no `#`):
 | `text` | primary text |
 | `accent` | state pill highlights |
 | `muted` | secondary text |
+| `border` | card border (`border=0` hides it) |
 
 And shape/behavior params:
 

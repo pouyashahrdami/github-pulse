@@ -23,7 +23,7 @@ import {
 import { resolveTheme } from "@/lib/themes";
 
 const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,38})$/;
-const SIZES: CardSize[] = ["card", "wide", "compact", "badge"];
+const SIZES: CardSize[] = ["card", "wide", "compact", "badge", "monitor"];
 
 const SVG_HEADERS = {
   "Content-Type": "image/svg+xml; charset=utf-8",

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="260"
+     viewBox="0 0 830 260" role="img" aria-labelledby="gp-title gp-desc">
+  <title id="gp-title">pouyashahrdami's pulse monitor — 96 bpm (radiant)</title>
+  <desc id="gp-desc">GitHub vitals for @pouyashahrdami: 96 bpm, 7 pull requests, 0 reviews, 1-day streak. Based on recent public events only.</desc>
+  <style>.gp-sweep{animation:gp-sweep 3.8s linear infinite}
+       .gp-sweep2{animation:gp-sweep 6s linear infinite}
+       .gp-sweep3{animation:gp-sweep 8.3s linear infinite}
+       .gp-heart{animation:gp-thump 0.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+       @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
+       @keyframes gp-blink{50%{opacity:.25}}</style>
+  <defs>
+    <linearGradient id="gp-tg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#8B5CF6"/>
+        <stop offset="0.5" stop-color="#2FD4EE"/>
+        <stop offset="1" stop-color="#F26DB8"/>
+      </linearGradient>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gp-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="rgba(139,92,246,0.10)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="829" height="259"
+        rx="12" fill="#0B0819" stroke="rgba(139,92,246,0.10)"/>
+  <rect x="16" y="56" width="630" height="190"
+        fill="url(#gp-grid)" opacity="0.9"/>
+
+  <text x="26" y="32" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5"
+        letter-spacing="2" fill="#928DAD">PULSE/ONE · PATIENT @POUYASHAHRDAMI · LEAD: MAIN</text>
+
+  <rect x="737.8" y="18" width="66.2" height="19"
+        rx="9.5" fill="none" stroke="#8B5CF6" opacity="0.85"/>
+  <text x="770.9" y="31" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10" font-weight="600"
+        fill="#8B5CF6" letter-spacing="1">RADIANT</text>
+
+  <path d="M26 118 h43.6 h43.6 h10.7 q3 -0.8 6 0 l2 3 l4 -16.5 l4 24.5 l2 -8 q3 -1.5 6 0 h8.9 h8.9 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h10.7 h10.7 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h8.9 h8.9 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h10.7 h43.6 h43.6 h43.6 h43.6 h43.6 h43.6 h43.6 h8.9 q3 -0.8 6 0 l2 3 l4 -48 l4 56 l2 -8 q3 -1.5 6 0 h10.7" fill="none" stroke="url(#gp-tg)" stroke-width="1.6" opacity="0.22"/>
+       <path class="gp-sweep" d="M26 118 h43.6 h43.6 h10.7 q3 -0.8 6 0 l2 3 l4 -16.5 l4 24.5 l2 -8 q3 -1.5 6 0 h8.9 h8.9 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h10.7 h10.7 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h8.9 h8.9 q3 -0.8 6 0 l2 3 l4 -27 l4 35 l2 -8 q3 -1.5 6 0 h10.7 h43.6 h43.6 h43.6 h43.6 h43.6 h43.6 h43.6 h8.9 q3 -0.8 6 0 l2 3 l4 -48 l4 56 l2 -8 q3 -1.5 6 0 h10.7" pathLength="1000" fill="none"
+             stroke="url(#gp-tg)" stroke-width="2.2" stroke-linecap="round"
+             stroke-dasharray="140 860" filter="url(#gp-glow)"/>
+  <path d="M26 202 q76.3 -12 152.5 0 q76.3 -12 152.5 0 q76.3 -12 152.5 0 q76.3 -12 152.5 0" fill="none" stroke="#8B5CF6" stroke-width="1.2" opacity="0.16"/>
+    <path class="gp-sweep2" d="M26 202 q76.3 -12 152.5 0 q76.3 -12 152.5 0 q76.3 -12 152.5 0 q76.3 -12 152.5 0" pathLength="1000" fill="none"
+             stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"
+             stroke-dasharray="90 910" opacity="0.85"/>
+  <path d="M26 234 H636" fill="none" stroke="#F5B84B" stroke-width="1.2" opacity="0.16"/>
+    <path class="gp-sweep3" d="M26 234 H636" pathLength="1000" fill="none"
+             stroke="#F5B84B" stroke-width="1.5" stroke-linecap="round"
+             stroke-dasharray="90 910" opacity="0.85"/>
+
+  <line x1="650" y1="52" x2="650" y2="242" stroke="rgba(139,92,246,0.10)"/>
+
+  <text x="664" y="76" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="9.5"
+        letter-spacing="1.5" fill="#928DAD">HEART RATE</text>
+  <text x="664" y="102" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="24"
+        font-weight="700" fill="#8B5CF6">96<tspan font-size="11" font-weight="400" fill="#928DAD" dx="4">bpm</tspan></text>
+  <text class="gp-heart" x="786" y="102" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="18" fill="#8B5CF6">♥</text>
+  <text x="664" y="126" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="9.5"
+        letter-spacing="1.5" fill="#928DAD">MERGES / YR</text>
+  <text x="664" y="152" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="24"
+        font-weight="700" fill="#8B5CF6">7</text>
+  <text x="664" y="176" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="9.5"
+        letter-spacing="1.5" fill="#928DAD">REVIEWS / YR</text>
+  <text x="664" y="202" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="24"
+        font-weight="700" fill="#F5B84B">0</text>
+  <text x="664" y="226" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="9.5"
+        letter-spacing="1.5" fill="#928DAD">STREAK · TYPE</text>
+  <text x="664" y="252" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="24"
+        font-weight="700" fill="#EDEBF6">1d<tspan fill="#928DAD" font-size="16" dx="8">TS+</tspan></text>
+
+  <text x="26" y="242" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="10.5" fill="#8B5CF6"
+        class="gp-dot">● beating now</text>
+</svg>
