@@ -3,15 +3,20 @@ import { fetchGithubData, UserNotFoundError } from "@/lib/github";
 import { computePulse, forceState } from "@/lib/pulse";
 import { renderCard, renderErrorCard } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
-import { parseOptions, parseState, parseDays, parseNow } from "@/lib/options";
+import {
+  parseOptions,
+  parseState,
+  parseDays,
+  parseNow,
+  CACHE_SECONDS,
+} from "@/lib/options";
 
 const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,38})$/;
 
 const SVG_HEADERS = {
   "Content-Type": "image/svg+xml; charset=utf-8",
-  // Short-ish edge cache: decay has to feel alive. Camo adds its own layer on top.
-  "Cache-Control":
-    "public, max-age=300, s-maxage=900, stale-while-revalidate=3600",
+  // Cadence is PULSE_CACHE_SECONDS (default 24h). Camo adds its own layer on top.
+  "Cache-Control": `public, max-age=${Math.min(3600, CACHE_SECONDS)}, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=${CACHE_SECONDS}`,
 };
 
 export async function GET(

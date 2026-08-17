@@ -17,6 +17,19 @@ import {
 
 export const SIZES: CardSize[] = ["card", "wide", "compact", "badge", "monitor"];
 
+/**
+ * How long rendered cards (and the GitHub data behind them) stay cached, in
+ * seconds. Defaults to 24h — one API call per unique user per day, which lets a
+ * single no-scope token serve six figures of users. Clamped to 5min..7days.
+ * Override with the PULSE_CACHE_SECONDS env var.
+ */
+export const CACHE_SECONDS = (() => {
+  const raw = Number.parseInt(process.env.PULSE_CACHE_SECONDS ?? "", 10);
+  const fallback = 86_400;
+  if (Number.isNaN(raw)) return fallback;
+  return Math.min(604_800, Math.max(300, raw));
+})();
+
 export function clampInt(
   raw: string | null,
   min: number,

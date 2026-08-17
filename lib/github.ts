@@ -25,9 +25,11 @@ export class UserNotFoundError extends Error {
   }
 }
 
+import { CACHE_SECONDS } from "./options";
+
 const API = "https://api.github.com";
 const UA = "github-pulse (https://github.com/pouyashahrdami/github-pulse)";
-const REVALIDATE = 900; // 15 min — decay must feel alive
+const REVALIDATE = CACHE_SECONDS;
 
 function headers(): Record<string, string> {
   const h: Record<string, string> = {

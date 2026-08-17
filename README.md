@@ -225,10 +225,12 @@ Open `http://localhost:3000`, or hit `http://localhost:3000/u/<username>` direct
 ## How it stays alive
 
 GitHub proxies README images through camo and strips scripts, so all animation is
-pure CSS inside the SVG — the sweep, the thumping heart, the blinking dot. The
-endpoint sends short cache headers (`s-maxage=900`) because decay is the product:
-camo re-fetches every ~30–60 minutes, and the card it gets reflects how long you've
-been quiet.
+pure CSS inside the SVG — the sweep, the thumping heart, the blinking dot.
+
+Cards refresh once per `PULSE_CACHE_SECONDS` (default **24 hours**), which keeps a
+single no-scope token comfortably serving a very large user base: one API call per
+unique user per day. Deployments that want livelier decay can set the env var
+lower (e.g. `21600` for 6h) — the trade is API calls for freshness.
 
 Private contributions count only if you've enabled *Include private contributions*
 on your GitHub profile — same rule as every other stats card.
