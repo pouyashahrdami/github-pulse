@@ -104,6 +104,9 @@ Add `?theme=<name>`:
 
 **[→ See all 13 themes in the gallery](./docs/THEMES.md)**
 
+Can't pick? `?theme=random` deals you a theme that stays stable all day and
+reshuffles every UTC midnight — a different look every morning.
+
 *(Samples above are snapshots committed to this repo — your embed is generated live.)*
 
 ## Custom colors

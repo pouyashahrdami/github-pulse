@@ -39,7 +39,7 @@ async function main() {
   const previewState = parseState(search);
   if (previewState) pulse = forceState(pulse, previewState);
 
-  const svg = renderCard(pulse, resolveTheme(search), parseOptions(search));
+  const svg = renderCard(pulse, resolveTheme(search, username), parseOptions(search));
   writeFileSync(out, svg);
   console.log(
     `wrote ${out} — @${pulse.login}: ${pulse.state}, ${pulse.bpm} bpm${

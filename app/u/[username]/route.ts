@@ -25,7 +25,7 @@ export async function GET(
 ) {
   const { username } = await params;
   const search = req.nextUrl.searchParams;
-  const theme = resolveTheme(search);
+  const theme = resolveTheme(search, username);
   const options = parseOptions(search);
 
   if (!USERNAME_RE.test(username)) {

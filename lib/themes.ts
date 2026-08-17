@@ -161,9 +161,20 @@ function sanitizeColor(value: string | null): string | null {
   return null;
 }
 
+/** ?theme=random resolves here: stable per seed per UTC day, reshuffles daily. */
+function pickRandomTheme(seed: string): string {
+  const day = Math.floor(Date.now() / 86_400_000);
+  let h = 0;
+  for (const c of `${seed}:${day}`) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const names = Object.keys(THEMES);
+  return names[h % names.length];
+}
+
 /** Resolve a theme from query params: ?theme=<preset> plus per-color overrides. */
-export function resolveTheme(params: URLSearchParams): Theme {
-  const preset = THEMES[params.get("theme") ?? DEFAULT_THEME] ?? THEMES[DEFAULT_THEME];
+export function resolveTheme(params: URLSearchParams, seed = ""): Theme {
+  const requested = params.get("theme") ?? DEFAULT_THEME;
+  const name = requested === "random" ? pickRandomTheme(seed) : requested;
+  const preset = THEMES[name] ?? THEMES[DEFAULT_THEME];
   const theme: Theme = { ...preset };
 
   const bg = sanitizeColor(params.get("bg"));
