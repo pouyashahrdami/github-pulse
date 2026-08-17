@@ -1,0 +1,156 @@
+import type { GithubData } from "./github";
+
+export type PulseState =
+  | "radiant"
+  | "steady"
+  | "fading"
+  | "critical"
+  | "flatline"
+  | "revived";
+
+export interface Pulse {
+  login: string;
+  name: string;
+  state: PulseState;
+  /** 0 when flatlined */
+  bpm: number;
+  weekly: number;
+  streak: number;
+  daysSinceBeat: number;
+  lastBeatDate: string | null;
+  bloodType: string;
+  /** last 14 days, normalized 0..1 (0 = no commits that day) */
+  beats: number[];
+  totalContributions: number;
+  stars: number;
+  /** deterministic per-user fingerprint seed, 0..1 values */
+  fingerprint: { jitter: number; tWave: number; pWave: number };
+  partial: boolean;
+}
+
+const FLATLINE_DAYS = 14;
+const REVIVED_WINDOW_DAYS = 2;
+const BEAT_WINDOW = 14;
+
+const LANG_ABBREV: Record<string, string> = {
+  TypeScript: "TS",
+  JavaScript: "JS",
+  Python: "PY",
+  Rust: "RS",
+  Go: "GO",
+  Swift: "SW",
+  Kotlin: "KT",
+  Java: "JV",
+  "C#": "CS",
+  "C++": "CPP",
+  C: "C",
+  Ruby: "RB",
+  PHP: "PHP",
+  Dart: "DR",
+  Elixir: "EX",
+  Haskell: "HS",
+  Lua: "LU",
+  Scala: "SC",
+  Shell: "SH",
+  Zig: "ZG",
+  HTML: "HT",
+  CSS: "CSS",
+  Vue: "VUE",
+  Svelte: "SV",
+  "Jupyter Notebook": "NB",
+  "Objective-C": "OC",
+};
+
+function hashString(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function daysBetween(isoA: string, isoB: string): number {
+  const a = new Date(`${isoA}T00:00:00Z`).getTime();
+  const b = new Date(`${isoB}T00:00:00Z`).getTime();
+  return Math.round((b - a) / 86_400_000);
+}
+
+export function computePulse(data: GithubData, now = new Date()): Pulse {
+  const today = now.toISOString().slice(0, 10);
+  const days = data.days;
+
+  const activeDays = days.filter((d) => d.count > 0);
+  const lastActive = activeDays.at(-1) ?? null;
+  const daysSinceBeat = lastActive
+    ? Math.max(0, daysBetween(lastActive.date, today))
+    : Number.POSITIVE_INFINITY;
+
+  // Revived: beating again within the last 2 days after a gap of >= FLATLINE_DAYS.
+  let revived = false;
+  if (lastActive && daysSinceBeat <= REVIVED_WINDOW_DAYS && activeDays.length >= 2) {
+    const previous = activeDays.at(-2);
+    if (previous && daysBetween(previous.date, lastActive.date) >= FLATLINE_DAYS) {
+      revived = true;
+    }
+  }
+
+  let state: PulseState;
+  if (revived) state = "revived";
+  else if (daysSinceBeat <= 1) state = "radiant";
+  else if (daysSinceBeat <= 3) state = "steady";
+  else if (daysSinceBeat <= 7) state = "fading";
+  else if (daysSinceBeat < FLATLINE_DAYS) state = "critical";
+  else state = "flatline";
+
+  const weekly = days.slice(-7).reduce((a, d) => a + d.count, 0);
+  const bpm =
+    state === "flatline"
+      ? 0
+      : Math.min(180, Math.max(36, Math.round(36 + weekly * 3)));
+
+  // Streak of consecutive active days, allowed to end today or yesterday.
+  let streak = 0;
+  if (daysSinceBeat <= 1 && days.length > 0) {
+    for (let i = days.length - 1; i >= 0; i--) {
+      const d = days[i];
+      if (daysBetween(d.date, today) < daysSinceBeat) continue;
+      if (d.count > 0) streak++;
+      else break;
+    }
+  }
+
+  const topLang = data.topLanguages[0]?.name;
+  const abbrev = topLang
+    ? (LANG_ABBREV[topLang] ?? topLang.slice(0, 2).toUpperCase())
+    : "??";
+  const bloodType = `${abbrev}${weekly > 0 ? "+" : "-"}`;
+
+  const window = days.slice(-BEAT_WINDOW);
+  const max = Math.max(1, ...window.map((d) => d.count));
+  const beats = window.map((d) => (d.count === 0 ? 0 : d.count / max));
+
+  const seed = hashString(data.login.toLowerCase());
+  const fingerprint = {
+    jitter: ((seed & 0xff) / 255) * 0.8 + 0.2,
+    tWave: (((seed >> 8) & 0xff) / 255) * 0.9 + 0.1,
+    pWave: (((seed >> 16) & 0xff) / 255) * 0.9 + 0.1,
+  };
+
+  return {
+    login: data.login,
+    name: data.name ?? data.login,
+    state,
+    bpm,
+    weekly,
+    streak,
+    daysSinceBeat: Number.isFinite(daysSinceBeat) ? daysSinceBeat : 999,
+    lastBeatDate: lastActive?.date ?? null,
+    bloodType,
+    beats,
+    totalContributions: data.totalContributions,
+    stars: data.stars,
+    fingerprint,
+    partial: data.partial,
+  };
+}
