@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="150"
+     viewBox="0 0 830 150" role="img" aria-labelledby="gp-title gp-desc">
+  <title id="gp-title">pouyashahrdami's pulse — 36 bpm (critical)</title>
+  <desc id="gp-desc">GitHub activity heartbeat for @pouyashahrdami: 0 contributions this week, 8 in the last year. Based on recent public events only.</desc>
+  <style>.gp-sweep{animation:gp-sweep 10s linear infinite}
+       .gp-heart{animation:gp-thump 1.7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+       @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
+       @keyframes gp-blink{50%{opacity:.25}}</style>
+  <defs>
+    
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gp-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="rgba(59,240,122,0.09)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="829" height="149"
+        rx="12" fill="#050D08" stroke="rgba(59,240,122,0.09)"/>
+  <rect x="16" y="38" width="798" height="72" fill="url(#gp-grid)" opacity="0.9"/>
+
+  <text x="26" y="26" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="13"
+        font-weight="600" fill="#D8E6DC">@pouyashahrdami</text>
+
+  <rect x="731.2" y="12" width="72.8" height="19"
+        rx="9.5" fill="none" stroke="#F5B84B" opacity="0.85"/>
+  <text x="767.6" y="25" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10" font-weight="600"
+        fill="#F5B84B" letter-spacing="1">CRITICAL</text>
+
+  <path d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6" fill="none" stroke="#3BF07A" stroke-width="1.6" opacity="0.22"/>
+       <path class="gp-sweep" d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6" pathLength="1000" fill="none"
+             stroke="#3BF07A" stroke-width="2.2" stroke-linecap="round"
+             stroke-dasharray="140 860" filter="url(#gp-glow)"/>
+  
+
+  <text class="gp-heart" x="26" y="130" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="16" fill="#3BF07A">♥</text>
+  <text x="46" y="130" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="22" font-weight="700" fill="#D8E6DC">36<tspan
+        font-size="10" font-weight="400" fill="#7E948A" dx="4">bpm</tspan></text>
+  <text x="150" y="128" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+           font-size="10.5" fill="#7E948A">TS-  ·  8 beats/yr  ·  ★ 19</text>
+
+  <text x="804" y="128" text-anchor="end"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5" fill="#7E948A"
+        >last beat 8d ago</text>
+</svg>
