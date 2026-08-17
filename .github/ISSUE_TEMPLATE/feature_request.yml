@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest a new theme, size, stat, or behavior for the card
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should the card do or show? Mockups and sketches are great.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change is this?
+      options:
+        - New theme
+        - New size / layout
+        - New stat or card element
+        - Life-cycle / decay behavior
+        - API / query params
+        - GitHub Action
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it fits
+      description: github-pulse is about a card where time actually passes — how does this idea play with that?

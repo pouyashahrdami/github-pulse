@@ -25,6 +25,8 @@ export interface CardOptions {
   wave: WaveStyle;
   /** rendered width: px (200..1600) or "full" to stretch to the container */
   width?: number | "full";
+  /** per-state pill text overrides, e.g. { radiant: "ON FIRE" } */
+  stateLabels?: Partial<Record<PulseState, string>>;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -401,13 +403,13 @@ function renderMonitor(
         font-weight="700" fill="${color}">${esc(value)}${extra}</text>`;
 
   const bpmText = alive ? String(pulse.bpm) : "—";
-  const pillLabel = look.label;
+  const pillLabel = options.stateLabels?.[pulse.state] ?? look.label;
   const pillW = pillLabel.length * 6.6 + 20;
   const pillX = lay.w - 26 - pillW;
 
   const title = `${pulse.login}'s pulse monitor — ${
     alive ? `${pulse.bpm} bpm` : "flatlined"
-  } (${look.label.toLowerCase()})`;
+  } (${pillLabel.toLowerCase()})`;
   const desc = `GitHub vitals for @${pulse.login}: ${pulse.bpm} bpm, ${pulse.prs} pull requests, ${pulse.reviews} reviews, ${pulse.streak}-day streak.${
     pulse.partial ? " Based on recent public events only." : ""
   }`;
@@ -450,7 +452,7 @@ function renderMonitor(
         rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
   <text x="${round(pillX + pillW / 2)}" y="${lay.pillY + 13}" text-anchor="middle"
         font-family="${MONO}" font-size="10" font-weight="600"
-        fill="${stateColor}" letter-spacing="1">${pillLabel}</text>
+        fill="${stateColor}" letter-spacing="1">${esc(pillLabel)}</text>
 
   ${mainTrace}
   ${subTrace(mrgPath, theme.accent, "gp-sweep2")}
@@ -535,7 +537,7 @@ function renderCardAtSize(
     : "";
 
   const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
-  const pillLabel = look.label;
+  const pillLabel = options.stateLabels?.[pulse.state] ?? look.label;
   const pillW = pillLabel.length * 6.6 + 20;
   const pillX = lay.w - lay.waveX0 - pillW;
 
@@ -599,7 +601,7 @@ function renderCardAtSize(
         rx="9.5" fill="none" stroke="${stateColor}" opacity="0.85"/>
   <text x="${round(pillX + pillW / 2)}" y="${lay.pillY + 13}" text-anchor="middle"
         font-family="${MONO}" font-size="10" font-weight="600"
-        fill="${stateColor}" letter-spacing="1">${pillLabel}</text>`;
+        fill="${stateColor}" letter-spacing="1">${esc(pillLabel)}</text>`;
 
   const bpmCluster = options.hide.has("bpm")
     ? ""
@@ -619,7 +621,7 @@ function renderCardAtSize(
 
   const title = `${pulse.login}'s pulse — ${
     alive ? `${pulse.bpm} bpm` : "flatlined"
-  } (${look.label.toLowerCase()})`;
+  } (${pillLabel.toLowerCase()})`;
   const desc = `GitHub activity heartbeat for @${pulse.login}: ${pulse.weekly} contributions this week, ${pulse.totalContributions} in the last year.${
     pulse.partial ? " Based on recent public events only." : ""
   }`;

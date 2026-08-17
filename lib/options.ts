@@ -61,6 +61,22 @@ export function parseOptions(search: URLSearchParams): CardOptions {
 
   const label = search.get("label")?.slice(0, 32) || undefined;
 
+  // labels=radiant:ON FIRE,flatline:RIP — rename state pills (16 chars each)
+  const labelsRaw = search.get("labels");
+  let stateLabels: CardOptions["stateLabels"];
+  if (labelsRaw) {
+    const map: NonNullable<CardOptions["stateLabels"]> = {};
+    for (const pair of labelsRaw.split(",")) {
+      const [key, ...rest] = pair.split(":");
+      const state = key?.trim();
+      const text = rest.join(":").trim().slice(0, 16);
+      if (text && (PULSE_STATES as string[]).includes(state)) {
+        map[state as PulseState] = text;
+      }
+    }
+    if (Object.keys(map).length > 0) stateLabels = map;
+  }
+
   const wRaw = search.get("w") ?? search.get("width");
   const width =
     wRaw === "full"
@@ -85,6 +101,7 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     hide,
     wave,
     width,
+    stateLabels,
   };
 }
 

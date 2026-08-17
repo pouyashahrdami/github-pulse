@@ -1,0 +1,35 @@
+name: Bug report
+description: The card renders wrong, dies when it shouldn't, or an endpoint errors
+labels: [bug]
+body:
+  - type: input
+    id: card-url
+    attributes:
+      label: Card URL
+      description: The full URL of the card, including username and query params — this is the whole repro.
+      placeholder: https://github-pulse-topaz.vercel.app/u/octocat?size=monitor&theme=phosphor
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect instead? Screenshots welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did you see it?
+      options:
+        - GitHub README (embedded image)
+        - Browser (direct URL)
+        - GitHub Action output
+        - Self-hosted deployment
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Self-hosted config, unusual contribution history, timezone details, etc.

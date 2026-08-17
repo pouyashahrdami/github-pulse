@@ -137,6 +137,7 @@ And shape/behavior params:
 | `glow` | `0` disables the glow filter | `1` |
 | `days` | beat window `7`–`30` | `14` |
 | `label` | custom header text (max 32 chars) | `@username` |
+| `labels` | rename state pills: `radiant:ON FIRE,flatline:RIP` (16 chars each) | medical |
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `speed` | animation speed `0.25`–`3` | `1` |

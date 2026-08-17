@@ -21,8 +21,9 @@ life state, and `?size=` / `?theme=` to test layouts and palettes.
 
 - **Type-check:** `pnpm typecheck` must pass.
 - **Build:** `pnpm build` must succeed.
-- **Regenerate samples** if your change affects rendering:
-  `pnpm exec tsx scripts/generate.ts` (updates `assets/`).
+- **Check rendering** if your change affects the card: preview locally, and you
+  can render a standalone SVG with
+  `INPUT_USERNAME=octocat INPUT_OUT=pulse.svg npx -y tsx scripts/generate.ts`.
 - Keep the change small and focused — one fix or feature per PR.
 - Use conventional commit subjects: `feat:`, `fix:`, `docs:`, `refactor:`,
   `chore:`.
