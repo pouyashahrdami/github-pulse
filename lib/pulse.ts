@@ -30,7 +30,9 @@ export interface Pulse {
 
 const FLATLINE_DAYS = 14;
 const REVIVED_WINDOW_DAYS = 2;
-const BEAT_WINDOW = 14;
+export const DEFAULT_BEAT_WINDOW = 14;
+export const MIN_BEAT_WINDOW = 7;
+export const MAX_BEAT_WINDOW = 30;
 
 const LANG_ABBREV: Record<string, string> = {
   TypeScript: "TS",
@@ -76,7 +78,11 @@ function daysBetween(isoA: string, isoB: string): number {
   return Math.round((b - a) / 86_400_000);
 }
 
-export function computePulse(data: GithubData, now = new Date()): Pulse {
+export function computePulse(
+  data: GithubData,
+  now = new Date(),
+  beatWindow = DEFAULT_BEAT_WINDOW,
+): Pulse {
   const today = now.toISOString().slice(0, 10);
   const days = data.days;
 
@@ -126,7 +132,7 @@ export function computePulse(data: GithubData, now = new Date()): Pulse {
     : "??";
   const bloodType = `${abbrev}${weekly > 0 ? "+" : "-"}`;
 
-  const window = days.slice(-BEAT_WINDOW);
+  const window = days.slice(-beatWindow);
   const max = Math.max(1, ...window.map((d) => d.count));
   const beats = window.map((d) => (d.count === 0 ? 0 : d.count / max));
 

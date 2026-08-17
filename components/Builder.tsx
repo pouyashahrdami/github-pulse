@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { THEMES, DEFAULT_THEME } from "@/lib/themes";
+import type { CardSize } from "@/lib/card";
 
 interface CustomColors {
   color?: string;
@@ -10,21 +11,29 @@ interface CustomColors {
   accent?: string;
 }
 
+const SIZES: { name: CardSize; w: number; h: number }[] = [
+  { name: "card", w: 520, h: 190 },
+  { name: "wide", w: 830, h: 150 },
+  { name: "compact", w: 340, h: 130 },
+];
+
 export default function Builder() {
   const [input, setInput] = useState("");
   const [username, setUsername] = useState("");
   const [theme, setTheme] = useState(DEFAULT_THEME);
+  const [size, setSize] = useState<CardSize>("card");
   const [custom, setCustom] = useState<CustomColors>({});
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
     if (theme !== DEFAULT_THEME) params.set("theme", theme);
+    if (size !== "card") params.set("size", size);
     for (const [k, v] of Object.entries(custom)) {
       if (v) params.set(k, v.replace(/^#/, ""));
     }
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [theme, custom]);
+  }, [theme, size, custom]);
 
   const path = username ? `/u/${username}${query}` : "";
   const origin =
@@ -77,8 +86,8 @@ export default function Builder() {
             key={path}
             src={path}
             alt={`GitHub Pulse card for @${username}`}
-            width={520}
-            height={190}
+            width={SIZES.find((s) => s.name === size)?.w}
+            height={SIZES.find((s) => s.name === size)?.h}
           />
         ) : (
           <span className="hint">your card appears here — try your username</span>
@@ -97,6 +106,20 @@ export default function Builder() {
             >
               <span className="dot" style={{ background: t.trace }} />
               {name}
+            </button>
+          ))}
+        </div>
+
+        <span className="control-label">Shape</span>
+        <div className="chips">
+          {SIZES.map((s) => (
+            <button
+              key={s.name}
+              type="button"
+              className={`chip${size === s.name ? " active" : ""}`}
+              onClick={() => setSize(s.name)}
+            >
+              {s.name} · {s.w}×{s.h}
             </button>
           ))}
         </div>
