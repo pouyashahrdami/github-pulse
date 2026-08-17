@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="830" height="150"
      viewBox="0 0 830 150" role="img" aria-labelledby="gp-title gp-desc">
-  <title id="gp-title">pouyashahrdami's pulse — 36 bpm (critical)</title>
-  <desc id="gp-desc">GitHub activity heartbeat for @pouyashahrdami: 0 contributions this week, 8 in the last year. Based on recent public events only.</desc>
-  <style>.gp-sweep{animation:gp-sweep 10s linear infinite}
-       .gp-heart{animation:gp-thump 1.7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+  <title id="gp-title">pouyashahrdami's pulse — 39 bpm (radiant)</title>
+  <desc id="gp-desc">GitHub activity heartbeat for @pouyashahrdami: 1 contributions this week, 9 in the last year. Based on recent public events only.</desc>
+  <style>.gp-sweep{animation:gp-sweep 9.2s linear infinite}
+       .gp-heart{animation:gp-thump 1.5s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
        .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
@@ -26,27 +26,24 @@
   <text x="26" y="26" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="13"
         font-weight="600" fill="#D8E6DC">@pouyashahrdami</text>
 
-  <rect x="731.2" y="12" width="72.8" height="19"
-        rx="9.5" fill="none" stroke="#F5B84B" opacity="0.85"/>
-  <text x="767.6" y="25" text-anchor="middle"
+  <rect x="737.8" y="12" width="66.2" height="19"
+        rx="9.5" fill="none" stroke="#3BF07A" opacity="0.85"/>
+  <text x="770.9" y="25" text-anchor="middle"
         font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10" font-weight="600"
-        fill="#F5B84B" letter-spacing="1">CRITICAL</text>
-
-  <path d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6" fill="none" stroke="#3BF07A" stroke-width="1.6" opacity="0.22"/>
-       <path class="gp-sweep" d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6" pathLength="1000" fill="none"
+        fill="#3BF07A" letter-spacing="1">RADIANT</text>
+  <path d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h14.9 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h16.7" fill="none" stroke="#3BF07A" stroke-width="1.6" opacity="0.22"/>
+       <path class="gp-sweep" d="M26 74 h55.6 h55.6 h16.7 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h16.7 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h14.9 h14.9 q3 -0.8 6 0 l2 3 l4 -36 l4 44 l2 -8 q3 -1.5 6 0 h16.7 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h55.6 h14.9 q3 -0.8 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -1.5 6 0 h16.7" pathLength="1000" fill="none"
              stroke="#3BF07A" stroke-width="2.2" stroke-linecap="round"
              stroke-dasharray="140 860" filter="url(#gp-glow)"/>
   
-
   <text class="gp-heart" x="26" y="130" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
         font-size="16" fill="#3BF07A">♥</text>
   <text x="46" y="130" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
-        font-size="22" font-weight="700" fill="#D8E6DC">36<tspan
+        font-size="22" font-weight="700" fill="#D8E6DC">39<tspan
         font-size="10" font-weight="400" fill="#7E948A" dx="4">bpm</tspan></text>
   <text x="150" y="128" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
-           font-size="10.5" fill="#7E948A">TS-  ·  8 beats/yr  ·  ★ 19</text>
-
+           font-size="10.5" fill="#7E948A">⚡ 1d streak  ·  TS+  ·  9 beats/yr  ·  ★ 19</text>
   <text x="804" y="128" text-anchor="end"
-        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5" fill="#7E948A"
-        >last beat 8d ago</text>
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5" fill="#3BF07A"
+        class="gp-dot">● beating now</text>
 </svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="190"
+     viewBox="0 0 520 190" role="img" aria-labelledby="gp-title gp-desc">
+  <title id="gp-title">pouyashahrdami's pulse — flatlined (flatline)</title>
+  <desc id="gp-desc">GitHub activity heartbeat for @pouyashahrdami: 1 contributions this week, 9 in the last year. Based on recent public events only.</desc>
+  <style>.gp-flat{animation:gp-dim 3s ease-in-out infinite}
+       @keyframes gp-dim{50%{opacity:.45}}</style>
+  <defs>
+    <linearGradient id="gp-tg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#8B5CF6"/>
+        <stop offset="0.5" stop-color="#2FD4EE"/>
+        <stop offset="1" stop-color="#F26DB8"/>
+      </linearGradient>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gp-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="rgba(139,92,246,0.10)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="519" height="189"
+        rx="12" fill="#0B0819" stroke="rgba(139,92,246,0.10)"/>
+  <rect x="16" y="44" width="488" height="84" fill="url(#gp-grid)" opacity="0.9"/>
+
+  <text x="26" y="30" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="13"
+        font-weight="600" fill="#EDEBF6">@pouyashahrdami</text>
+
+  <rect x="421.2" y="16" width="72.8" height="19"
+        rx="9.5" fill="none" stroke="#FF5A66" opacity="0.85"/>
+  <text x="457.6" y="29" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10" font-weight="600"
+        fill="#FF5A66" letter-spacing="1">FLATLINE</text>
+  <path class="gp-flat" d="M26 92 H494" fill="none" stroke="#FF5A66"
+             stroke-width="1.8" filter="url(#gp-glow)"/>
+  
+  <text class="gp-heart" x="26" y="168" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="16" fill="#FF5A66">♥</text>
+  <text x="46" y="168" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="22" font-weight="700" fill="#EDEBF6">—<tspan
+        font-size="10" font-weight="400" fill="#928DAD" dx="4">bpm</tspan></text>
+  <text x="130" y="166" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+           font-size="10.5" fill="#928DAD">⚡ 1d streak  ·  TS+  ·  9 beats/yr  ·  ★ 19</text>
+  <text x="494" y="166" text-anchor="end"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5" fill="#FF5A66"
+        >† last beat 2026-08-17</text>
+</svg>

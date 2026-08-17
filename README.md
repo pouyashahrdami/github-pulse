@@ -8,6 +8,12 @@ revives when you come back.
   <img src="./assets/sample-aura.svg" width="520" height="190" alt="GitHub Pulse card, aura theme">
 </p>
 
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpouyashahrdami%2Fgithub-pulse&env=GITHUB_TOKEN&envDescription=Classic%20GitHub%20token%2C%20no%20scopes%20needed&project-name=github-pulse&repository-name=github-pulse">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel">
+  </a>
+</p>
+
 Unlike every static stats card, your pulse card is generated *at the moment someone
 views it*. Time actually passes on it.
 
@@ -28,6 +34,24 @@ views it*. Time actually passes on it.
   live: `+` if you shipped this week.
 - **Streak, yearly beats, stars** — and a `● beating now` indicator when your last
   beat was today.
+
+## The life cycle
+
+The card decays in real time and earns its way back:
+
+```
+RADIANT → STEADY → FADING → CRITICAL → FLATLINE → ⚡ REVIVED
+ <24h      ≤3d      ≤7d       <14d       ≥14d      first beat after
+```
+
+Go quiet for two weeks and your card literally dies in public — time of death
+printed on it. Your first commit after a flatline stamps `⚡ REVIVED` on the card.
+
+<img src="./assets/sample-revived.svg" width="520" height="190" alt="revived state">
+<br>
+<img src="./assets/sample-flatline.svg" width="520" height="190" alt="flatline state">
+
+Preview any state without waiting to die: `?state=radiant|steady|fading|critical|flatline|revived`.
 
 ## Shapes
 
@@ -57,8 +81,15 @@ Add `?theme=<name>`:
 | `github` | matches the contribution graph |
 | `mono` | white on black |
 | `paper` | printed ECG strip (light) |
+| `dracula` | matches the Dracula editor theme |
+| `tokyonight` | matches Tokyo Night |
+| `catppuccin` | matches Catppuccin Mocha |
+| `nord` | matches Nord |
+| `gruvbox` | matches Gruvbox |
 
 <img src="./assets/sample-ember.svg" width="520" height="190" alt="ember theme">
+<br>
+<img src="./assets/sample-dracula.svg" width="520" height="190" alt="dracula theme">
 <br>
 <img src="./assets/sample-paper.svg" width="520" height="190" alt="paper theme">
 
@@ -89,6 +120,11 @@ And shape/behavior params:
 | `grid` | `0` hides the ECG grid | `1` |
 | `glow` | `0` disables the glow filter | `1` |
 | `days` | beat window `7`–`30` | `14` |
+| `label` | custom header text (max 32 chars) | `@username` |
+| `hide` | comma list: `pill` `bpm` `stats` `status` | — |
+| `anim` | `0` renders a fully static card | `1` |
+| `speed` | animation speed `0.25`–`3` | `1` |
+| `state` | preview a life state (see above) | live |
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
 
