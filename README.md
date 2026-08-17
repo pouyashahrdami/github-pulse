@@ -156,6 +156,53 @@ viewer's theme — one card for dark mode, another for light:
 
 The site's builder has an **adaptive** toggle that generates this snippet for you.
 
+## Zero-server mode (GitHub Action)
+
+Don't want to depend on anyone's server — including ours? Let your own repo's
+Actions regenerate the card on a schedule. No token setup at all: the workflow's
+built-in `GITHUB_TOKEN` is used automatically.
+
+Add `.github/workflows/pulse.yml` to your profile repo (the one named after you):
+
+```yaml
+name: pulse
+on:
+  schedule:
+    - cron: "23 */6 * * *" # every 6 hours
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pouyashahrdami/github-pulse@main
+        with:
+          username: YOUR_USERNAME
+          theme: aura            # optional
+          size: card             # optional
+          params: "tz=3.5"       # optional: any URL param
+      - name: Commit the card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pulse.svg
+          git diff --cached --quiet || git commit -m "pulse: update"
+          git push
+```
+
+Then embed it with a relative path:
+
+```md
+![GitHub Pulse](./pulse.svg)
+```
+
+**Honest trade-off:** this mode is a snapshot refreshed on your cron, so decay and
+`● beating now` are only as fresh as the last run. The bot commits are authored by
+`github-actions[bot]`, so they don't touch your own contribution graph. For
+real-time decay, use the URL endpoint instead.
+
 ## Deploy your own (free)
 
 1. Fork this repo.

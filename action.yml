@@ -1,0 +1,48 @@
+name: "GitHub Pulse"
+description: "Generate a living EKG card of your GitHub activity as an SVG — no server needed."
+branding:
+  icon: "activity"
+  color: "purple"
+
+inputs:
+  username:
+    description: "GitHub username to take the pulse of"
+    required: true
+  out:
+    description: "Output SVG path"
+    required: false
+    default: "pulse.svg"
+  theme:
+    description: "Theme name (aura, phosphor, cyber, ember, rose, github, mono, paper, dracula, tokyonight, catppuccin, nord, gruvbox)"
+    required: false
+  size:
+    description: "Card shape: card, monitor, wide, compact, badge"
+    required: false
+  wave:
+    description: "Trace style: ecg or smooth"
+    required: false
+  days:
+    description: "Beat window, 7-30 days"
+    required: false
+  params:
+    description: "Extra query-string params, e.g. 'label=Night%20Shift&hide=stats&tz=3.5&color=ff2d95'"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - name: Generate pulse card
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        INPUT_USERNAME: ${{ inputs.username }}
+        INPUT_OUT: ${{ inputs.out }}
+        INPUT_THEME: ${{ inputs.theme }}
+        INPUT_SIZE: ${{ inputs.size }}
+        INPUT_WAVE: ${{ inputs.wave }}
+        INPUT_DAYS: ${{ inputs.days }}
+        INPUT_PARAMS: ${{ inputs.params }}
+      run: npx -y tsx "$GITHUB_ACTION_PATH/scripts/generate.ts"
