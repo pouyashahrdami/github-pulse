@@ -1,0 +1,23 @@
+{
+  "name": "github-pulse",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A living EKG card for your GitHub README — it beats when you ship, dims when you rest, flatlines when you vanish.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.3.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.8.0"
+  }
+}

@@ -1,0 +1,32 @@
+:root {
+  --ground: #08070f;
+  --surface: #100f1c;
+  --panel: #0d1117;
+  --line: rgba(146, 141, 173, 0.16);
+  --text: #edebf6;
+  --muted: #928dad;
+  --faint: #6a6584;
+  --violet: #8b5cf6;
+  --cyan: #2fd4ee;
+  --magenta: #f26db8;
+  --amber: #f5b84b;
+  --green: #3fdd8c;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --display: "Avenir Next", "Avenir", "Futura", "Trebuchet MS", "Segoe UI",
+    system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
