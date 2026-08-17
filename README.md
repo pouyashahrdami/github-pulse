@@ -177,7 +177,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pouyashahrdami/github-pulse@main
+      - uses: pouyashahrdami/github-pulse@v1
         with:
           username: YOUR_USERNAME
           theme: aura            # optional
