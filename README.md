@@ -7,7 +7,9 @@ it beats faster when you ship, dims when you rest, flatlines when you vanish, an
 revives when you come back.
 
 <p align="center">
-  <img src="./assets/sample-aura.svg" width="520" height="190" alt="GitHub Pulse card, aura theme">
+  <a href="https://github-pulse-topaz.vercel.app">
+    <img src="https://github-pulse-topaz.vercel.app/u/pouyashahrdami" width="520" height="190" alt="GitHub Pulse card, aura theme — live">
+  </a>
 </p>
 
 <p align="center">
@@ -20,7 +22,7 @@ Unlike every static stats card, your pulse card is generated *at the moment some
 views it*. Time actually passes on it.
 
 ```md
-[![GitHub Pulse](https://YOUR-DEPLOYMENT.vercel.app/u/YOUR_USERNAME)](https://YOUR-DEPLOYMENT.vercel.app)
+[![GitHub Pulse](https://github-pulse-topaz.vercel.app/u/YOUR_USERNAME)](https://github-pulse-topaz.vercel.app)
 ```
 
 ## What the card shows
@@ -148,9 +150,9 @@ viewer's theme — one card for dark mode, another for light:
 ```html
 <picture>
   <source media="(prefers-color-scheme: dark)"
-          srcset="https://YOUR-DEPLOYMENT.vercel.app/u/YOU?theme=aura">
+          srcset="https://github-pulse-topaz.vercel.app/u/YOU?theme=aura">
   <img alt="GitHub Pulse"
-       src="https://YOUR-DEPLOYMENT.vercel.app/u/YOU?theme=paper">
+       src="https://github-pulse-topaz.vercel.app/u/YOU?theme=paper">
 </picture>
 ```
 
