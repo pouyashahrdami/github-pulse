@@ -1,5 +1,7 @@
 # github-pulse 🫀
 
+[![ci](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml)
+
 **A living EKG card for your GitHub README.** One username in, a beating heart out —
 it beats faster when you ship, dims when you rest, flatlines when you vanish, and
 revives when you come back.
@@ -62,10 +64,12 @@ Add `?size=<name>` to fit your README layout:
 | `card` *(default)* | 520×190 | next to other stat cards |
 | `wide` | 830×150 | full-width banner across the README |
 | `compact` | 340×130 | sidebars, small profiles |
+| `badge` | 260×70 | one-liners, project READMEs, bios |
 
 <img src="./assets/sample-phosphor-wide.svg" width="830" height="150" alt="wide banner, phosphor theme">
 <br>
 <img src="./assets/sample-github-compact.svg" width="340" height="130" alt="compact card, github theme">
+<img src="./assets/sample-badge.svg" width="260" height="70" alt="badge, aura theme">
 
 ## Themes
 
@@ -127,6 +131,22 @@ And shape/behavior params:
 | `state` | preview a life state (see above) | live |
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
+
+## Light & dark mode
+
+GitHub READMEs support the `<picture>` element, so your pulse can match the
+viewer's theme — one card for dark mode, another for light:
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)"
+          srcset="https://YOUR-DEPLOYMENT.vercel.app/u/YOU?theme=aura">
+  <img alt="GitHub Pulse"
+       src="https://YOUR-DEPLOYMENT.vercel.app/u/YOU?theme=paper">
+</picture>
+```
+
+The site's builder has an **adaptive** toggle that generates this snippet for you.
 
 ## Deploy your own (free)
 
