@@ -125,7 +125,7 @@ And shape/behavior params:
 
 | param | values | default |
 |---|---|---|
-| `size` | `card` `wide` `compact` | `card` |
+| `size` | `card` `monitor` `wide` `compact` `badge` | `card` |
 | `radius` | corner rounding `0`–`24` | `12` |
 | `grid` | `0` hides the ECG grid | `1` |
 | `glow` | `0` disables the glow filter | `1` |
