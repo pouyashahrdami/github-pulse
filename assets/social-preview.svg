@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="trace" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8B5CF6"/>
+      <stop offset="0.5" stop-color="#2FD4EE"/>
+      <stop offset="1" stop-color="#F26DB8"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0" stop-color="#1A1133"/>
+      <stop offset="1" stop-color="#0B0819"/>
+    </radialGradient>
+    <filter id="glow" x="-30%" y="-60%" width="160%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" x="-30%" y="-60%" width="160%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="grid" width="46" height="46" patternUnits="userSpaceOnUse">
+      <path d="M46 0H0V46" fill="none" stroke="#8B5CF6" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#halo)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+
+  <text x="640" y="118" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono',Menlo,monospace" font-size="19"
+        letter-spacing="7" fill="#928DAD">GITHUB PULSE · FREE · OPEN SOURCE</text>
+
+  <text x="640" y="196" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono',Menlo,monospace" font-size="58"
+        font-weight="700" fill="#EDEBF6">Your README has</text>
+  <text x="640" y="268" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono',Menlo,monospace" font-size="58"
+        font-weight="700" fill="#EDEBF6">a <tspan fill="url(#trace)">heartbeat</tspan> now.</text>
+
+  <path d="M60 400 H150
+           q6 -5 12 0 l5 8 l9 -68 l11 96 l6 -36 q8 -12 16 0 H330
+           q6 -4 12 0 l5 8 l9 -46 l11 66 l6 -28 q8 -9 16 0 H520
+           l5 8 l9 -88 l11 122 l6 -42 q8 -14 16 0 H760
+           q6 -4 12 0 l5 8 l9 -38 l11 56 l6 -26 q8 -8 16 0 H950
+           l5 8 l9 -72 l11 100 l6 -36 q8 -12 16 0 H1220"
+        fill="none" stroke="url(#trace)" stroke-width="4.5"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#glowSoft)"/>
+
+  <g font-family="ui-monospace,'SF Mono',Menlo,monospace" font-size="20" font-weight="700">
+    <rect x="286" y="484" width="124" height="44" rx="22" fill="none" stroke="#8B5CF6" stroke-width="2"/>
+    <text x="348" y="513" text-anchor="middle" fill="#8B5CF6" letter-spacing="2" filter="url(#glow)">RADIANT</text>
+    <rect x="434" y="484" width="112" height="44" rx="22" fill="none" stroke="#F5B84B" stroke-width="2" opacity="0.9"/>
+    <text x="490" y="513" text-anchor="middle" fill="#F5B84B" letter-spacing="2">FADING</text>
+    <rect x="570" y="484" width="140" height="44" rx="22" fill="none" stroke="#FF5A66" stroke-width="2" opacity="0.9"/>
+    <text x="640" y="513" text-anchor="middle" fill="#FF5A66" letter-spacing="2">FLATLINE</text>
+    <rect x="734" y="484" width="152" height="44" rx="22" fill="none" stroke="#2FD4EE" stroke-width="2"/>
+    <text x="810" y="513" text-anchor="middle" fill="#2FD4EE" letter-spacing="2" filter="url(#glow)">⚡ REVIVED</text>
+  </g>
+
+  <text x="640" y="586" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono',Menlo,monospace" font-size="18"
+        fill="#6E6890">it beats when you ship · fades when you rest · revives when you return</text>
+</svg>
