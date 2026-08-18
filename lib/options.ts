@@ -113,10 +113,10 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     width,
     stateLabels,
     font,
-    goal:
-      search.get("goal") !== null
-        ? clampInt(search.get("goal"), 1, 999, 0) || undefined
-        : undefined,
+    goal: (() => {
+      const n = Number.parseInt(search.get("goal") ?? "", 10);
+      return Number.isFinite(n) && n > 0 ? Math.min(999, n) : undefined;
+    })(),
   };
 }
 
