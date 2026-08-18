@@ -218,6 +218,33 @@ h1 .beat {
   background: rgba(139, 92, 246, 0.10);
 }
 
+.share {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.share img {
+  max-width: 100%;
+  height: auto;
+}
+
+.share .snippet {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 .goal-chip input {
   font-family: var(--mono);
   font-size: 12.5px;

@@ -20,7 +20,8 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       streak ever. Durable via Upstash/Vercel-KV REST env vars, memory fallback
 - [x] Pacemaker detector — "⚙ paced" stat when the rhythm is machine-regular
       (≥90% of the window active, one dominant count ≤4). Opt out: `hide=pacemaker`
-- [ ] Share page — `/share/<user>` HTML page with og:image for link unfurls
+- [x] Share page — `/s/<user>` with a PNG og:image (next/og) so links unfurl
+      on Twitter/Slack/Discord, which never render the SVG cards
 
 ## Do more (round 2)
 - [x] JSON vitals API — `/api/u/<user>` + `/api/r/<owner>/<repo>`, CORS open

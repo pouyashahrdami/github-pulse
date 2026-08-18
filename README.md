@@ -195,6 +195,17 @@ Two hearts, one monitor — you and a friend (or rival) on the same trace, with 
 
 Trace A gets the theme color, trace B the accent. `size=card` and `size=wide`.
 
+## Share pages
+
+Cards are SVG, which chat apps and social sites won't unfurl — so every user
+also gets a share link with a PNG preview baked in:
+
+```
+https://github-pulse-topaz.vercel.app/s/YOUR_USERNAME
+```
+
+Drop it in Slack, Discord, or a tweet and it unfurls into a vitals snapshot.
+
 ## JSON API
 
 Everything the card knows, as data — build your own visualizations, bots, or
