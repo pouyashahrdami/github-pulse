@@ -14,7 +14,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 ## Do more
 - [x] Repo cards — `/r/<owner>/<repo>` pulse from default-branch commit history
       (GraphQL with token, REST fallback without; window 35d, page-capped at 100)
-- [ ] Duet card — two usernames, two traces on one monitor, "sync %" stat
+- [x] Duet card — `/vs/<a>/<b>`: two traces, rhythm-sync % (Jaccard of active days)
 - [x] `goal=<n>` — daily contribution target line on the wave + hit-rate stat
 - [ ] Medical record memory — per-user KV history: flatlines survived, revivals,
       longest streak ever; rendered as a deadpan cardiology report (needs storage)

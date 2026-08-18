@@ -168,6 +168,17 @@ Any repository has a heartbeat too — commit activity on the default branch:
 Same params as user cards. Stats map to the repo: ★ stars, open PRs/issues,
 blood type = primary language, beats/yr = commits in the last year.
 
+## Duet cards
+
+Two hearts, one monitor — you and a friend (or rival) on the same trace, with a
+**rhythm sync** score: how often your active days overlap.
+
+```md
+![duet](https://github-pulse-topaz.vercel.app/vs/YOU/FRIEND?theme=aura)
+```
+
+Trace A gets the theme color, trace B the accent. `size=card` and `size=wide`.
+
 ## Light & dark mode
 
 GitHub READMEs support the `<picture>` element, so your pulse can match the

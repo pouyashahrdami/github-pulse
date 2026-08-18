@@ -737,6 +737,82 @@ function renderCardAtSize(
 </svg>`;
 }
 
+/**
+ * Duet card: two users on one monitor — trace A in the theme color, trace B in
+ * the accent — plus a rhythm-sync stat (Jaccard overlap of active days).
+ * Card and wide shapes only; other sizes fall back to card.
+ */
+export function renderDuetCard(
+  a: Pulse,
+  b: Pulse,
+  theme: Theme,
+  options: CardOptions = DEFAULT_OPTIONS,
+): string {
+  const size = options.size === "wide" ? "wide" : "card";
+  const lay = LAYOUTS[size];
+  const ampMax = Math.round(lay.bandH * 0.24);
+  const mkLay = (baseline: number): Layout => ({ ...lay, baseline, ampMax });
+  const layA = mkLay(lay.bandTop + Math.round(lay.bandH * 0.34));
+  const layB = mkLay(lay.bandTop + Math.round(lay.bandH * 0.96));
+
+  const n = Math.min(a.dayCounts.length, b.dayCounts.length);
+  const ac = a.dayCounts.slice(-n);
+  const bc = b.dayCounts.slice(-n);
+  let bothActive = 0;
+  let eitherActive = 0;
+  for (let i = 0; i < n; i++) {
+    if (ac[i] > 0 && bc[i] > 0) bothActive++;
+    if (ac[i] > 0 || bc[i] > 0) eitherActive++;
+  }
+  const sync = eitherActive
+    ? Math.round((100 * bothActive) / eitherActive)
+    : 0;
+
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+  const traceB = theme.accent === theme.trace ? theme.warn : theme.accent;
+  const legend = (x: number, color: string, p: Pulse) =>
+    `<circle cx="${x + 4}" cy="${lay.footerY - 4}" r="3" fill="${color}"/>
+  <text x="${x + 12}" y="${lay.footerY}" font-family="${MONO}" font-size="9.5"
+        fill="${theme.muted}">@${esc(p.login)} · ${p.state === "flatline" ? "—" : p.bpm} bpm</text>`;
+
+  const title = `${a.login} vs ${b.login} — rhythm sync ${sync}%`;
+  return applyWidth(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
+     viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-label="${esc(title)}">
+  <defs>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${lay.waveX0}" y="${lay.headerY}" font-family="${MONO}" font-size="13"
+        font-weight="600" fill="${theme.text}">${esc(options.label ?? `@${a.login} ♥ @${b.login}`)}</text>`
+  }
+  ${
+    options.hide.has("pill")
+      ? ""
+      : `<text x="${lay.w - lay.waveX0}" y="${lay.headerY}" text-anchor="end"
+        font-family="${MONO}" font-size="10" letter-spacing="1"
+        fill="${traceB}">SYNC ${sync}%</text>`
+  }
+  <path d="${wavePath(a, layA, options.wave)}" fill="none" stroke="${theme.trace}"
+        stroke-width="1.6" stroke-linecap="round" ${glowFilter}/>
+  <path d="${wavePath(b, layB, options.wave)}" fill="none" stroke="${traceB}"
+        stroke-width="1.6" stroke-linecap="round" opacity="0.85" ${glowFilter}/>
+  ${legend(lay.waveX0, theme.trace, a)}
+  ${legend(lay.waveX0 + Math.round(lay.w * 0.42), traceB, b)}
+  ${scanlineOverlay(lay, options)}
+  ${fontOverride(options)}
+</svg>`,
+    options.width,
+  );
+}
+
 export function renderErrorCard(
   login: string,
   theme: Theme,
