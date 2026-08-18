@@ -172,6 +172,16 @@ Any repository has a heartbeat too — commit activity on the default branch:
 Same params as user cards. Stats map to the repo: ★ stars, open PRs/issues,
 blood type = primary language, beats/yr = commits in the last year.
 
+## Org cards
+
+A whole organization on one monitor — the wave is org-wide push activity from
+recent public events, ★ totals its repos' stars, blood type is the org's
+dominant language:
+
+```md
+![org pulse](https://github-pulse-topaz.vercel.app/o/YOUR_ORG?size=wide)
+```
+
 ## Duet cards
 
 Two hearts, one monitor — you and a friend (or rival) on the same trace, with a

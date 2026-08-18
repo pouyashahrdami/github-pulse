@@ -30,7 +30,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] Seasonal auto-themes — `theme=season` picks by date (halloween → dracula,
       winter → nord, spring → catppuccin, summer → ember, fall → gruvbox)
 - [ ] SVG `<a>` deep links — each stat clickable to the matching GitHub page
-- [ ] Org cards — `/o/<org>` aggregate pulse of an organization's repos
+- [x] Org cards — `/o/<org>` aggregate pulse from org-wide public push events
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
 
 ## Plumbing

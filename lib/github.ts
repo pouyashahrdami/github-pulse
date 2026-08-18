@@ -393,6 +393,60 @@ async function fetchRepoViaRest(
   };
 }
 
+// ---------------------------------------------------------------------------
+// Org cards: /o/<org> — the organization's aggregate heartbeat, built from
+// org-wide public push events (same technique as the user REST fallback).
+
+interface RestOrg {
+  login: string;
+  name: string | null;
+  public_repos: number;
+  followers: number;
+}
+
+export async function fetchOrgData(org: string): Promise<GithubData> {
+  const [meta, repos, events] = await Promise.all([
+    rest<RestOrg>(`/orgs/${org}`),
+    rest<RestRepo[]>(`/orgs/${org}/repos?per_page=100&sort=pushed`),
+    rest<RestEvent[]>(`/orgs/${org}/events?per_page=100`).catch(
+      () => [] as RestEvent[],
+    ),
+  ]);
+
+  const counts = new Map<string, number>();
+  for (const ev of events) {
+    if (ev.type !== "PushEvent") continue;
+    const date = ev.created_at.slice(0, 10);
+    const commits = ev.payload?.commits?.length ?? 1;
+    counts.set(date, (counts.get(date) ?? 0) + commits);
+  }
+  const days: DayCount[] = [];
+  const today = new Date();
+  for (let i = FALLBACK_WINDOW_DAYS - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setUTCDate(d.getUTCDate() - i);
+    const date = d.toISOString().slice(0, 10);
+    days.push({ date, count: counts.get(date) ?? 0 });
+  }
+
+  const own = repos.filter((r) => !r.fork);
+  const countType = (type: string) =>
+    events.filter((e) => e.type === type).length;
+  return {
+    login: meta.login,
+    name: meta.name,
+    days,
+    totalContributions: days.reduce((a, d) => a + d.count, 0),
+    topLanguages: languagesFrom(own.map((r) => r.language)),
+    stars: own.reduce((a, r) => a + r.stargazers_count, 0),
+    followers: meta.followers,
+    prs: countType("PullRequestEvent"),
+    issues: countType("IssuesEvent"),
+    reviews: countType("PullRequestReviewEvent"),
+    partial: true,
+  };
+}
+
 export async function fetchRepoData(
   owner: string,
   repo: string,
