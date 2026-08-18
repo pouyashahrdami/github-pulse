@@ -14,6 +14,7 @@ import { redis, redisConfigured } from "./redis";
  */
 
 const INDEX = "pulse:watch:index";
+const BLOCK = "pulse:watch:block";
 const MAX_WATCHERS_PER_LOGIN = 3;
 const MAX_WATCHED_LOGINS = 500;
 const DISPATCH_TIMEOUT_MS = 5_000;
@@ -78,12 +79,40 @@ export function webhookBody(url: string, event: WatchEvent, pulse: Pulse): strin
   });
 }
 
-export type AddResult = "ok" | "invalid" | "full" | "unavailable";
+export async function isBlocked(login: string): Promise<boolean> {
+  if (!redisConfigured()) return false;
+  return Number(await redis(["SISMEMBER", BLOCK, login.toLowerCase()])) === 1;
+}
+
+/**
+ * Deliberately unauthenticated, like the rest of /api/watch: a prankster
+ * "blocking" someone only silences notifications, while requiring proof of
+ * account ownership would gate the ability to stop being watched. Privacy
+ * wins that tie. Blocking also purges any existing watches for the login.
+ */
+export async function blockWatches(login: string): Promise<void> {
+  if (!redisConfigured()) return;
+  const key = login.toLowerCase();
+  await redis(["SADD", BLOCK, key]);
+  await Promise.all([
+    redis(["DEL", watchKey(login)]),
+    redis(["DEL", stateKey(login)]),
+    redis(["SREM", INDEX, key]),
+  ]);
+}
+
+export async function unblockWatches(login: string): Promise<void> {
+  if (!redisConfigured()) return;
+  await redis(["SREM", BLOCK, login.toLowerCase()]);
+}
+
+export type AddResult = "ok" | "invalid" | "full" | "blocked" | "unavailable";
 
 export async function addWatch(login: string, url: string): Promise<AddResult> {
   if (!redisConfigured()) return "unavailable";
   const valid = validateWebhookUrl(url);
   if (!valid) return "invalid";
+  if (await isBlocked(login)) return "blocked";
   const [watchers, watched] = await Promise.all([
     redis(["SCARD", watchKey(login)]),
     redis(["SCARD", INDEX]),

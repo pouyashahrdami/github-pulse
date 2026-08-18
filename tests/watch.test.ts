@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Pulse } from "@/lib/pulse";
 import {
   addWatch,
+  blockWatches,
   removeWatch,
   transitionEvent,
+  unblockWatches,
   validateWebhookUrl,
   watcherCount,
   webhookBody,
@@ -78,6 +80,7 @@ describe("watch registry (redis-backed)", () => {
     let result: unknown = null;
     const set = () => sets.get(key) ?? sets.set(key, new Set()).get(key)!;
     if (cmd === "SADD") result = set().add(args[0]).size;
+    else if (cmd === "SISMEMBER") result = set().has(args[0]) ? 1 : 0;
     else if (cmd === "SREM") result = set().delete(args[0]) ? 1 : 0;
     else if (cmd === "SCARD") result = sets.get(key)?.size ?? 0;
     else if (cmd === "SMEMBERS") result = [...(sets.get(key) ?? [])];
@@ -110,6 +113,15 @@ describe("watch registry (redis-backed)", () => {
 
     await removeWatch("alice", DISCORD);
     expect(await watcherCount("alice")).toBe(2);
+  });
+
+  it("blocking refuses new watches and purges existing ones", async () => {
+    expect(await addWatch("alice", DISCORD)).toBe("ok");
+    await blockWatches("Alice");
+    expect(await watcherCount("alice")).toBe(0);
+    expect(await addWatch("alice", DISCORD)).toBe("blocked");
+    await unblockWatches("alice");
+    expect(await addWatch("alice", DISCORD)).toBe("ok");
   });
 
   it("is unavailable without redis", async () => {

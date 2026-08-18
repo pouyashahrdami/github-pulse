@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       error: "url must be https on discord.com/discordapp.com/hooks.slack.com",
     },
     full: { status: 409, error: "watch capacity reached" },
+    blocked: { status: 403, error: "this user has opted out of being watched" },
     unavailable: { status: 503, error: "watches need Redis on this deploy" },
   } as const;
   const r = responses[result];

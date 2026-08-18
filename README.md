@@ -257,7 +257,15 @@ curl -X POST https://github-pulse-topaz.vercel.app/api/watch \
 A daily sweep compares every watched pulse against yesterday's and fires on
 the two transitions that matter: `🖤 flatlined` and `⚡ revived`. Up to 3
 watchers per login; `DELETE` the same body to unsubscribe; watcher URLs are
-never exposed. Self-hosters: set `CRON_SECRET` to lock the sweep, and
+never exposed.
+
+Don't want to be watchable at all? Opt out — it removes existing watches on
+you and refuses new ones (`DELETE` the same body to opt back in):
+
+```bash
+curl -X POST https://github-pulse-topaz.vercel.app/api/watch/block \
+  -H 'Content-Type: application/json' -d '{"login":"YOUR_USERNAME"}'
+``` Self-hosters: set `CRON_SECRET` to lock the sweep, and
 `PULSE_WEBHOOK_ALLOW_ANY=1` to allow webhook targets beyond Discord/Slack
 (the shared instance restricts hosts so it can't be used to POST at
 arbitrary servers).
