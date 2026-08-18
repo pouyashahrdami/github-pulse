@@ -17,6 +17,7 @@
   --paper-grid: rgba(196, 88, 60, 0.16);
   --paper-grid-major: rgba(196, 88, 60, 0.3);
   --ink: #35291f;
+  --ink-soft: #6b5847;
   --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
