@@ -48,6 +48,8 @@ export interface CardOptions {
   font?: string;
   /** show chart-history stats when the pulse carries a medical record */
   record: boolean;
+  /** mirror the wave so the newest beat is on the left (RTL READMEs) */
+  flip: boolean;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -61,6 +63,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   wave: "ecg",
   scanlines: false,
   record: false,
+  flip: false,
 };
 
 interface Layout {
@@ -580,6 +583,13 @@ export function renderCard(
   theme: Theme,
   options: CardOptions = DEFAULT_OPTIONS,
 ): string {
+  if (options.flip) {
+    pulse = {
+      ...pulse,
+      beats: [...pulse.beats].reverse(),
+      dayCounts: [...pulse.dayCounts].reverse(),
+    };
+  }
   return applyWidth(renderCardAtSize(pulse, theme, options), options.width);
 }
 

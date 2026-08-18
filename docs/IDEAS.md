@@ -25,8 +25,9 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 ## Do more (round 2)
 - [x] JSON vitals API — `/api/u/<user>` + `/api/r/<owner>/<repo>`, CORS open
 - [ ] Milestone stamps — card celebrates 1k beats/yr, 100-day best streak
-- [ ] `flip=1` — mirror the wave right-to-left (RTL READMEs)
-- [ ] Seasonal auto-themes — `theme=season` picks by date (spooky October…)
+- [x] `flip=1` — mirror the wave right-to-left (RTL READMEs)
+- [x] Seasonal auto-themes — `theme=season` picks by date (halloween → dracula,
+      winter → nord, spring → catppuccin, summer → ember, fall → gruvbox)
 - [ ] SVG `<a>` deep links — each stat clickable to the matching GitHub page
 - [ ] Org cards — `/o/<org>` aggregate pulse of an organization's repos
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives

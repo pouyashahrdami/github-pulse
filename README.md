@@ -105,7 +105,9 @@ Add `?theme=<name>`:
 **[→ See all 13 themes in the gallery](./docs/THEMES.md)**
 
 Can't pick? `?theme=random` deals you a theme that stays stable all day and
-reshuffles every UTC midnight — a different look every morning.
+reshuffles every UTC midnight — a different look every morning. Or let the
+calendar decide with `?theme=season`: frosty `nord` winters, warm `ember`
+summers, `gruvbox` autumns — and `dracula` takes over for halloween week.
 
 *(Samples above are snapshots committed to this repo — your embed is generated live.)*
 
@@ -140,6 +142,7 @@ And shape/behavior params:
 | `labels` | rename state pills: `radiant:ON FIRE,flatline:RIP` (16 chars each) | medical |
 | `goal` | daily contribution target `1`–`999`: dashed line on the wave + hit-rate | — |
 | `record` | `1` shows chart history: `⚕ flatlines† revivals⚡ best-streak` (persists in Redis when `UPSTASH_REDIS_REST_URL`/`TOKEN` are set) | `0` |
+| `flip` | `1` mirrors the wave — newest beat on the left, for RTL READMEs | `0` |
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` `pacemaker` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |

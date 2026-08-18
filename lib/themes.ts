@@ -170,10 +170,26 @@ function pickRandomTheme(seed: string): string {
   return names[h % names.length];
 }
 
+/** ?theme=season: picked by the calendar — frosty winters, spooky late October. */
+function pickSeasonTheme(now = new Date()): string {
+  const month = now.getUTCMonth(); // 0..11
+  const day = now.getUTCDate();
+  if (month === 9 && day >= 24) return "dracula"; // halloween week
+  if (month === 11 || month <= 1) return "nord"; // winter
+  if (month <= 4) return "catppuccin"; // spring
+  if (month <= 7) return "ember"; // summer
+  return "gruvbox"; // fall
+}
+
 /** Resolve a theme from query params: ?theme=<preset> plus per-color overrides. */
 export function resolveTheme(params: URLSearchParams, seed = ""): Theme {
   const requested = params.get("theme") ?? DEFAULT_THEME;
-  const name = requested === "random" ? pickRandomTheme(seed) : requested;
+  const name =
+    requested === "random"
+      ? pickRandomTheme(seed)
+      : requested === "season"
+        ? pickSeasonTheme()
+        : requested;
   const preset = THEMES[name] ?? THEMES[DEFAULT_THEME];
   const theme: Theme = { ...preset };
 
