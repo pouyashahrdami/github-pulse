@@ -147,6 +147,11 @@ export default function Builder() {
 
   return (
     <div className="builder">
+      <div className="intake-head">
+        <strong>patient intake</strong>
+        <span>no login · renders live</span>
+      </div>
+      <div className="intake-body">
       <div className="chips mode-chips">
         {(Object.keys(MODES) as Mode[]).map((m) => (
           <button
@@ -213,8 +218,8 @@ export default function Builder() {
           ))}
           {(
             [
-              ["random", "🎲 random · new theme daily"],
-              ["season", "🍂 season · follows the calendar"],
+              ["random", "random · new theme daily"],
+              ["season", "season · follows the calendar"],
             ] as const
           ).map(([name, label]) => (
             <button
@@ -274,11 +279,10 @@ export default function Builder() {
         <div className="chips">
           {(
             [
-              ["scanlines", "📺 scanlines", scanlines, setScanlines],
-              ["flip", "🔁 flip (RTL)", flip, setFlip],
-              ["record", "⚕ medical record", record, setRecord],
-              ["wall", "🖼 join the wall", wall, setWall],
-              ["full", "↔ full width", full, setFull],
+              ["scanlines", "scanlines", scanlines, setScanlines],
+              ["flip", "flip · rtl", flip, setFlip],
+              ["record", "medical record", record, setRecord],
+              ["full", "full width", full, setFull],
             ] as const
           ).map(([key, label, value, setter]) => (
             <button
@@ -291,7 +295,7 @@ export default function Builder() {
             </button>
           ))}
           <label className="chip goal-chip">
-            🎯 goal
+            daily goal
             <input
               type="number"
               min={1}
@@ -347,15 +351,24 @@ export default function Builder() {
       </div>
 
       {base && (
-        <div className="embed">
-          <span className="control-label">Add it to your README</span>
-          <label className="adaptive-toggle">
+        <div className="paper">
+          <div className="paper-head">discharge — add it to your README</div>
+          <label className="paper-check">
             <input
               type="checkbox"
               checked={adaptive}
               onChange={(e) => setAdaptive(e.target.checked)}
             />
-            adaptive: this theme in dark mode, paper in light mode
+            adaptive theme <small>— this theme in dark mode, paper in light</small>
+          </label>
+          <label className="paper-check">
+            <input
+              type="checkbox"
+              checked={wall}
+              onChange={(e) => setWall(e.target.checked)}
+            />
+            opt in to the public Wall of Hearts{" "}
+            <small>— adds wall=1; off by default</small>
           </label>
           <div className="snippet">
             <code>{markdown}</code>
@@ -365,6 +378,7 @@ export default function Builder() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
