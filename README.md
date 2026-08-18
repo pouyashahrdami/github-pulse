@@ -225,6 +225,19 @@ Want just a tiny badge instead of a full card? The pulse speaks the
 
 Renders as `pulse | 180 bpm · radiant`, colored by life state.
 
+## Cardiology report
+
+The annual checkup — your whole year as one printed chart: a 365-day EKG
+strip, total beats, active days, longest streak, longest flatline (dated),
+busiest day, weekend load:
+
+```md
+![cardiology report](https://github-pulse-topaz.vercel.app/report/YOUR_USERNAME?theme=paper)
+```
+
+All themes and layout params apply — `theme=paper` makes it look like the
+real thing. Post yours at the end of December.
+
 ## Dead man's switch
 
 Watch anyone; get pinged when they flatline — or rise again. Point it at a

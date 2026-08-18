@@ -52,7 +52,9 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] `npx github-pulse-cli <user>` — ASCII EKG in the terminal via the JSON
       API (`packages/cli`, zero deps; plain `github-pulse` was taken on npm).
       Publish with `pnpm -C packages/cli publish` when ready
-- [ ] Annual cardiology report — Wrapped-style year card (ship late December)
+- [x] Annual cardiology report — `/report/<user>`: year EKG strip + whole-window
+      stats (streak, dated flatline, busiest day, weekend load). Promote hard
+      in late December
 - [x] Defibrillator — flatlined/critical share pages grow a paddle-charging
       button → CLEAR! → prefilled X code-blue post + copy; `/s/<u>?state=`
       preview override added along the way

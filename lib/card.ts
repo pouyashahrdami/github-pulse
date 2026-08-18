@@ -1,4 +1,5 @@
 import type { Pulse, PulseState } from "./pulse";
+import type { ReportStats } from "./report";
 import type { Theme } from "./themes";
 
 export type CardSize = "card" | "wide" | "compact" | "badge" | "monitor";
@@ -1010,6 +1011,120 @@ export function renderWardCard(
   }
   ${rows}
   ${scanlineOverlay(base, options)}
+  ${fontOverride(options)}
+</svg>`,
+    options.width,
+  );
+}
+
+/** The whole examination window as one polyline strip. */
+function yearStrip(
+  counts: number[],
+  x0: number,
+  x1: number,
+  baseline: number,
+  amp: number,
+): string {
+  if (counts.length < 2) return "";
+  const max = Math.max(...counts, 1);
+  const step = (x1 - x0) / (counts.length - 1);
+  const pts = counts
+    .map(
+      (c, i) =>
+        `${round(x0 + i * step)},${round(baseline - (c / max) * amp)}`,
+    )
+    .join(" ");
+  return pts;
+}
+
+/** Wrapped-style annual checkup — the year's vitals as a printed chart. */
+export function renderReportCard(
+  pulse: Pulse,
+  stats: ReportStats,
+  theme: Theme,
+  options: CardOptions = DEFAULT_OPTIONS,
+  examDate: string = new Date().toISOString().slice(0, 10),
+): string {
+  const w = 830;
+  const h = 330;
+  const x0 = 26;
+  const x1 = w - x0;
+  const stripBase = 168;
+  const stripAmp = 62;
+  const lay: Layout = { ...LAYOUTS.wide, w, h, footerY: h - 16 };
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+  const stateColor = STATE_LOOK[pulse.state].color(theme);
+  const stateLabel =
+    options.stateLabels?.[pulse.state] ?? STATE_LOOK[pulse.state].label;
+  const num = (n: number) => n.toLocaleString("en-US");
+
+  const cells: { label: string; value: string; color?: string }[] = [
+    { label: "TOTAL BEATS", value: num(stats.totalBeats) },
+    {
+      label: "ACTIVE DAYS",
+      value: `${stats.activeDays}/${stats.windowDays} (${Math.round((100 * stats.activeDays) / Math.max(stats.windowDays, 1))}%)`,
+    },
+    { label: "LONGEST STREAK", value: `${stats.longestStreak}d` },
+    {
+      label: "LONGEST FLATLINE",
+      value: stats.longestFlatline.days
+        ? `${stats.longestFlatline.days}d`
+        : "none",
+      color: stats.longestFlatline.days >= 14 ? theme.danger : undefined,
+    },
+    {
+      label: "BUSIEST DAY",
+      value: stats.busiest
+        ? `${stats.busiest.date} · ${num(stats.busiest.count)}`
+        : "—",
+    },
+    { label: "WEEKEND LOAD", value: `${stats.weekendPct}%` },
+  ];
+  const colW = (x1 - x0) / 3;
+  const cellMarkup = cells
+    .map((c, i) => {
+      const cx = x0 + (i % 3) * colW;
+      const cy = 226 + Math.floor(i / 3) * 52;
+      return `<text x="${round(cx)}" y="${cy}" font-family="${MONO}" font-size="8.5"
+        letter-spacing="1.5" fill="${theme.muted}">${esc(c.label)}</text>
+  <text x="${round(cx)}" y="${cy + 20}" font-family="${MONO}" font-size="15"
+        font-weight="600" fill="${c.color ?? theme.text}">${esc(c.value)}</text>`;
+    })
+    .join("\n  ");
+
+  const title = `cardiology report — @${pulse.login}, ${stats.totalBeats} beats in ${stats.windowDays} days`;
+  return applyWidth(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"
+     viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}">
+  <defs>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="${w - 1}" height="${h - 1}"
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${x0}" y="34" font-family="${MONO}" font-size="13" letter-spacing="3"
+        font-weight="600" fill="${theme.text}">CARDIOLOGY REPORT</text>
+  <text x="${x1}" y="34" text-anchor="end" font-family="${MONO}" font-size="10"
+        fill="${theme.muted}">printed ${esc(examDate)}</text>`
+  }
+  <text x="${x0}" y="60" font-family="${MONO}" font-size="11" fill="${theme.muted}"
+        >patient <tspan fill="${theme.text}" font-weight="600">${esc(options.label ?? `@${pulse.login}`)}</tspan> · blood type <tspan fill="${theme.text}">${esc(pulse.bloodType)}</tspan> · status <tspan fill="${stateColor}" font-weight="600">${esc(stateLabel)}</tspan></text>
+  <line x1="${x0}" y1="${stripBase}" x2="${x1}" y2="${stripBase}"
+        stroke="${theme.grid}" stroke-width="0.5"/>
+  <polyline points="${yearStrip(stats.counts, x0, x1, stripBase, stripAmp)}"
+        fill="none" stroke="${theme.trace}" stroke-width="1.2"
+        stroke-linejoin="round" ${glowFilter}/>
+  <text x="${x0}" y="${stripBase + 18}" font-family="${MONO}" font-size="8.5"
+        letter-spacing="1.5" fill="${theme.muted}">EXAMINATION PERIOD · LAST ${stats.windowDays} DAYS</text>
+  ${cellMarkup}
+  <text x="${x0}" y="${lay.footerY}" font-family="${MONO}" font-size="9.5"
+        fill="${theme.muted}">github-pulse</text>
+  ${scanlineOverlay({ ...lay, h }, options)}
   ${fontOverride(options)}
 </svg>`,
     options.width,
