@@ -1,60 +1,39 @@
-# Contributing to github-pulse
+# Contributing
 
-Thanks for wanting to make the heart beat better. Contributions of all kinds
-are welcome — bug reports, themes, docs, and code.
+Thanks for wanting to make the heartbeat better.
 
-## Quick start
+## Dev setup
 
 ```bash
-git clone https://github.com/pouyashahrdami/github-pulse
-cd github-pulse
 pnpm install
-cp .env.example .env.local   # add a classic GitHub token, no scopes needed
-pnpm dev
+pnpm dev        # localhost:3000 — cards at /u/<you>, builder on /
 ```
 
-Open `http://localhost:3000/u/YOUR_USERNAME` to see a live card. Append
-`?state=flatline` (or `radiant|steady|fading|critical|revived`) to preview any
-life state, and `?size=` / `?theme=` to test layouts and palettes.
+A no-scope `GITHUB_TOKEN` in `.env.local` enables the GraphQL path; without it
+everything still works via the public REST fallback (marked `partial`).
 
 ## Before you open a PR
 
-- **Type-check:** `pnpm typecheck` must pass.
-- **Build:** `pnpm build` must succeed.
-- **Check rendering** if your change affects the card: preview locally, and you
-  can render a standalone SVG with
-  `INPUT_USERNAME=octocat INPUT_OUT=pulse.svg npx -y tsx scripts/generate.ts`.
-- Keep the change small and focused — one fix or feature per PR.
-- Use conventional commit subjects: `feat:`, `fix:`, `docs:`, `refactor:`,
-  `chore:`.
+```bash
+pnpm typecheck && pnpm test && pnpm build
+```
 
-## Project layout
+All three must pass — CI runs exactly this. New mechanics (param parsing, pulse
+math, render output guarantees) get a test in `tests/`; visual tweaks don't
+need one.
 
-| Path | What lives there |
-|---|---|
-| `app/` | Next.js routes — `u/[username]` serves the SVG |
-| `lib/` | Waveform math, life-state logic, GitHub data fetching |
-| `components/` | SVG card layouts (card, monitor, wide, compact, badge) |
-| `docs/THEMES.md` | Theme reference |
-| `scripts/generate.ts` | Regenerates the sample SVGs in `assets/` |
+## Ground rules
 
-## Adding a theme
+- Cards are **pure SVG with SMIL/CSS animation only** — GitHub strips
+  JavaScript and proxies through camo. If your feature needs JS in the card,
+  it can't ship.
+- Every param must fail safe: junk input falls back to defaults, never to a
+  broken card. Escape anything user-controlled that lands in the SVG.
+- Match the existing style (see neighboring code); no new dependencies without
+  a strong case — the runtime deps are currently just Next/React.
+- One feature per PR, conventional commit subjects (`feat:`, `fix:`, `docs:`).
 
-Themes are the easiest contribution. Read [docs/THEMES.md](docs/THEMES.md),
-add your palette alongside the existing ones in `lib/`, and include a sample
-render in your PR description. Keep contrast readable on both GitHub light and
-dark backgrounds.
+## Ideas
 
-## Reporting bugs & suggesting features
-
-Open an issue with the appropriate template. For rendering bugs, include the
-full card URL (username + query params) — it's the whole repro.
-
-## Security
-
-Please do not report security vulnerabilities in public issues — see
-[SECURITY.md](SECURITY.md).
-
-## Code of Conduct
-
-By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
+Check [docs/IDEAS.md](docs/IDEAS.md) — ticked items are shipped, unticked ones
+are up for grabs, struck-through ones were declined with reasons.
