@@ -17,6 +17,12 @@ inputs:
   duet:
     description: "Duet card instead: 'you,friend'"
     required: false
+  ward:
+    description: "Ward card instead: 2-6 users, 'alice,bob,carol'"
+    required: false
+  report:
+    description: "Annual cardiology report instead: username"
+    required: false
   out:
     description: "Output SVG path"
     required: false
@@ -28,7 +34,7 @@ inputs:
     description: "Card shape: card, monitor, wide, compact, badge"
     required: false
   wave:
-    description: "Trace style: ecg or smooth"
+    description: "Trace style: ecg, smooth, or bars"
     required: false
   days:
     description: "Beat window, 7-30 days"
@@ -51,6 +57,8 @@ runs:
         INPUT_REPO: ${{ inputs.repo }}
         INPUT_ORG: ${{ inputs.org }}
         INPUT_DUET: ${{ inputs.duet }}
+        INPUT_WARD: ${{ inputs.ward }}
+        INPUT_REPORT: ${{ inputs.report }}
         INPUT_OUT: ${{ inputs.out }}
         INPUT_THEME: ${{ inputs.theme }}
         INPUT_SIZE: ${{ inputs.size }}

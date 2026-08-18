@@ -13,7 +13,13 @@ import {
   fetchRepoData,
 } from "../lib/github";
 import { computePulse, forceState } from "../lib/pulse";
-import { renderCard, renderDuetCard } from "../lib/card";
+import {
+  renderCard,
+  renderDuetCard,
+  renderReportCard,
+  renderWardCard,
+} from "../lib/card";
+import { computeReport } from "../lib/report";
 import { resolveTheme } from "../lib/themes";
 import { parseOptions, parseState, parseDays, parseNow } from "../lib/options";
 
@@ -27,10 +33,12 @@ async function main() {
   const repo = input("repo"); // owner/repo
   const org = input("org");
   const duet = input("duet"); // you,friend
-  const subject = username ?? repo ?? org ?? duet;
+  const ward = input("ward"); // alice,bob,carol (2-6)
+  const report = input("report"); // username
+  const subject = username ?? repo ?? org ?? duet ?? ward ?? report;
   if (!subject) {
     console.error(
-      "error: one of INPUT_USERNAME, INPUT_REPO, INPUT_ORG, INPUT_DUET is required",
+      "error: one of INPUT_USERNAME, INPUT_REPO, INPUT_ORG, INPUT_DUET, INPUT_WARD, INPUT_REPORT is required",
     );
     process.exit(1);
   }
@@ -62,6 +70,34 @@ async function main() {
     const pb = computePulse(db, now, days);
     svg = renderDuetCard(pa, pb, theme, options);
     logLine = `@${pa.login} vs @${pb.login}`;
+  } else if (ward) {
+    const members = ward
+      .split(",")
+      .map((s) => s.trim().replace(/^@/, ""))
+      .filter(Boolean);
+    if (members.length < 2 || members.length > 6) {
+      console.error("error: INPUT_WARD must list 2-6 users, 'alice,bob,carol'");
+      process.exit(1);
+    }
+    const datas = await Promise.all(members.map((m) => fetchGithubData(m)));
+    const pulses = datas.map((d) => computePulse(d, now, days));
+    svg = renderWardCard(pulses, theme, options);
+    const alive = pulses.filter((p) => p.state !== "flatline").length;
+    logLine = `ward: ${alive}/${pulses.length} alive`;
+  } else if (report) {
+    const data = await fetchGithubData(report);
+    let pulse = computePulse(data, now, days);
+    const previewState = parseState(search);
+    if (previewState) pulse = forceState(pulse, previewState);
+    const stats = computeReport(data.days);
+    svg = renderReportCard(
+      pulse,
+      stats,
+      theme,
+      options,
+      now.toISOString().slice(0, 10),
+    );
+    logLine = `report: @${pulse.login}, ${stats.totalBeats} beats in ${stats.windowDays}d`;
   } else {
     let data;
     if (repo) {
