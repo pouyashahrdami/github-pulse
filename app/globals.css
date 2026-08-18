@@ -218,6 +218,23 @@ h1 .beat {
   background: rgba(139, 92, 246, 0.10);
 }
 
+.goal-chip input {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 3.5ch;
+}
+
+/* number spinners off — they fight the chip's compact shape */
+.goal-chip input::-webkit-outer-spin-button,
+.goal-chip input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .customizer {
   display: flex;
   flex-wrap: wrap;

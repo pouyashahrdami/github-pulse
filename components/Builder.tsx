@@ -27,6 +27,12 @@ export default function Builder() {
   const [wave, setWave] = useState<WaveStyle>("ecg");
   const [custom, setCustom] = useState<CustomColors>({});
   const [adaptive, setAdaptive] = useState(false);
+  const [scanlines, setScanlines] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const [record, setRecord] = useState(false);
+  const [full, setFull] = useState(false);
+  const [goal, setGoal] = useState("");
+  const [lang, setLang] = useState("en");
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -36,9 +42,15 @@ export default function Builder() {
     for (const [k, v] of Object.entries(custom)) {
       if (v) params.set(k, v.replace(/^#/, ""));
     }
+    if (scanlines) params.set("scanlines", "1");
+    if (flip) params.set("flip", "1");
+    if (record) params.set("record", "1");
+    if (full) params.set("w", "full");
+    if (goal && Number(goal) > 0) params.set("goal", goal);
+    if (lang !== "en") params.set("lang", lang);
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [theme, size, wave, custom]);
+  }, [theme, size, wave, custom, scanlines, flip, record, full, goal, lang]);
 
   const path = username ? `/u/${username}${query}` : "";
   const origin =
@@ -107,6 +119,7 @@ export default function Builder() {
             alt={`GitHub Pulse card for @${username}`}
             width={SIZES.find((s) => s.name === size)?.w}
             height={SIZES.find((s) => s.name === size)?.h}
+            style={full ? { width: "100%", height: "auto" } : undefined}
           />
         ) : (
           <span className="hint">your card appears here — try your username</span>
@@ -125,6 +138,21 @@ export default function Builder() {
             >
               <span className="dot" style={{ background: t.trace }} />
               {name}
+            </button>
+          ))}
+          {(
+            [
+              ["random", "🎲 random · new theme daily"],
+              ["season", "🍂 season · follows the calendar"],
+            ] as const
+          ).map(([name, label]) => (
+            <button
+              key={name}
+              type="button"
+              className={`chip${theme === name ? " active" : ""}`}
+              onClick={() => setTheme(name)}
+            >
+              {label}
             </button>
           ))}
         </div>
@@ -159,6 +187,53 @@ export default function Builder() {
               onClick={() => setWave(w)}
             >
               {label}
+            </button>
+          ))}
+        </div>
+
+        <span className="control-label">Extras</span>
+        <div className="chips">
+          {(
+            [
+              ["scanlines", "📺 scanlines", scanlines, setScanlines],
+              ["flip", "🔁 flip (RTL)", flip, setFlip],
+              ["record", "⚕ medical record", record, setRecord],
+              ["full", "↔ full width", full, setFull],
+            ] as const
+          ).map(([key, label, value, setter]) => (
+            <button
+              key={key}
+              type="button"
+              className={`chip${value ? " active" : ""}`}
+              onClick={() => setter(!value)}
+            >
+              {label}
+            </button>
+          ))}
+          <label className="chip goal-chip">
+            🎯 goal
+            <input
+              type="number"
+              min={1}
+              max={999}
+              value={goal}
+              placeholder="—"
+              onChange={(e) => setGoal(e.target.value)}
+              aria-label="daily contribution goal"
+            />
+          </label>
+        </div>
+
+        <span className="control-label">Language</span>
+        <div className="chips">
+          {(["en", "fa", "de", "es", "ja"] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              className={`chip${lang === l ? " active" : ""}`}
+              onClick={() => setLang(l)}
+            >
+              {l}
             </button>
           ))}
         </div>
