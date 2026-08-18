@@ -144,6 +144,7 @@ And shape/behavior params:
 | `record` | `1` shows chart history: `⚕ flatlines† revivals⚡ best-streak` (persists in Redis when `UPSTASH_REDIS_REST_URL`/`TOKEN` are set) | `0` |
 | `flip` | `1` mirrors the wave — newest beat on the left, for RTL READMEs | `0` |
 | `lang` | status strings in `en` `fa` `de` `es` `ja` (pair `fa` with `flip=1`) | `en` |
+| `blink` | `1` blinks the LED dot at your actual heart rate on every alive card | `0` |
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` `pacemaker` `milestone` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |

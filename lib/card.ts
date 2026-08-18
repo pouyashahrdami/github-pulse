@@ -64,6 +64,8 @@ export interface CardOptions {
   flip: boolean;
   /** status-string language, a key of LANGS */
   lang: string;
+  /** LED dot on every alive card, blinking at the real heart period */
+  blink: boolean;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -79,6 +81,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   record: false,
   flip: false,
   lang: "en",
+  blink: false,
 };
 
 interface Layout {
@@ -343,7 +346,7 @@ function renderBadge(
     : alive
       ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
        .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
-       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       .gp-dot{animation:gp-blink ${dotPeriod(pulse, options)}s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
        @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
@@ -387,7 +390,7 @@ function renderBadge(
         fill="${theme.muted}">${esc(header)}</text>`
   }
   <circle cx="${lay.w - 16}" cy="16" r="4" fill="${stateColor}"
-          ${liveNow ? 'class="gp-dot"' : ""}/>
+          ${dotActive(pulse, options) ? 'class="gp-dot"' : ""}/>
   <text class="gp-heart" x="14" y="${lay.footerY}" font-family="${MONO}"
         font-size="13" fill="${alive ? theme.trace : theme.danger}">♥</text>
   <text x="30" y="${lay.footerY}" font-family="${MONO}" font-size="18"
@@ -466,7 +469,7 @@ function renderMonitor(
        .gp-sweep2{animation:gp-sweep ${round(sweepDur * 1.6)}s linear infinite}
        .gp-sweep3{animation:gp-sweep ${round(sweepDur * 2.2)}s linear infinite}
        .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
-       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       .gp-dot{animation:gp-blink ${dotPeriod(pulse, options)}s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
        @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
@@ -591,7 +594,7 @@ function renderMonitor(
 
   <text x="${lay.waveX0}" y="${lay.footerY}" font-family="${MONO}"
         font-size="10.5" fill="${right.color}"
-        ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
+        ${dotActive(pulse, options) ? 'class="gp-dot"' : ""}>${esc(
           right.text,
         )}</text>
   ${scanlineOverlay(lay, options)}
@@ -634,6 +637,20 @@ function fontOverride(options: CardOptions): string {
         ? "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif"
         : `'${options.font}',${MONO}`;
   return `<style>text{font-family:${stack} !important}</style>`;
+}
+
+/** LED cadence: the fixed idle wink, or the real heart period when ?blink=1. */
+function dotPeriod(pulse: Pulse, options: CardOptions): number {
+  if (!options.blink || pulse.state === "flatline" || pulse.bpm === 0) {
+    return 1.8;
+  }
+  return Number(Math.min(2, Math.max(0.3, 60 / pulse.bpm / options.speed)).toFixed(2));
+}
+
+/** true when the LED dot should carry the blink class on this card. */
+function dotActive(pulse: Pulse, options: CardOptions): boolean {
+  if (options.blink) return pulse.state !== "flatline";
+  return pulse.state === "radiant" && pulse.daysSinceBeat === 0;
 }
 
 /** ?scanlines=1: CRT horizontal-line overlay drawn above everything else. */
@@ -726,7 +743,7 @@ function renderCardAtSize(
     : alive
       ? `.gp-sweep{animation:gp-sweep ${round(sweepDur)}s linear infinite}
        .gp-heart{animation:gp-thump ${round(period)}s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
-       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       .gp-dot{animation:gp-blink ${dotPeriod(pulse, options)}s ease-in-out infinite}
        @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
        @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
        @keyframes gp-blink{50%{opacity:.25}}${options.wave === "bars" ? EQ_CSS(options.speed) : ""}`
@@ -792,7 +809,7 @@ function renderCardAtSize(
     ? ""
     : `<text x="${lay.w - lay.waveX0}" y="${lay.footerY - 2}" text-anchor="end"
         font-family="${MONO}" font-size="10.5" fill="${right.color}"
-        ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
+        ${dotActive(pulse, options) ? 'class="gp-dot"' : ""}>${esc(
           right.text,
         )}</text>`;
 

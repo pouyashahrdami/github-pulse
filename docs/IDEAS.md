@@ -8,7 +8,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] `font=` — serif/sans presets or any installed family (`font=Courier New`);
       viewer-side fallback to the mono stack, since camo blocks webfonts
 - [x] `scanlines=1` — CRT scanline overlay for phosphor/retro themes
-- [ ] `blink=1` — tiny LED heartbeat dot in the header, synced to bpm
+- [x] `blink=1` — LED heartbeat dot on every alive card, synced to real bpm
 - [x] `lang=` — localized footer/status/streak strings: en, fa, de, es, ja
 
 ## Do more

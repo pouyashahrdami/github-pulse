@@ -105,6 +105,7 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     scanlines: search.get("scanlines") === "1",
     record: search.get("record") === "1",
     flip: search.get("flip") === "1",
+    blink: search.get("blink") === "1",
     lang: LANGS[search.get("lang") ?? ""] ? (search.get("lang") as string) : "en",
     speed,
     label,
