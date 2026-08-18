@@ -108,6 +108,29 @@ h1 .beat {
   }
 }
 
+.wall-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.wall-grid img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.wall-empty {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  padding: 48px 0;
+}
+
 .builder {
   display: flex;
   flex-direction: column;

@@ -33,6 +33,36 @@ export interface Hearts {
   durable: boolean; // false = no Redis configured, counts are not collected
 }
 
+export interface RecentBeat {
+  kind: BeatKind;
+  subject: string; // "login", "owner/repo", "org", or "a/b" for duets
+}
+
+/** Most recently served cards, newest first — the Wall of Hearts source. */
+export async function recentBeats(limit: number): Promise<RecentBeat[]> {
+  if (!redisConfigured()) return [];
+  try {
+    const raw = await redis([
+      "ZRANGE", KEY, "+inf", "-inf", "BYSCORE", "REV",
+      "LIMIT", "0", String(limit),
+    ]);
+    if (!Array.isArray(raw)) return [];
+    return raw.flatMap((m) => {
+      if (typeof m !== "string") return [];
+      const i = m.indexOf(":");
+      const kind = m.slice(0, i);
+      const subject = m.slice(i + 1);
+      return (kind === "u" || kind === "r" || kind === "o" || kind === "vs") &&
+        subject
+        ? [{ kind, subject }]
+        : [];
+    });
+  } catch (err) {
+    console.error("wall read failed:", err);
+    return [];
+  }
+}
+
 export async function heartsBeating(): Promise<Hearts> {
   if (redisConfigured()) {
     try {

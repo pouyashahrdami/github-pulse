@@ -218,6 +218,9 @@ https://github-pulse-topaz.vercel.app/s/YOUR_USERNAME
 
 Drop it in Slack, Discord, or a tweet and it unfurls into a vitals snapshot.
 
+Every card served also lights up the deploy's **[Wall of Hearts](https://github-pulse-topaz.vercel.app/wall)** —
+a live gallery of the most recently beating cards.
+
 ## JSON API
 
 Everything the card knows, as data — build your own visualizations, bots, or

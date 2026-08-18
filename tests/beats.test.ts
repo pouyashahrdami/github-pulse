@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { heartsBeating, recordBeat } from "@/lib/beats";
+import { heartsBeating, recentBeats, recordBeat } from "@/lib/beats";
 
 // Simulates the Upstash REST endpoint with a tiny in-memory ZSET so the real
 // command construction and response parsing in beats.ts + redis.ts run.
@@ -17,6 +17,13 @@ function fakeUpstash(input: RequestInfo | URL, init?: RequestInit) {
     result = [...zset.values()].filter((s) => s >= min).length;
   } else if (cmd === "ZCARD") {
     result = zset.size;
+  } else if (cmd === "ZRANGE") {
+    // shape used by recentBeats: ZRANGE key +inf -inf BYSCORE REV LIMIT 0 n
+    const limit = Number(args[7]);
+    result = [...zset.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([member]) => member);
   }
   return Promise.resolve(Response.json({ result }));
 }
@@ -60,6 +67,20 @@ describe("beats (redis-backed)", () => {
     expect((await heartsBeating()).week).toBe(1);
   });
 
+  it("lists recent beats newest first, parsed by kind", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-01T00:00:00Z"));
+    await recordBeat("u", "older");
+    vi.setSystemTime(new Date("2026-08-02T00:00:00Z"));
+    await recordBeat("r", "owner/repo");
+    vi.setSystemTime(new Date("2026-08-03T00:00:00Z"));
+    await recordBeat("vs", "a/b");
+    expect(await recentBeats(2)).toEqual([
+      { kind: "vs", subject: "a/b" },
+      { kind: "r", subject: "owner/repo" },
+    ]);
+  });
+
   it("is honest when redis is missing", async () => {
     vi.unstubAllEnvs();
     await recordBeat("u", "ghost");
@@ -68,5 +89,6 @@ describe("beats (redis-backed)", () => {
       allTime: 0,
       durable: false,
     });
+    expect(await recentBeats(10)).toEqual([]);
   });
 });

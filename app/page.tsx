@@ -20,7 +20,7 @@ export default function Home() {
       <Builder />
 
       <footer>
-        open source · MIT ·{" "}
+        <a href="/wall">wall of hearts</a> · open source · MIT ·{" "}
         <a
           href="https://github.com/pouyashahrdami/github-pulse"
           target="_blank"
