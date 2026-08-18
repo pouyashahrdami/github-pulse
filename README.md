@@ -2,6 +2,10 @@
 
 [![ci](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml)
 
+**New in [v1.1.0](./CHANGELOG.md):** ward cards, the cardiology report, the
+opt-in Wall of Hearts, a dead man's switch, a terminal CLI — and a landing
+page that became a patient monitor.
+
 **A living EKG card for your GitHub README.** One username in, a beating heart out —
 it beats faster when you ship, dims when you rest, flatlines when you vanish, and
 revives when you come back.
