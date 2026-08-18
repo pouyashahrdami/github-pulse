@@ -46,6 +46,8 @@ Use any with `?theme=<name>`; every color is individually overridable — see th
 | repo `/r/<owner>/<repo>` | ![repo](https://github-pulse-topaz.vercel.app/r/pouyashahrdami/github-pulse?size=compact) |
 | org `/o/<org>` | ![org](https://github-pulse-topaz.vercel.app/o/vercel?size=compact) |
 | duet `/vs/<a>/<b>` | ![duet](https://github-pulse-topaz.vercel.app/vs/pouyashahrdami/torvalds) |
+| ward `/ward/<a,b,c>` | ![ward](https://github-pulse-topaz.vercel.app/ward/pouyashahrdami,torvalds,gaearon?w=520) |
+| report `/report/<name>` | ![report](https://github-pulse-topaz.vercel.app/report/pouyashahrdami?theme=paper&w=520) |
 
 ## Waves
 
