@@ -6,7 +6,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] `theme=random` — stable per-user pick that reshuffles every UTC day
 - [x] Custom state labels — `labels=radiant:ON FIRE,flatline:RIP` renames the pill text
 - [ ] `font=` — pick the mono stack (jetbrains / ibm-plex / sf-mono / serif for paper)
-- [ ] `scanlines=1` — CRT scanline + vignette overlay for phosphor/retro themes
+- [x] `scanlines=1` — CRT scanline overlay for phosphor/retro themes
 - [ ] `blink=1` — tiny LED heartbeat dot in the header, synced to bpm
 - [ ] `lang=` — localized footer/status strings (fa, de, ja, …)
 

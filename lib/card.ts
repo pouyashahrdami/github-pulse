@@ -27,6 +27,8 @@ export interface CardOptions {
   width?: number | "full";
   /** per-state pill text overrides, e.g. { radiant: "ON FIRE" } */
   stateLabels?: Partial<Record<PulseState, string>>;
+  /** CRT scanline overlay */
+  scanlines: boolean;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -38,6 +40,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   speed: 1,
   hide: new Set<HideKey>(),
   wave: "ecg",
+  scanlines: false,
 };
 
 interface Layout {
@@ -286,6 +289,7 @@ function renderBadge(
         font-weight="700" fill="${theme.text}">${bpmText}<tspan font-size="9"
         font-weight="400" fill="${theme.muted}" dx="3">bpm</tspan></text>
   ${trace}
+  ${scanlineOverlay(lay, options)}
 </svg>`;
 }
 
@@ -484,7 +488,18 @@ function renderMonitor(
         ${pulse.state === "radiant" && pulse.daysSinceBeat === 0 ? 'class="gp-dot"' : ""}>${esc(
           right.text,
         )}</text>
+  ${scanlineOverlay(lay, options)}
 </svg>`;
+}
+
+/** ?scanlines=1: CRT horizontal-line overlay drawn above everything else. */
+function scanlineOverlay(lay: Layout, options: CardOptions): string {
+  if (!options.scanlines) return "";
+  return `<pattern id="gp-scan" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="2" fill="#000" opacity="0.16"/>
+  </pattern>
+  <rect x="0.5" y="0.5" width="${lay.w - 1}" height="${lay.h - 1}"
+        rx="${options.radius}" fill="url(#gp-scan)"/>`;
 }
 
 /**
@@ -659,6 +674,7 @@ function renderCardAtSize(
   ${bpmCluster}
   ${statsText}
   ${statusText}
+  ${scanlineOverlay(lay, options)}
 </svg>`;
 }
 

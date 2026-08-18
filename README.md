@@ -140,6 +140,7 @@ And shape/behavior params:
 | `labels` | rename state pills: `radiant:ON FIRE,flatline:RIP` (16 chars each) | medical |
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` | — |
 | `anim` | `0` renders a fully static card | `1` |
+| `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |
 | `speed` | animation speed `0.25`–`3` | `1` |
 | `state` | preview a life state (see above) | live |
 | `wave` | `ecg` heartbeat, `smooth` aura wave, `bars` equalizer | `ecg` |
