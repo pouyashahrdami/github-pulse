@@ -940,6 +940,82 @@ export function renderDuetCard(
   );
 }
 
+/** One monitor, many patients — traces stacked in triage order (bpm desc). */
+export function renderWardCard(
+  pulses: Pulse[],
+  theme: Theme,
+  options: CardOptions = DEFAULT_OPTIONS,
+): string {
+  const sorted = [...pulses].sort((a, b) => b.bpm - a.bpm);
+  const w = 830;
+  const rowH = 56;
+  const top = 44;
+  const h = top + sorted.length * rowH + 26;
+  const waveX1 = 610;
+  const base: Layout = { ...LAYOUTS.wide, w, h, waveX1, footerY: h - 12 };
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+  const alive = sorted.filter((p) => p.state !== "flatline").length;
+
+  const rows = sorted
+    .map((p, i) => {
+      const rowTop = top + i * rowH;
+      const lay: Layout = {
+        ...base,
+        baseline: rowTop + Math.round(rowH * 0.62),
+        ampMax: 17,
+      };
+      const color = STATE_LOOK[p.state].color(theme);
+      const label =
+        options.stateLabels?.[p.state] ?? STATE_LOOK[p.state].label;
+      const bpm = p.state === "flatline" ? "—" : String(p.bpm);
+      return `${
+        i > 0
+          ? `<line x1="${base.waveX0}" y1="${rowTop}" x2="${w - base.waveX0}" y2="${rowTop}"
+        stroke="${theme.grid}" stroke-width="0.5"/>`
+          : ""
+      }
+  <path d="${wavePath(p, lay, options.wave)}" fill="none" stroke="${color}"
+        stroke-width="1.5" stroke-linecap="round" ${glowFilter}/>
+  <text x="${waveX1 + 16}" y="${lay.baseline - 5}" font-family="${MONO}" font-size="11.5"
+        font-weight="600" fill="${theme.text}">@${esc(p.login)}</text>
+  <text x="${waveX1 + 16}" y="${lay.baseline + 9}" font-family="${MONO}" font-size="9.5"
+        fill="${color}">${bpm} bpm · ${esc(label)}</text>`;
+    })
+    .join("\n");
+
+  const title = `ward — ${sorted.map((p) => p.login).join(", ")}`;
+  return applyWidth(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"
+     viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}">
+  <defs>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="${w - 1}" height="${h - 1}"
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${base.waveX0}" y="${base.headerY}" font-family="${MONO}" font-size="13"
+        font-weight="600" fill="${theme.text}">${esc(options.label ?? `ward · ${sorted.length} hearts`)}</text>`
+  }
+  ${
+    options.hide.has("pill")
+      ? ""
+      : `<text x="${w - base.waveX0}" y="${base.headerY}" text-anchor="end"
+        font-family="${MONO}" font-size="10" letter-spacing="1"
+        fill="${alive === sorted.length ? theme.trace : theme.warn}">${alive}/${sorted.length} ALIVE</text>`
+  }
+  ${rows}
+  ${scanlineOverlay(base, options)}
+  ${fontOverride(options)}
+</svg>`,
+    options.width,
+  );
+}
+
 export function renderErrorCard(
   login: string,
   theme: Theme,

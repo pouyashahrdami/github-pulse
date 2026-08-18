@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { renderCard, renderDuetCard } from "@/lib/card";
+import { renderCard, renderDuetCard, renderWardCard } from "@/lib/card";
 import { parseOptions } from "@/lib/options";
 import { resolveTheme, THEMES } from "@/lib/themes";
 import type { Pulse } from "@/lib/pulse";
@@ -86,6 +86,37 @@ describe("renderDuetCard", () => {
     const svg = renderDuetCard(a, b, THEMES.aura, parseOptions(new URLSearchParams("")));
     expect(svg).toContain("SYNC 60%");
     expect((svg.match(/<path/g) ?? []).length).toBe(2);
+  });
+});
+
+describe("renderWardCard", () => {
+  const ward = (...pulses: Pulse[]) =>
+    renderWardCard(pulses, THEMES.aura, parseOptions(new URLSearchParams("")));
+
+  it("sorts patients into triage order (bpm desc)", () => {
+    const svg = ward(
+      pulseWith({ login: "slow", bpm: 40 }),
+      pulseWith({ login: "fast", bpm: 160 }),
+      pulseWith({ login: "mid", bpm: 90 }),
+    );
+    const order = [...svg.matchAll(/@(\w+)</g)].map((m) => m[1]);
+    expect(order).toEqual(["fast", "mid", "slow"]);
+    expect(svg).toContain("3/3 ALIVE");
+    expect(svg).toContain("ward · 3 hearts");
+  });
+
+  it("counts flatlines out of the alive tally and grows with members", () => {
+    const svg = ward(
+      pulseWith({ login: "alive1" }),
+      pulseWith({ login: "gone", state: "flatline", bpm: 0 }),
+    );
+    expect(svg).toContain("1/2 ALIVE");
+    expect(svg).toContain("— bpm · FLATLINE");
+    const two = Number(svg.match(/height="(\d+)"/)?.[1]);
+    const three = Number(
+      ward(pulseWith(), pulseWith(), pulseWith()).match(/height="(\d+)"/)?.[1],
+    );
+    expect(three).toBeGreaterThan(two);
   });
 });
 

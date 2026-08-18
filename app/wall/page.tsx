@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 function cardSrc(b: RecentBeat): string {
+  if (b.kind === "ward") return `/ward/${b.subject}`;
   return b.kind === "vs"
     ? `/vs/${b.subject}?size=card`
     : `/${b.kind}/${b.subject}?size=compact`;
@@ -48,8 +49,11 @@ export default async function Wall() {
                 src={cardSrc(b)}
                 alt={`${b.subject} — live pulse card`}
                 loading="lazy"
-                width={b.kind === "vs" ? 520 : 340}
-                height={b.kind === "vs" ? 190 : 130}
+                {...(b.kind === "ward"
+                  ? {} // ward height varies with member count — let the SVG size itself
+                  : b.kind === "vs"
+                    ? { width: 520, height: 190 }
+                    : { width: 340, height: 130 })}
               />
             </a>
           ))}

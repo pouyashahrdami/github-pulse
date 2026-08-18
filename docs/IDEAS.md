@@ -47,7 +47,8 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       subject), `/api/stats` JSON, "N hearts beating this week" hero stat
       (hidden until ≥5; requires Redis — instance memory can't aggregate
       across route lambdas)
-- [ ] Ward card — `/ward/a,b,c` team monitor, duet generalized; sorted by BPM
+- [x] Ward card — `/ward/a,b,c` team monitor (2–6 patients), triage-sorted by
+      bpm, state-colored traces, `N/M ALIVE` pill; joins the wall as `ward:`
 - [x] `npx github-pulse-cli <user>` — ASCII EKG in the terminal via the JSON
       API (`packages/cli`, zero deps; plain `github-pulse` was taken on npm).
       Publish with `pnpm -C packages/cli publish` when ready

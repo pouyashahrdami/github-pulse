@@ -196,6 +196,19 @@ Two hearts, one monitor — you and a friend (or rival) on the same trace, with 
 
 Trace A gets the theme color, trace B the accent. `size=card` and `size=wide`.
 
+## Ward cards
+
+Your whole team in one ICU — 2 to 6 patients stacked on a single monitor,
+sorted into triage order (highest bpm first), each trace colored by its
+owner's life state:
+
+```md
+![ward](https://github-pulse-topaz.vercel.app/ward/alice,bob,carol?theme=phosphor)
+```
+
+The pill counts survivors (`4/5 ALIVE`). Perfect for org READMEs — nothing
+motivates a team like a coworker visibly flatlining.
+
 ## Shields badge
 
 Want just a tiny badge instead of a full card? The pulse speaks the

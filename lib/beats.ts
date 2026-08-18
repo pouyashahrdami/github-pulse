@@ -12,7 +12,7 @@ import { redis, redisConfigured } from "./redis";
  * Best-effort throughout — stats must never touch a render.
  */
 
-export type BeatKind = "u" | "r" | "o" | "vs";
+export type BeatKind = "u" | "r" | "o" | "vs" | "ward";
 
 const KEY = "pulse:hearts";
 const WEEK_SECONDS = 7 * 86_400;
@@ -52,7 +52,11 @@ export async function recentBeats(limit: number): Promise<RecentBeat[]> {
       const i = m.indexOf(":");
       const kind = m.slice(0, i);
       const subject = m.slice(i + 1);
-      return (kind === "u" || kind === "r" || kind === "o" || kind === "vs") &&
+      return (kind === "u" ||
+        kind === "r" ||
+        kind === "o" ||
+        kind === "vs" ||
+        kind === "ward") &&
         subject
         ? [{ kind, subject }]
         : [];
