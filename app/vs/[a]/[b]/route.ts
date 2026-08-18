@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
+import { recordBeat } from "@/lib/beats";
 import { fetchGithubData, UserNotFoundError } from "@/lib/github";
 import { computePulse } from "@/lib/pulse";
 import { renderDuetCard, renderErrorCard } from "@/lib/card";
@@ -39,6 +40,7 @@ export async function GET(
     const now = parseNow(search);
     const days = parseDays(search);
     const [da, db] = await Promise.all([fetchGithubData(a), fetchGithubData(b)]);
+    after(() => recordBeat("vs", `${a}/${b}`));
     const card = renderDuetCard(
       computePulse(da, now, days),
       computePulse(db, now, days),

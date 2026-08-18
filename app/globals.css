@@ -79,6 +79,35 @@ h1 .beat {
   margin: 0 auto;
 }
 
+.hearts {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-top: 14px;
+}
+
+.hearts-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hearts-dot {
+    animation: hearts-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes hearts-pulse {
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
 .builder {
   display: flex;
   flex-direction: column;

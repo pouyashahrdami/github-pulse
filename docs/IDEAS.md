@@ -41,8 +41,10 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       (Next's data cache never covered the GraphQL POSTs), with stale-on-error
       fallback: rate-limit spikes serve slightly-old vitals, not an error card
 - [ ] Wall of Hearts — a gallery page of real users' live cards (opt-in)
-- [ ] Embed counter — per-username request counter in Upstash; "X hearts
-      beating" live stat on the homepage
+- [x] Embed counter — `pulse:hearts` sorted set in Upstash (last-seen per
+      subject), `/api/stats` JSON, "N hearts beating this week" hero stat
+      (hidden until ≥5; requires Redis — instance memory can't aggregate
+      across route lambdas)
 - [ ] Ward card — `/ward/a,b,c` team monitor, duet generalized; sorted by BPM
 - [ ] `npx github-pulse <user>` — ASCII EKG in the terminal via the JSON API
 - [ ] Annual cardiology report — Wrapped-style year card (ship late December)

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
+import { recordBeat } from "@/lib/beats";
 import { fetchGithubData, UserNotFoundError } from "@/lib/github";
 import { computePulse, forceState } from "@/lib/pulse";
 import { renderCard, renderErrorCard } from "@/lib/card";
@@ -39,6 +40,7 @@ export async function GET(
 
   try {
     const data = await fetchGithubData(username);
+    after(() => recordBeat("u", username));
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);

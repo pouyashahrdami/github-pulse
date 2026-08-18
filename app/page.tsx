@@ -1,4 +1,5 @@
 import Builder from "@/components/Builder";
+import HeartsCounter from "@/components/HeartsCounter";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
           you ship, dims when you rest, flatlines when you vanish — and revives
           when you come back.
         </p>
+        <HeartsCounter />
       </div>
 
       <Builder />
