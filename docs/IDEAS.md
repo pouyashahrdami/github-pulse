@@ -36,5 +36,5 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
 
 ## Plumbing
-- [ ] Per-card ETag so camo revalidates cheaply
+- [x] Per-card ETag + If-None-Match 304s on all four SVG routes
 - [ ] `?v=` cache-buster documented for instant refreshes

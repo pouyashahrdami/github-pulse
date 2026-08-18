@@ -4,6 +4,7 @@ import { computePulse, forceState } from "@/lib/pulse";
 import { renderCard, renderErrorCard } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
 import { touchRecord } from "@/lib/record";
+import { cachedSvg } from "@/lib/http";
 import {
   parseOptions,
   parseState,
@@ -48,10 +49,7 @@ export async function GET(
         console.error(`record store failed for ${username}:`, err);
       }
     }
-    return new NextResponse(renderCard(pulse, theme, options), {
-      status: 200,
-      headers: SVG_HEADERS,
-    });
+    return cachedSvg(req, renderCard(pulse, theme, options), SVG_HEADERS);
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return new NextResponse(renderErrorCard(username, theme, options), {

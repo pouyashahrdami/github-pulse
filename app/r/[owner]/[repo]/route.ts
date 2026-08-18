@@ -3,6 +3,7 @@ import { fetchRepoData, UserNotFoundError } from "@/lib/github";
 import { computePulse, forceState } from "@/lib/pulse";
 import { renderCard, renderErrorCard } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
+import { cachedSvg } from "@/lib/http";
 import {
   parseOptions,
   parseState,
@@ -43,10 +44,7 @@ export async function GET(
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);
-    return new NextResponse(renderCard(pulse, theme, options), {
-      status: 200,
-      headers: SVG_HEADERS,
-    });
+    return cachedSvg(req, renderCard(pulse, theme, options), SVG_HEADERS);
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return new NextResponse(renderErrorCard(slug, theme, options), {

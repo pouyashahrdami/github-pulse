@@ -3,6 +3,7 @@ import { fetchGithubData, UserNotFoundError } from "@/lib/github";
 import { computePulse } from "@/lib/pulse";
 import { renderDuetCard, renderErrorCard } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
+import { cachedSvg } from "@/lib/http";
 import {
   parseOptions,
   parseDays,
@@ -44,7 +45,7 @@ export async function GET(
       theme,
       options,
     );
-    return new NextResponse(card, { status: 200, headers: SVG_HEADERS });
+    return cachedSvg(req, card, SVG_HEADERS);
   } catch (err) {
     if (err instanceof UserNotFoundError) {
       return new NextResponse(renderErrorCard(slug, theme, options), {
