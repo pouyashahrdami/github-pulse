@@ -54,8 +54,10 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       Publish with `pnpm -C packages/cli publish` when ready
 - [ ] Annual cardiology report — Wrapped-style year card (ship late December)
 - [ ] Defibrillator — "send a jolt" nudge button on flatlined share pages
-- [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
-      ("dead man's switch for your GitHub")
+- [x] Webhook pings — dead man's switch: `POST /api/watch {login,url}`,
+      daily `/api/watch/sweep` cron (vercel.json) fires Discord/Slack/generic
+      webhooks on flatline/revive transitions; host allow-list on the shared
+      instance, `PULSE_WEBHOOK_ALLOW_ANY=1` for self-hosters
 
 ## Plumbing
 - [x] Per-card ETag + If-None-Match 304s on all four SVG routes

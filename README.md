@@ -220,6 +220,25 @@ Want just a tiny badge instead of a full card? The pulse speaks the
 
 Renders as `pulse | 180 bpm · radiant`, colored by life state.
 
+## Dead man's switch
+
+Watch anyone; get pinged when they flatline — or rise again. Point it at a
+Discord or Slack webhook:
+
+```bash
+curl -X POST https://github-pulse-topaz.vercel.app/api/watch \
+  -H 'Content-Type: application/json' \
+  -d '{"login":"YOUR_FRIEND","url":"https://discord.com/api/webhooks/…"}'
+```
+
+A daily sweep compares every watched pulse against yesterday's and fires on
+the two transitions that matter: `🖤 flatlined` and `⚡ revived`. Up to 3
+watchers per login; `DELETE` the same body to unsubscribe; watcher URLs are
+never exposed. Self-hosters: set `CRON_SECRET` to lock the sweep, and
+`PULSE_WEBHOOK_ALLOW_ANY=1` to allow webhook targets beyond Discord/Slack
+(the shared instance restricts hosts so it can't be used to POST at
+arbitrary servers).
+
 ## Share pages
 
 Cards are SVG, which chat apps and social sites won't unfurl — so every user
