@@ -13,7 +13,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 ## Do more
 - [ ] Repo cards — `/r/<owner>/<repo>` pulse from commit activity, not user calendar
 - [ ] Duet card — two usernames, two traces on one monitor, "sync %" stat
-- [ ] `goal=<n>` — daily contribution target line on the wave + hit-rate stat
+- [x] `goal=<n>` — daily contribution target line on the wave + hit-rate stat
 - [ ] Medical record memory — per-user KV history: flatlines survived, revivals,
       longest streak ever; rendered as a deadpan cardiology report (needs storage)
 - [ ] Pacemaker detector — flag suspiciously regular cron-bot commit rhythms

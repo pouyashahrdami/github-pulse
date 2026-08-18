@@ -103,6 +103,10 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     wave,
     width,
     stateLabels,
+    goal:
+      search.get("goal") !== null
+        ? clampInt(search.get("goal"), 1, 999, 0) || undefined
+        : undefined,
   };
 }
 

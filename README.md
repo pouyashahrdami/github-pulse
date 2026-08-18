@@ -138,6 +138,7 @@ And shape/behavior params:
 | `days` | beat window `7`–`30` | `14` |
 | `label` | custom header text (max 32 chars) | `@username` |
 | `labels` | rename state pills: `radiant:ON FIRE,flatline:RIP` (16 chars each) | medical |
+| `goal` | daily contribution target `1`–`999`: dashed line on the wave + hit-rate | — |
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |

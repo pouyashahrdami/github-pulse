@@ -21,6 +21,8 @@ export interface Pulse {
   bloodType: string;
   /** last 14 days, normalized 0..1 (0 = no commits that day) */
   beats: number[];
+  /** same window as beats, raw contribution counts */
+  dayCounts: number[];
   totalContributions: number;
   stars: number;
   prs: number;
@@ -200,6 +202,7 @@ export function computePulse(
     lastBeatDate: lastActive?.date ?? null,
     bloodType,
     beats,
+    dayCounts: window.map((d) => d.count),
     totalContributions: data.totalContributions,
     stars: data.stars,
     prs: data.prs,

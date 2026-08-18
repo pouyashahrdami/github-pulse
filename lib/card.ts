@@ -29,6 +29,8 @@ export interface CardOptions {
   stateLabels?: Partial<Record<PulseState, string>>;
   /** CRT scanline overlay */
   scanlines: boolean;
+  /** daily contribution target: dashed line + hit-rate (card/wide/compact) */
+  goal?: number;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -492,6 +494,27 @@ function renderMonitor(
 </svg>`;
 }
 
+/** ?goal=N: dashed target line at N contributions/day, plus hit-rate tag. */
+function goalMarkup(
+  pulse: Pulse,
+  lay: Layout,
+  theme: Theme,
+  goal: number,
+): string {
+  const counts = pulse.dayCounts;
+  if (counts.length === 0) return "";
+  const max = Math.max(1, ...counts);
+  // Mirrors the ECG amplitude formula (6 + amp * ampMax); clamps just above
+  // the tallest beat when the goal exceeds every day in the window.
+  const amp = Math.min(lay.ampMax + 10, 6 + (goal / max) * lay.ampMax);
+  const y = round(lay.baseline - amp);
+  const hits = counts.filter((c) => c >= goal).length;
+  return `<line x1="${lay.waveX0}" y1="${y}" x2="${lay.waveX1}" y2="${y}"
+        stroke="${theme.accent}" stroke-width="1" stroke-dasharray="4 4" opacity="0.45"/>
+  <text x="${lay.waveX1}" y="${y - 4}" text-anchor="end" font-family="${MONO}"
+        font-size="8.5" fill="${theme.accent}" opacity="0.85">goal ${goal} · ${hits}/${counts.length}d</text>`;
+}
+
 /** ?scanlines=1: CRT horizontal-line overlay drawn above everything else. */
 function scanlineOverlay(lay: Layout, options: CardOptions): string {
   if (!options.scanlines) return "";
@@ -669,6 +692,7 @@ function renderCardAtSize(
   }
 
   ${pill}
+  ${options.goal ? goalMarkup(pulse, lay, theme, options.goal) : ""}
   ${trace}
   ${revivedStamp}
   ${bpmCluster}
