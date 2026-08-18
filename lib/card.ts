@@ -3,8 +3,21 @@ import type { Theme } from "./themes";
 
 export type CardSize = "card" | "wide" | "compact" | "badge" | "monitor";
 
-export type HideKey = "pill" | "bpm" | "stats" | "status" | "header";
-export const HIDE_KEYS: HideKey[] = ["pill", "bpm", "stats", "status", "header"];
+export type HideKey =
+  | "pill"
+  | "bpm"
+  | "stats"
+  | "status"
+  | "header"
+  | "pacemaker";
+export const HIDE_KEYS: HideKey[] = [
+  "pill",
+  "bpm",
+  "stats",
+  "status",
+  "header",
+  "pacemaker",
+];
 
 export type WaveStyle = "ecg" | "smooth" | "bars";
 export const WAVE_STYLES: WaveStyle[] = ["ecg", "smooth", "bars"];
@@ -585,6 +598,7 @@ function renderCardAtSize(
     pulse.bloodType,
     `${pulse.totalContributions} beats/yr`,
     pulse.stars > 0 ? `★ ${pulse.stars}` : null,
+    pulse.pacemaker && !options.hide.has("pacemaker") ? "⚙ paced" : null,
   ]
     .filter(Boolean)
     .join("  ·  ");

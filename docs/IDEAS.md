@@ -16,7 +16,8 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] `goal=<n>` — daily contribution target line on the wave + hit-rate stat
 - [ ] Medical record memory — per-user KV history: flatlines survived, revivals,
       longest streak ever; rendered as a deadpan cardiology report (needs storage)
-- [ ] Pacemaker detector — flag suspiciously regular cron-bot commit rhythms
+- [x] Pacemaker detector — "⚙ paced" stat when the rhythm is machine-regular
+      (≥90% of the window active, one dominant count ≤4). Opt out: `hide=pacemaker`
 - [ ] Share page — `/share/<user>` HTML page with og:image for link unfurls
 
 ## Plumbing

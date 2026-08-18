@@ -30,6 +30,8 @@ export interface Pulse {
   reviews: number;
   /** deterministic per-user fingerprint seed, 0..1 values */
   fingerprint: { jitter: number; tWave: number; pWave: number };
+  /** true when the rhythm looks machine-regular (cron bot, not a heart) */
+  pacemaker: boolean;
   partial: boolean;
 }
 
@@ -126,6 +128,21 @@ export function forceState(pulse: Pulse, state: PulseState): Pulse {
   return forced;
 }
 
+/**
+ * A real heart has variance. A cron bot commits the same small number of times
+ * nearly every single day — flag that rhythm as machine-paced. Conservative on
+ * purpose: needs a near-full window of active days AND one dominant small count.
+ */
+export function detectPacemaker(counts: number[]): boolean {
+  if (counts.length < 10) return false;
+  const active = counts.filter((c) => c > 0);
+  if (active.length < 10 || active.length / counts.length < 0.9) return false;
+  const freq = new Map<number, number>();
+  for (const c of active) freq.set(c, (freq.get(c) ?? 0) + 1);
+  const [mode, modeCount] = [...freq.entries()].sort((a, b) => b[1] - a[1])[0];
+  return mode <= 4 && modeCount / active.length >= 0.85;
+}
+
 export function computePulse(
   data: GithubData,
   now = new Date(),
@@ -209,6 +226,7 @@ export function computePulse(
     issues: data.issues,
     reviews: data.reviews,
     fingerprint,
+    pacemaker: detectPacemaker(window.map((d) => d.count)),
     partial: data.partial,
   };
 }
