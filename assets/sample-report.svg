@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="330"
+     viewBox="0 0 830 330" role="img" aria-label="cardiology report — @nova, 1373 beats in 365 days">
+  <defs>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="829" height="329"
+        rx="12" fill="#F6EFE3" stroke="rgba(196,69,47,0.14)"/>
+  <text x="26" y="34" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="13" letter-spacing="3"
+        font-weight="600" fill="#2A2118">CARDIOLOGY REPORT</text>
+  <text x="804" y="34" text-anchor="end" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10"
+        fill="#8A7B67">printed 2026-08-18</text>
+  <text x="26" y="60" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="11" fill="#8A7B67"
+        >patient <tspan fill="#2A2118" font-weight="600">@nova</tspan> · blood type <tspan fill="#2A2118">TS+</tspan> · status <tspan fill="#C4452F" font-weight="600">STEADY</tspan></text>
+  <line x1="26" y1="168" x2="804" y2="168"
+        stroke="rgba(196,69,47,0.14)" stroke-width="0.5"/>
+  <polyline points="26,161.4 28.1,168 30.3,165.4 32.4,162.7 34.5,168 36.7,168 38.8,164 41,168 43.1,162.7 45.2,160.1 47.4,158.8 49.5,160.1 51.6,168 53.8,158.8 55.9,164 58.1,164 60.2,168 62.3,166.7 64.5,154.8 66.6,168 68.7,168 70.9,161.4 73,166.7 75.2,158.8 77.3,157.4 79.4,162.7 81.6,168 83.7,168 85.8,164 88,162.7 90.1,157.4 92.3,157.4 94.4,168 96.5,153.5 98.7,153.5 100.8,165.4 102.9,162.7 105.1,158.8 107.2,168 109.4,157.4 111.5,168 113.6,157.4 115.8,160.1 117.9,168 120,153.5 122.2,153.5 124.3,168 126.5,168 128.6,158.8 130.7,156.1 132.9,161.4 135,168 137.1,153.5 139.3,168 141.4,168 143.6,162.7 145.7,157.4 147.8,156.1 150,168 152.1,160.1 154.2,168 156.4,153.5 158.5,157.4 160.7,164 162.8,165.4 164.9,162.7 167.1,158.8 169.2,168 171.3,156.1 173.5,165.4 175.6,168 177.8,166.7 179.9,158.8 182,168 184.2,168 186.3,158.8 188.4,164 190.6,157.4 192.7,162.7 194.9,162.7 197,164 199.1,168 201.3,168 203.4,168 205.5,165.4 207.7,162.7 209.8,161.4 212,157.4 214.1,168 216.2,154.8 218.4,160.1 220.5,158.8 222.6,164 224.8,162.7 226.9,157.4 229,165.4 231.2,168 233.3,165.4 235.5,166.7 237.6,164 239.7,161.4 241.9,153.5 244,168 246.1,168 248.3,154.8 250.4,154.8 252.6,168 254.7,165.4 256.8,156.1 259,161.4 261.1,168 263.2,168 265.4,154.8 267.5,168 269.7,166.7 271.8,165.4 273.9,168 276.1,168 278.2,153.5 280.3,168 282.5,154.8 284.6,168 286.8,162.7 288.9,168 291,168 293.2,162.7 295.3,168 297.4,162.7 299.6,168 301.7,161.4 303.9,166.7 306,168 308.1,153.5 310.3,168 312.4,157.4 314.5,162.7 316.7,166.7 318.8,161.4 321,168 323.1,168 325.2,168 327.4,168 329.5,168 331.6,168 333.8,168 335.9,168 338.1,168 340.2,168 342.3,168 344.5,168 346.6,168 348.7,168 350.9,168 353,168 355.2,168 357.3,168 359.4,157.4 361.6,168 363.7,168 365.8,157.4 368,161.4 370.1,160.1 372.3,162.7 374.4,165.4 376.5,164 378.7,168 380.8,168 382.9,161.4 385.1,166.7 387.2,153.5 389.4,154.8 391.5,160.1 393.6,154.8 395.8,161.4 397.9,157.4 400,165.4 402.2,168 404.3,157.4 406.5,168 408.6,168 410.7,168 412.9,165.4 415,165.4 417.1,164 419.3,157.4 421.4,153.5 423.5,161.4 425.7,162.7 427.8,168 430,164 432.1,168 434.2,168 436.4,160.1 438.5,168 440.6,168 442.8,158.8 444.9,168 447.1,160.1 449.2,158.8 451.3,158.8 453.5,168 455.6,168 457.7,168 459.9,162.7 462,157.4 464.2,168 466.3,154.8 468.4,106 470.6,154.8 472.7,162.7 474.8,154.8 477,154.8 479.1,165.4 481.3,153.5 483.4,168 485.5,158.8 487.7,156.1 489.8,164 491.9,168 494.1,168 496.2,160.1 498.4,160.1 500.5,168 502.6,161.4 504.8,158.8 506.9,160.1 509,165.4 511.2,165.4 513.3,168 515.5,168 517.6,168 519.7,166.7 521.9,164 524,164 526.1,168 528.3,168 530.4,168 532.6,168 534.7,165.4 536.8,164 539,162.7 541.1,157.4 543.2,168 545.4,168 547.5,165.4 549.7,168 551.8,153.5 553.9,166.7 556.1,162.7 558.2,164 560.3,168 562.5,154.8 564.6,157.4 566.8,156.1 568.9,168 571,164 573.2,168 575.3,168 577.4,166.7 579.6,161.4 581.7,168 583.9,168 586,153.5 588.1,165.4 590.3,168 592.4,164 594.5,164 596.7,157.4 598.8,158.8 601,153.5 603.1,168 605.2,168 607.4,153.5 609.5,162.7 611.6,162.7 613.8,156.1 615.9,154.8 618,168 620.2,157.4 622.3,164 624.5,168 626.6,165.4 628.7,168 630.9,160.1 633,168 635.1,168 637.3,157.4 639.4,153.5 641.6,168 643.7,164 645.8,156.1 648,168 650.1,168 652.2,160.1 654.4,154.8 656.5,161.4 658.7,160.1 660.8,157.4 662.9,154.8 665.1,168 667.2,156.1 669.3,158.8 671.5,160.1 673.6,160.1 675.8,158.8 677.9,157.4 680,157.4 682.2,161.4 684.3,153.5 686.4,158.8 688.6,168 690.7,166.7 692.9,168 695,168 697.1,160.1 699.3,165.4 701.4,158.8 703.5,168 705.7,168 707.8,168 710,153.5 712.1,160.1 714.2,157.4 716.4,158.8 718.5,168 720.6,153.5 722.8,168 724.9,168 727.1,168 729.2,168 731.3,168 733.5,166.7 735.6,168 737.7,160.1 739.9,168 742,156.1 744.2,154.8 746.3,153.5 748.4,164 750.6,161.4 752.7,168 754.8,165.4 757,158.8 759.1,158.8 761.3,168 763.4,156.1 765.5,166.7 767.7,168 769.8,168 771.9,158.8 774.1,168 776.2,161.4 778.4,168 780.5,162.7 782.6,168 784.8,168 786.9,168 789,158.8 791.2,157.4 793.3,168 795.5,158.8 797.6,168 799.7,168 801.9,165.4 804,168"
+        fill="none" stroke="#C4452F" stroke-width="1.2"
+        stroke-linejoin="round" filter="url(#gp-glow)"/>
+  <text x="26" y="186" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">EXAMINATION PERIOD · LAST 365 DAYS</text>
+  <text x="26" y="226" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">TOTAL BEATS</text>
+  <text x="26" y="246" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#2A2118">1,373</text>
+  <text x="285.3" y="226" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">ACTIVE DAYS</text>
+  <text x="285.3" y="246" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#2A2118">224/365 (61%)</text>
+  <text x="544.7" y="226" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">LONGEST STREAK</text>
+  <text x="544.7" y="246" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#2A2118">10d</text>
+  <text x="26" y="278" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">LONGEST FLATLINE</text>
+  <text x="26" y="298" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#C4452F">18d</text>
+  <text x="285.3" y="278" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">BUSIEST DAY</text>
+  <text x="285.3" y="298" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#2A2118">2026-03-14 · 47</text>
+  <text x="544.7" y="278" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="8.5"
+        letter-spacing="1.5" fill="#8A7B67">WEEKEND LOAD</text>
+  <text x="544.7" y="298" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="15"
+        font-weight="600" fill="#2A2118">18%</text>
+  <text x="26" y="314" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="9.5"
+        fill="#8A7B67">github-pulse</text>
+  
+  
+</svg>

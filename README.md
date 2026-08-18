@@ -214,6 +214,8 @@ owner's life state:
 The pill counts survivors (`4/5 ALIVE`). Perfect for org READMEs — nothing
 motivates a team like a coworker visibly flatlining.
 
+<img src="./assets/sample-ward.svg" width="830" height="294" alt="ward card, phosphor theme — one patient flatlined">
+
 ## Shields badge
 
 Want just a tiny badge instead of a full card? The pulse speaks the
@@ -237,6 +239,8 @@ busiest day, weekend load:
 
 All themes and layout params apply — `theme=paper` makes it look like the
 real thing. Post yours at the end of December.
+
+<img src="./assets/sample-report.svg" width="830" height="330" alt="cardiology report, paper theme — a year of vitals">
 
 ## Dead man's switch
 
