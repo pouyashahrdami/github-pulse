@@ -19,14 +19,19 @@ const SIZES: { name: CardSize; w: number; h: number }[] = [
   { name: "badge", w: 260, h: 70 },
 ];
 
-type Mode = "user" | "repo" | "org" | "duet";
+type Mode = "user" | "repo" | "org" | "duet" | "ward" | "report";
 
 const MODES: Record<Mode, { label: string; placeholder: string; prefix: string }> = {
   user: { label: "user", placeholder: "username", prefix: "github.com/" },
   repo: { label: "repo", placeholder: "owner/repo", prefix: "github.com/" },
   org: { label: "org", placeholder: "organization", prefix: "github.com/" },
   duet: { label: "duet", placeholder: "you,friend", prefix: "vs · " },
+  ward: { label: "ward", placeholder: "alice,bob,carol", prefix: "icu · " },
+  report: { label: "report", placeholder: "username", prefix: "checkup · " },
 };
+
+/** Card types with one fixed 830-wide layout — the size picker doesn't apply. */
+const FIXED_LAYOUT: ReadonlySet<Mode> = new Set(["ward", "report"]);
 
 /** Build the card path for a mode from its raw input, or "" when incomplete. */
 function cardPath(mode: Mode, raw: string): string {
@@ -45,6 +50,17 @@ function cardPath(mode: Mode, raw: string): string {
       const [a, b] = clean.split(/[,/]/).map((s) => s.trim().replace(/^@/, ""));
       return a && b ? `/vs/${a}/${b}` : "";
     }
+    case "ward": {
+      const members = clean
+        .split(",")
+        .map((s) => s.trim().replace(/^@/, ""))
+        .filter(Boolean);
+      return members.length >= 2 && members.length <= 6
+        ? `/ward/${members.join(",")}`
+        : "";
+    }
+    case "report":
+      return `/report/${clean}`;
   }
 }
 
@@ -67,8 +83,8 @@ export default function Builder() {
   const query = useMemo(() => {
     const params = new URLSearchParams();
     if (theme !== DEFAULT_THEME) params.set("theme", theme);
-    if (size !== "card") params.set("size", size);
-    if (wave !== "ecg") params.set("wave", wave);
+    if (size !== "card" && !FIXED_LAYOUT.has(mode)) params.set("size", size);
+    if (wave !== "ecg" && mode !== "report") params.set("wave", wave);
     for (const [k, v] of Object.entries(custom)) {
       if (v) params.set(k, v.replace(/^#/, ""));
     }
@@ -80,7 +96,7 @@ export default function Builder() {
     if (lang !== "en") params.set("lang", lang);
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [theme, size, wave, custom, scanlines, flip, record, full, goal, lang]);
+  }, [mode, theme, size, wave, custom, scanlines, flip, record, full, goal, lang]);
 
   const base = cardPath(mode, username);
   const path = base ? `${base}${query}` : "";
@@ -166,9 +182,13 @@ export default function Builder() {
             key={path}
             src={path}
             alt={`GitHub Pulse card for ${username}`}
-            width={SIZES.find((s) => s.name === size)?.w}
-            height={SIZES.find((s) => s.name === size)?.h}
-            style={full ? { width: "100%", height: "auto" } : undefined}
+            width={FIXED_LAYOUT.has(mode) ? 830 : SIZES.find((s) => s.name === size)?.w}
+            height={FIXED_LAYOUT.has(mode) ? undefined : SIZES.find((s) => s.name === size)?.h}
+            style={
+              full || FIXED_LAYOUT.has(mode)
+                ? { width: full ? "100%" : undefined, height: "auto" }
+                : undefined
+            }
           />
         ) : (
           <span className="hint">your card appears here — try your username</span>
@@ -206,39 +226,47 @@ export default function Builder() {
           ))}
         </div>
 
-        <span className="control-label">Shape</span>
-        <div className="chips">
-          {SIZES.map((s) => (
-            <button
-              key={s.name}
-              type="button"
-              className={`chip${size === s.name ? " active" : ""}`}
-              onClick={() => setSize(s.name)}
-            >
-              {s.name} · {s.w}×{s.h}
-            </button>
-          ))}
-        </div>
+        {!FIXED_LAYOUT.has(mode) && (
+          <>
+            <span className="control-label">Shape</span>
+            <div className="chips">
+              {SIZES.map((s) => (
+                <button
+                  key={s.name}
+                  type="button"
+                  className={`chip${size === s.name ? " active" : ""}`}
+                  onClick={() => setSize(s.name)}
+                >
+                  {s.name} · {s.w}×{s.h}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
-        <span className="control-label">Wave</span>
-        <div className="chips">
-          {(
-            [
-              ["ecg", "ecg · heartbeat"],
-              ["smooth", "smooth · aura wave"],
-              ["bars", "bars · equalizer"],
-            ] as const
-          ).map(([w, label]) => (
-            <button
-              key={w}
-              type="button"
-              className={`chip${wave === w ? " active" : ""}`}
-              onClick={() => setWave(w)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        {mode !== "report" && (
+          <>
+            <span className="control-label">Wave</span>
+            <div className="chips">
+              {(
+                [
+                  ["ecg", "ecg · heartbeat"],
+                  ["smooth", "smooth · aura wave"],
+                  ["bars", "bars · equalizer"],
+                ] as const
+              ).map(([w, label]) => (
+                <button
+                  key={w}
+                  type="button"
+                  className={`chip${wave === w ? " active" : ""}`}
+                  onClick={() => setWave(w)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
         <span className="control-label">Extras</span>
         <div className="chips">
