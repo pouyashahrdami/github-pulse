@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Defibrillator from "@/components/Defibrillator";
 import { fetchGithubData } from "@/lib/github";
-import { computePulse } from "@/lib/pulse";
+import { computePulse, forceState, type Pulse } from "@/lib/pulse";
+import { parseState } from "@/lib/options";
 
 interface Props {
   params: Promise<{ username: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -24,15 +27,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function SharePage({ params }: Props) {
+export default async function SharePage({ params, searchParams }: Props) {
   const { username } = await params;
   const embed = `[![GitHub Pulse](https://github-pulse-topaz.vercel.app/u/${username})](https://github-pulse-topaz.vercel.app)`;
+  const sp = await searchParams;
+  const stateRaw = typeof sp.state === "string" ? sp.state : "";
+  const previewState = parseState(new URLSearchParams({ state: stateRaw }));
+  let pulse: Pulse | null = null;
+  try {
+    pulse = computePulse(await fetchGithubData(username));
+    if (previewState) pulse = forceState(pulse, previewState);
+  } catch {
+    // unknown user or upstream hiccup — page still renders, card shows the error
+  }
+  const needsJolt =
+    pulse && (pulse.state === "flatline" || pulse.state === "critical");
   return (
     <main className="share">
       <p className="eyebrow">GITHUB PULSE</p>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`/u/${username}`}
+        src={`/u/${username}${previewState ? `?state=${previewState}` : ""}`}
         alt={`GitHub Pulse card for @${username}`}
         width={520}
         height={190}
@@ -42,6 +57,14 @@ export default async function SharePage({ params }: Props) {
         GitHub activity. It decays when they rest and flatlines when they
         vanish.
       </p>
+      {needsJolt && pulse && (
+        <Defibrillator
+          login={username}
+          state={pulse.state as "critical" | "flatline"}
+          daysSinceBeat={pulse.daysSinceBeat}
+          shareUrl={`https://github-pulse-topaz.vercel.app/s/${username}`}
+        />
+      )}
       <pre className="snippet">
         <code>{embed}</code>
       </pre>

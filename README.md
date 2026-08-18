@@ -253,6 +253,11 @@ Drop it in Slack, Discord, or a tweet and it unfurls into a vitals snapshot.
 Every card served also lights up the deploy's **[Wall of Hearts](https://github-pulse-topaz.vercel.app/wall)** —
 a live gallery of the most recently beating cards.
 
+And when someone's share page shows a critical or flatlined heart, it grows a
+**defibrillator**: charge the paddles, yell CLEAR!, and broadcast a prefilled
+code blue to shame them back to shipping. Preview yours before you die:
+`/s/YOU?state=flatline`.
+
 ## JSON API
 
 Everything the card knows, as data — build your own visualizations, bots, or

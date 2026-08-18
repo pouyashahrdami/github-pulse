@@ -53,7 +53,9 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       API (`packages/cli`, zero deps; plain `github-pulse` was taken on npm).
       Publish with `pnpm -C packages/cli publish` when ready
 - [ ] Annual cardiology report — Wrapped-style year card (ship late December)
-- [ ] Defibrillator — "send a jolt" nudge button on flatlined share pages
+- [x] Defibrillator — flatlined/critical share pages grow a paddle-charging
+      button → CLEAR! → prefilled X code-blue post + copy; `/s/<u>?state=`
+      preview override added along the way
 - [x] Webhook pings — dead man's switch: `POST /api/watch {login,url}`,
       daily `/api/watch/sweep` cron (vercel.json) fires Discord/Slack/generic
       webhooks on flatline/revive transitions; host allow-list on the shared
