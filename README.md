@@ -147,6 +147,7 @@ And shape/behavior params:
 | `anim` | `0` renders a fully static card | `1` |
 | `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |
 | `font` | `serif`, `sans`, or any installed family (`font=Courier New`) | mono |
+| `gradient` | custom trace gradient, 2–3 hex stops: `gradient=8B5CF6,2FD4EE,F26DB8` | theme |
 | `speed` | animation speed `0.25`–`3` | `1` |
 | `state` | preview a life state (see above) | live |
 | `wave` | `ecg` heartbeat, `smooth` aura wave, `bars` equalizer | `ecg` |

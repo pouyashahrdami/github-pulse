@@ -211,5 +211,20 @@ export function resolveTheme(params: URLSearchParams, seed = ""): Theme {
   if (text) theme.text = text;
   if (accent) theme.accent = accent;
   if (muted) theme.muted = muted;
+
+  // gradient=hex,hex[,hex] — custom 3-stop trace gradient (2 colors mirror
+  // A,B,A). Applied last so it wins over color='s gradient reset.
+  const gradientRaw = params.get("gradient");
+  if (gradientRaw) {
+    const stops = gradientRaw
+      .split(",")
+      .map((c) => sanitizeColor(c.trim()))
+      .filter((c): c is string => c !== null && c !== "none");
+    if (stops.length === 3) {
+      theme.traceGradient = [stops[0], stops[1], stops[2]];
+    } else if (stops.length === 2) {
+      theme.traceGradient = [stops[0], stops[1], stops[0]];
+    }
+  }
   return theme;
 }

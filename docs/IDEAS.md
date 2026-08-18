@@ -29,7 +29,9 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [x] `flip=1` — mirror the wave right-to-left (RTL READMEs)
 - [x] Seasonal auto-themes — `theme=season` picks by date (halloween → dracula,
       winter → nord, spring → catppuccin, summer → ember, fall → gruvbox)
-- [ ] SVG `<a>` deep links — each stat clickable to the matching GitHub page
+- [ ] ~~SVG `<a>` deep links~~ — dropped: GitHub embeds cards via `<img>`/camo,
+      where SVG anchors are inert; dead weight in the place cards live
+- [x] `gradient=hex,hex[,hex]` — custom trace gradient on any theme
 - [x] Org cards — `/o/<org>` aggregate pulse from org-wide public push events
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
 
