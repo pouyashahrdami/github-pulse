@@ -69,7 +69,8 @@ export default async function SharePage({ params, searchParams }: Props) {
         <code>{embed}</code>
       </pre>
       <p>
-        <a href="/">Take your own pulse →</a>
+        <a href="/">Take your own pulse →</a> ·{" "}
+        <a href="/wall">See the wall of hearts →</a>
       </p>
     </main>
   );
