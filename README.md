@@ -236,6 +236,24 @@ Returns the full vitals object: `state`, `bpm`, `streak`, `bloodType`, `beats`
 (`Access-Control-Allow-Origin: *`), responses cache like the cards. `days=` and
 `tz=` params apply.
 
+## Terminal CLI
+
+The pulse, in your terminal — zero install, zero dependencies:
+
+```bash
+npx github-pulse-cli torvalds
+```
+
+```
+◉ @torvalds · RADIANT · 90 bpm · C+
+▁▂▃▂▅▇█▃▂▆▁▃▅▇ 14d
+streak 34d · 2.4k beats/yr · ★ 190k
+```
+
+Works for repos too (`npx github-pulse-cli owner/repo`), colors by life state,
+respects `NO_COLOR`. `--json` dumps the raw vitals, `--host` points it at your
+own deploy. Source lives in [`packages/cli`](./packages/cli).
+
 ## Light & dark mode
 
 GitHub READMEs support the `<picture>` element, so your pulse can match the

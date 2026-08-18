@@ -48,7 +48,9 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       (hidden until ≥5; requires Redis — instance memory can't aggregate
       across route lambdas)
 - [ ] Ward card — `/ward/a,b,c` team monitor, duet generalized; sorted by BPM
-- [ ] `npx github-pulse <user>` — ASCII EKG in the terminal via the JSON API
+- [x] `npx github-pulse-cli <user>` — ASCII EKG in the terminal via the JSON
+      API (`packages/cli`, zero deps; plain `github-pulse` was taken on npm).
+      Publish with `pnpm -C packages/cli publish` when ready
 - [ ] Annual cardiology report — Wrapped-style year card (ship late December)
 - [ ] Defibrillator — "send a jolt" nudge button on flatlined share pages
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives

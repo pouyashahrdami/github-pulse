@@ -1,0 +1,27 @@
+{
+  "name": "github-pulse-cli",
+  "version": "0.1.0",
+  "description": "ASCII EKG in your terminal — GitHub Pulse vitals for any user or repo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pouyashahrdami/github-pulse.git",
+    "directory": "packages/cli"
+  },
+  "keywords": ["github", "ekg", "heartbeat", "cli", "sparkline", "profile"],
+  "type": "module",
+  "bin": {
+    "github-pulse": "dist/cli.js"
+  },
+  "files": ["dist"],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "prepublishOnly": "tsc -p ."
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}
