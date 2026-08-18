@@ -157,6 +157,17 @@ wide banner and let it stretch:
 ![GitHub Pulse](https://github-pulse-topaz.vercel.app/u/YOUR_USERNAME?size=wide&w=full)
 ```
 
+## Repo cards
+
+Any repository has a heartbeat too — commit activity on the default branch:
+
+```md
+![repo pulse](https://github-pulse-topaz.vercel.app/r/OWNER/REPO?theme=github)
+```
+
+Same params as user cards. Stats map to the repo: ★ stars, open PRs/issues,
+blood type = primary language, beats/yr = commits in the last year.
+
 ## Light & dark mode
 
 GitHub READMEs support the `<picture>` element, so your pulse can match the

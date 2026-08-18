@@ -12,7 +12,8 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 - [ ] `lang=` — localized footer/status strings (fa, de, ja, …)
 
 ## Do more
-- [ ] Repo cards — `/r/<owner>/<repo>` pulse from commit activity, not user calendar
+- [x] Repo cards — `/r/<owner>/<repo>` pulse from default-branch commit history
+      (GraphQL with token, REST fallback without; window 35d, page-capped at 100)
 - [ ] Duet card — two usernames, two traces on one monitor, "sync %" stat
 - [x] `goal=<n>` — daily contribution target line on the wave + hit-rate stat
 - [ ] Medical record memory — per-user KV history: flatlines survived, revivals,
