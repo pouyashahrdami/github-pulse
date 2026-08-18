@@ -9,7 +9,8 @@ export type HideKey =
   | "stats"
   | "status"
   | "header"
-  | "pacemaker";
+  | "pacemaker"
+  | "milestone";
 export const HIDE_KEYS: HideKey[] = [
   "pill",
   "bpm",
@@ -17,7 +18,18 @@ export const HIDE_KEYS: HideKey[] = [
   "status",
   "header",
   "pacemaker",
+  "milestone",
 ];
+
+/** Deadpan honors board: the highest badge these vitals have earned, if any. */
+function milestone(pulse: Pulse): string | null {
+  if (pulse.streak >= 100) return "⚜ CENTURION";
+  if (pulse.totalContributions >= 5000) return "⚜ 5K CLUB";
+  if (pulse.streak >= 30) return "⚜ IRON RHYTHM";
+  if (pulse.totalContributions >= 1000) return "⚜ 1K CLUB";
+  if (pulse.stars >= 1000) return "⚜ STARGAZER";
+  return null;
+}
 
 export type WaveStyle = "ecg" | "smooth" | "bars";
 export const WAVE_STYLES: WaveStyle[] = ["ecg", "smooth", "bars"];
@@ -677,6 +689,13 @@ function renderCardAtSize(
       }" height="${lay.bandH}" fill="url(#gp-grid)" opacity="0.9"/>`
     : "";
 
+  const honor = options.hide.has("milestone") ? null : milestone(pulse);
+  const milestoneStamp = honor
+    ? `<text x="${lay.waveX0}" y="${lay.bandTop + 16}" font-family="${MONO}"
+            font-size="10" font-weight="700" letter-spacing="1"
+            fill="${theme.accent}" opacity="0.75">${honor}</text>`
+    : "";
+
   const statsText =
     lay.statsX !== null && !options.hide.has("stats") && alive
       ? `<text x="${lay.statsX}" y="${lay.footerY - 2}" font-family="${MONO}"
@@ -745,6 +764,7 @@ function renderCardAtSize(
   ${options.goal ? goalMarkup(pulse, lay, theme, options.goal) : ""}
   ${trace}
   ${revivedStamp}
+  ${milestoneStamp}
   ${bpmCluster}
   ${statsText}
   ${statusText}

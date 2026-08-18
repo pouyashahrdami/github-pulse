@@ -24,7 +24,8 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 
 ## Do more (round 2)
 - [x] JSON vitals API — `/api/u/<user>` + `/api/r/<owner>/<repo>`, CORS open
-- [ ] Milestone stamps — card celebrates 1k beats/yr, 100-day best streak
+- [x] Milestone stamps — honors board on the wave: CENTURION (100d streak),
+      5K/1K CLUB (beats/yr), IRON RHYTHM (30d), STARGAZER (1k★). `hide=milestone`
 - [x] `flip=1` — mirror the wave right-to-left (RTL READMEs)
 - [x] Seasonal auto-themes — `theme=season` picks by date (halloween → dracula,
       winter → nord, spring → catppuccin, summer → ember, fall → gruvbox)
