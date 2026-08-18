@@ -271,7 +271,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pouyashahrdami/github-pulse@v1
         with:
-          username: YOUR_USERNAME
+          username: YOUR_USERNAME  # or repo: owner/repo · org: my-org · duet: you,friend
           theme: aura            # optional
           size: card             # optional
           params: "tz=3.5"       # optional: any URL param

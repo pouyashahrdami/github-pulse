@@ -6,8 +6,17 @@ branding:
 
 inputs:
   username:
-    description: "GitHub username to take the pulse of"
-    required: true
+    description: "GitHub username to take the pulse of (or use repo/org/duet)"
+    required: false
+  repo:
+    description: "Repository pulse instead: 'owner/repo'"
+    required: false
+  org:
+    description: "Organization pulse instead: org login"
+    required: false
+  duet:
+    description: "Duet card instead: 'you,friend'"
+    required: false
   out:
     description: "Output SVG path"
     required: false
@@ -39,6 +48,9 @@ runs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_USERNAME: ${{ inputs.username }}
+        INPUT_REPO: ${{ inputs.repo }}
+        INPUT_ORG: ${{ inputs.org }}
+        INPUT_DUET: ${{ inputs.duet }}
         INPUT_OUT: ${{ inputs.out }}
         INPUT_THEME: ${{ inputs.theme }}
         INPUT_SIZE: ${{ inputs.size }}
