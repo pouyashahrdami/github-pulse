@@ -180,6 +180,21 @@ Two hearts, one monitor — you and a friend (or rival) on the same trace, with 
 
 Trace A gets the theme color, trace B the accent. `size=card` and `size=wide`.
 
+## JSON API
+
+Everything the card knows, as data — build your own visualizations, bots, or
+status widgets on top of the pulse engine:
+
+```bash
+curl https://github-pulse-topaz.vercel.app/api/u/YOUR_USERNAME
+curl https://github-pulse-topaz.vercel.app/api/r/OWNER/REPO
+```
+
+Returns the full vitals object: `state`, `bpm`, `streak`, `bloodType`, `beats`
+(normalized wave), `dayCounts` (raw), `pacemaker`, and more. CORS is open
+(`Access-Control-Allow-Origin: *`), responses cache like the cards. `days=` and
+`tz=` params apply.
+
 ## Light & dark mode
 
 GitHub READMEs support the `<picture>` element, so your pulse can match the

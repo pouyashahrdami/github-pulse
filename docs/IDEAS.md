@@ -22,6 +22,15 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       (≥90% of the window active, one dominant count ≤4). Opt out: `hide=pacemaker`
 - [ ] Share page — `/share/<user>` HTML page with og:image for link unfurls
 
+## Do more (round 2)
+- [x] JSON vitals API — `/api/u/<user>` + `/api/r/<owner>/<repo>`, CORS open
+- [ ] Milestone stamps — card celebrates 1k beats/yr, 100-day best streak
+- [ ] `flip=1` — mirror the wave right-to-left (RTL READMEs)
+- [ ] Seasonal auto-themes — `theme=season` picks by date (spooky October…)
+- [ ] SVG `<a>` deep links — each stat clickable to the matching GitHub page
+- [ ] Org cards — `/o/<org>` aggregate pulse of an organization's repos
+- [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
+
 ## Plumbing
 - [ ] Per-card ETag so camo revalidates cheaply
 - [ ] `?v=` cache-buster documented for instant refreshes
