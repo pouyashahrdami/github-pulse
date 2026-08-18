@@ -9,7 +9,7 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       viewer-side fallback to the mono stack, since camo blocks webfonts
 - [x] `scanlines=1` — CRT scanline overlay for phosphor/retro themes
 - [ ] `blink=1` — tiny LED heartbeat dot in the header, synced to bpm
-- [ ] `lang=` — localized footer/status strings (fa, de, ja, …)
+- [x] `lang=` — localized footer/status/streak strings: en, fa, de, es, ja
 
 ## Do more
 - [x] Repo cards — `/r/<owner>/<repo>` pulse from default-branch commit history

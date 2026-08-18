@@ -62,6 +62,8 @@ export interface CardOptions {
   record: boolean;
   /** mirror the wave so the newest beat is on the left (RTL READMEs) */
   flip: boolean;
+  /** status-string language, a key of LANGS */
+  lang: string;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -76,6 +78,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   scanlines: false,
   record: false,
   flip: false,
+  lang: "en",
 };
 
 interface Layout {
@@ -215,24 +218,91 @@ const EQ_CSS = (speed: number) =>
   `.gp-eq{animation:gp-eq ${round(1.6 / speed)}s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
    @keyframes gp-eq{0%,100%{transform:scaleY(.7)}50%{transform:scaleY(1.06)}}`;
 
-function footerRight(pulse: Pulse, theme: Theme): { text: string; color: string } {
+interface CardStrings {
+  now: string;
+  yesterday: string;
+  revived: string;
+  noBeats: string;
+  lastBeat: (date: string) => string;
+  ago: (days: number) => string;
+  streak: (days: number) => string;
+  beatsYr: (n: number) => string;
+}
+
+/** ?lang= — localized status strings. Layout is unchanged; pair fa with flip=1. */
+export const LANGS: Record<string, CardStrings> = {
+  en: {
+    now: "● beating now",
+    yesterday: "● beat yesterday",
+    revived: "⚡ back from the dead",
+    noBeats: "† no recorded beats",
+    lastBeat: (d) => `† last beat ${d}`,
+    ago: (n) => `last beat ${n}d ago`,
+    streak: (n) => `⚡ ${n}d streak`,
+    beatsYr: (n) => `${n} beats/yr`,
+  },
+  fa: {
+    now: "● در حال تپش",
+    yesterday: "● تپش دیروز",
+    revived: "⚡ بازگشت از مرگ",
+    noBeats: "† تپشی ثبت نشده",
+    lastBeat: (d) => `† آخرین تپش ${d}`,
+    ago: (n) => `آخرین تپش ${n} روز پیش`,
+    streak: (n) => `⚡ ${n} روز پیاپی`,
+    beatsYr: (n) => `${n} تپش/سال`,
+  },
+  de: {
+    now: "● schlägt gerade",
+    yesterday: "● schlug gestern",
+    revived: "⚡ zurück von den Toten",
+    noBeats: "† keine Schläge erfasst",
+    lastBeat: (d) => `† letzter Schlag ${d}`,
+    ago: (n) => `letzter Schlag vor ${n}T`,
+    streak: (n) => `⚡ ${n}T Serie`,
+    beatsYr: (n) => `${n} Schläge/Jahr`,
+  },
+  es: {
+    now: "● latiendo ahora",
+    yesterday: "● latió ayer",
+    revived: "⚡ de vuelta a la vida",
+    noBeats: "† sin latidos registrados",
+    lastBeat: (d) => `† último latido ${d}`,
+    ago: (n) => `último latido hace ${n}d`,
+    streak: (n) => `⚡ racha de ${n}d`,
+    beatsYr: (n) => `${n} latidos/año`,
+  },
+  ja: {
+    now: "● 拍動中",
+    yesterday: "● 昨日拍動",
+    revived: "⚡ 蘇生した",
+    noBeats: "† 拍動記録なし",
+    lastBeat: (d) => `† 最終拍動 ${d}`,
+    ago: (n) => `最終拍動 ${n}日前`,
+    streak: (n) => `⚡ ${n}日連続`,
+    beatsYr: (n) => `${n} 拍/年`,
+  },
+};
+
+function footerRight(
+  pulse: Pulse,
+  theme: Theme,
+  s: CardStrings,
+): { text: string; color: string } {
   switch (pulse.state) {
     case "radiant":
       return pulse.daysSinceBeat === 0
-        ? { text: "● beating now", color: theme.trace }
-        : { text: "● beat yesterday", color: theme.trace };
+        ? { text: s.now, color: theme.trace }
+        : { text: s.yesterday, color: theme.trace };
     case "revived":
-      return { text: "⚡ back from the dead", color: theme.trace };
+      return { text: s.revived, color: theme.trace };
     case "flatline":
       return {
-        text: pulse.lastBeatDate
-          ? `† last beat ${pulse.lastBeatDate}`
-          : "† no recorded beats",
+        text: pulse.lastBeatDate ? s.lastBeat(pulse.lastBeatDate) : s.noBeats,
         color: theme.danger,
       };
     default:
       return {
-        text: `last beat ${pulse.daysSinceBeat}d ago`,
+        text: s.ago(pulse.daysSinceBeat),
         color: theme.muted,
       };
   }
@@ -371,7 +441,7 @@ function renderMonitor(
   const period = alive ? 60 / pulse.bpm / options.speed : 0;
   const sweepDur = alive ? Math.min(12, Math.max(3, period * 6)) : 0;
   const path = wavePath(pulse, lay, options.wave);
-  const right = footerRight(pulse, theme);
+  const right = footerRight(pulse, theme, LANGS[options.lang] ?? LANGS.en);
   const header = options.label?.trim() || `@${pulse.login}`;
 
   const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
@@ -620,7 +690,7 @@ function renderCardAtSize(
   const period = alive ? 60 / pulse.bpm / options.speed : 0;
   const sweepDur = alive ? Math.min(12, Math.max(3, period * 6)) : 0;
   const path = wavePath(pulse, lay, options.wave);
-  const right = footerRight(pulse, theme);
+  const right = footerRight(pulse, theme, LANGS[options.lang] ?? LANGS.en);
   const header = options.label?.trim() || `@${pulse.login}`;
 
   const strokeRef = theme.traceGradient ? "url(#gp-tg)" : theme.trace;
@@ -639,9 +709,9 @@ function renderCardAtSize(
 
   const bpmText = alive ? String(pulse.bpm) : "—";
   const statsLeft = [
-    pulse.streak > 0 ? `⚡ ${pulse.streak}d streak` : null,
+    pulse.streak > 0 ? (LANGS[options.lang] ?? LANGS.en).streak(pulse.streak) : null,
     pulse.bloodType,
-    `${pulse.totalContributions} beats/yr`,
+    (LANGS[options.lang] ?? LANGS.en).beatsYr(pulse.totalContributions),
     pulse.stars > 0 ? `★ ${pulse.stars}` : null,
     pulse.pacemaker && !options.hide.has("pacemaker") ? "⚙ paced" : null,
     options.record && pulse.record
