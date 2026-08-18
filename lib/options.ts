@@ -102,6 +102,7 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     glow: search.get("glow") !== "0",
     anim: search.get("anim") !== "0",
     scanlines: search.get("scanlines") === "1",
+    record: search.get("record") === "1",
     speed,
     label,
     hide,

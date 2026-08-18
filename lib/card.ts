@@ -46,6 +46,8 @@ export interface CardOptions {
   goal?: number;
   /** "serif" / "sans" presets, or any installed family (falls back to mono) */
   font?: string;
+  /** show chart-history stats when the pulse carries a medical record */
+  record: boolean;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -58,6 +60,7 @@ export const DEFAULT_OPTIONS: CardOptions = {
   hide: new Set<HideKey>(),
   wave: "ecg",
   scanlines: false,
+  record: false,
 };
 
 interface Layout {
@@ -619,6 +622,9 @@ function renderCardAtSize(
     `${pulse.totalContributions} beats/yr`,
     pulse.stars > 0 ? `★ ${pulse.stars}` : null,
     pulse.pacemaker && !options.hide.has("pacemaker") ? "⚙ paced" : null,
+    options.record && pulse.record
+      ? `⚕ ${pulse.record.flatlines}† ${pulse.record.revivals}⚡ best ${pulse.record.longestStreak}d`
+      : null,
   ]
     .filter(Boolean)
     .join("  ·  ");

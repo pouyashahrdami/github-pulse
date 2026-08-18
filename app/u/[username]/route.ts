@@ -3,6 +3,7 @@ import { fetchGithubData, UserNotFoundError } from "@/lib/github";
 import { computePulse, forceState } from "@/lib/pulse";
 import { renderCard, renderErrorCard } from "@/lib/card";
 import { resolveTheme } from "@/lib/themes";
+import { touchRecord } from "@/lib/record";
 import {
   parseOptions,
   parseState,
@@ -40,6 +41,13 @@ export async function GET(
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);
+    if (options.record) {
+      try {
+        pulse.record = await touchRecord(pulse);
+      } catch (err) {
+        console.error(`record store failed for ${username}:`, err);
+      }
+    }
     return new NextResponse(renderCard(pulse, theme, options), {
       status: 200,
       headers: SVG_HEADERS,

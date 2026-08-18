@@ -33,6 +33,8 @@ export interface Pulse {
   /** true when the rhythm looks machine-regular (cron bot, not a heart) */
   pacemaker: boolean;
   partial: boolean;
+  /** chart history, attached by the route when ?record=1 (see lib/record.ts) */
+  record?: import("./record").MedicalRecord;
 }
 
 const FLATLINE_DAYS = 14;
