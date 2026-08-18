@@ -195,6 +195,17 @@ Two hearts, one monitor — you and a friend (or rival) on the same trace, with 
 
 Trace A gets the theme color, trace B the accent. `size=card` and `size=wide`.
 
+## Shields badge
+
+Want just a tiny badge instead of a full card? The pulse speaks the
+[shields.io endpoint schema](https://shields.io/badges/endpoint-badge):
+
+```md
+![pulse](https://img.shields.io/endpoint?url=https%3A%2F%2Fgithub-pulse-topaz.vercel.app%2Fapi%2Fbadge%2FYOUR_USERNAME)
+```
+
+Renders as `pulse | 180 bpm · radiant`, colored by life state.
+
 ## Share pages
 
 Cards are SVG, which chat apps and social sites won't unfurl — so every user
