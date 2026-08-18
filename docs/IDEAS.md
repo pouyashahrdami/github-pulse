@@ -63,4 +63,4 @@ Living list of customization + "do more" ideas. Ticked = shipped.
 
 ## Plumbing
 - [x] Per-card ETag + If-None-Match 304s on all four SVG routes
-- [ ] `?v=` cache-buster documented for instant refreshes
+- [x] `?v=` cache-buster documented for instant refreshes

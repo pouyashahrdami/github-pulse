@@ -157,6 +157,11 @@ And shape/behavior params:
 
 Params compose with a theme: start from `?theme=phosphor` and override just `bg`.
 
+**Iterating on params and seeing a stale card?** Caching is deliberately hard
+(default 24h at the CDN, plus GitHub's camo proxy on top). Append `&v=2` — any
+value you haven't used before — to mint a fresh URL and skip every cache layer.
+Bump it again whenever you want an instant refresh.
+
 **Want it edge-to-edge?** Profile READMEs are wider than the default card. Use the
 wide banner and let it stretch:
 
