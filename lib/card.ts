@@ -373,7 +373,7 @@ function renderBadge(
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${lay.w}" height="${lay.h}"
      viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-label="${esc(title)}">
-  <style>${anim}</style>
+  <style>${anim}${REDUCED_MOTION}</style>
   <defs>
     ${gradientDef}
     <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
@@ -531,7 +531,7 @@ function renderMonitor(
      viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-labelledby="gp-title gp-desc">
   <title id="gp-title">${esc(title)}</title>
   <desc id="gp-desc">${esc(desc)}</desc>
-  <style>${anim}</style>
+  <style>${anim}${REDUCED_MOTION}</style>
   <defs>
     ${gradientDef}
     <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
@@ -638,6 +638,10 @@ function fontOverride(options: CardOptions): string {
         : `'${options.font}',${MONO}`;
   return `<style>text{font-family:${stack} !important}</style>`;
 }
+
+/** Honor the viewer's OS-level reduce-motion setting: still cards, no flashing. */
+const REDUCED_MOTION =
+  "@media (prefers-reduced-motion:reduce){*{animation:none !important}}";
 
 /** LED cadence: the fixed idle wink, or the real heart period when ?blink=1. */
 function dotPeriod(pulse: Pulse, options: CardOptions): number {
@@ -824,7 +828,7 @@ function renderCardAtSize(
      viewBox="0 0 ${lay.w} ${lay.h}" role="img" aria-labelledby="gp-title gp-desc">
   <title id="gp-title">${esc(title)}</title>
   <desc id="gp-desc">${esc(desc)}</desc>
-  <style>${anim}</style>
+  <style>${anim}${REDUCED_MOTION}</style>
   <defs>
     ${gradientDef}
     <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
