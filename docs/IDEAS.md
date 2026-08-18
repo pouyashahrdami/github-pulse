@@ -34,7 +34,21 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       where SVG anchors are inert; dead weight in the place cards live
 - [x] `gradient=hex,hex[,hex]` — custom trace gradient on any theme
 - [x] Org cards — `/o/<org>` aggregate pulse from org-wide public push events
+
+## Do more (round 3 — post-launch)
+- [x] Shared vitals cache — Upstash-backed `cachedFetch` around all three GitHub
+      fetchers, so every param variant of a card costs one upstream call
+      (Next's data cache never covered the GraphQL POSTs), with stale-on-error
+      fallback: rate-limit spikes serve slightly-old vitals, not an error card
+- [ ] Wall of Hearts — a gallery page of real users' live cards (opt-in)
+- [ ] Embed counter — per-username request counter in Upstash; "X hearts
+      beating" live stat on the homepage
+- [ ] Ward card — `/ward/a,b,c` team monitor, duet generalized; sorted by BPM
+- [ ] `npx github-pulse <user>` — ASCII EKG in the terminal via the JSON API
+- [ ] Annual cardiology report — Wrapped-style year card (ship late December)
+- [ ] Defibrillator — "send a jolt" nudge button on flatlined share pages
 - [ ] Webhook pings — POST somewhere when a watched user flatlines/revives
+      ("dead man's switch for your GitHub")
 
 ## Plumbing
 - [x] Per-card ETag + If-None-Match 304s on all four SVG routes

@@ -25,6 +25,7 @@ export class UserNotFoundError extends Error {
   }
 }
 
+import { cachedFetch } from "./cache";
 import { CACHE_SECONDS } from "./options";
 
 const API = "https://api.github.com";
@@ -230,11 +231,17 @@ async function fetchViaRest(login: string): Promise<GithubData> {
   };
 }
 
+/** Not-found is a definitive answer, not an outage — never mask it with stale data. */
+const staleUnlessNotFound = (err: unknown) => !(err instanceof UserNotFoundError);
+
 export async function fetchGithubData(login: string): Promise<GithubData> {
-  if (process.env.GITHUB_TOKEN) {
-    return fetchViaGraphQL(login);
-  }
-  return fetchViaRest(login);
+  return cachedFetch(
+    `gh:u:${login.toLowerCase()}`,
+    CACHE_SECONDS,
+    () =>
+      process.env.GITHUB_TOKEN ? fetchViaGraphQL(login) : fetchViaRest(login),
+    staleUnlessNotFound,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -405,6 +412,15 @@ interface RestOrg {
 }
 
 export async function fetchOrgData(org: string): Promise<GithubData> {
+  return cachedFetch(
+    `gh:o:${org.toLowerCase()}`,
+    CACHE_SECONDS,
+    () => fetchOrgUncached(org),
+    staleUnlessNotFound,
+  );
+}
+
+async function fetchOrgUncached(org: string): Promise<GithubData> {
   const [meta, repos, events] = await Promise.all([
     rest<RestOrg>(`/orgs/${org}`),
     rest<RestRepo[]>(`/orgs/${org}/repos?per_page=100&sort=pushed`),
@@ -451,8 +467,13 @@ export async function fetchRepoData(
   owner: string,
   repo: string,
 ): Promise<GithubData> {
-  if (process.env.GITHUB_TOKEN) {
-    return fetchRepoViaGraphQL(owner, repo);
-  }
-  return fetchRepoViaRest(owner, repo);
+  return cachedFetch(
+    `gh:r:${owner.toLowerCase()}/${repo.toLowerCase()}`,
+    CACHE_SECONDS,
+    () =>
+      process.env.GITHUB_TOKEN
+        ? fetchRepoViaGraphQL(owner, repo)
+        : fetchRepoViaRest(owner, repo),
+    staleUnlessNotFound,
+  );
 }

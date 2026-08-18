@@ -1,4 +1,5 @@
 import type { Pulse, PulseState } from "./pulse";
+import { redis, redisConfigured } from "./redis";
 
 /**
  * Per-user chart history — the card's long-term memory. Persists in Upstash
@@ -16,26 +17,6 @@ export interface MedicalRecord {
 }
 
 const memory = new Map<string, MedicalRecord>();
-
-function redisConfigured(): boolean {
-  return Boolean(
-    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
-  );
-}
-
-async function redis(cmd: string[]): Promise<unknown> {
-  const res = await fetch(process.env.UPSTASH_REDIS_REST_URL as string, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(cmd),
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`record store ${res.status}`);
-  return ((await res.json()) as { result: unknown }).result;
-}
 
 async function load(key: string): Promise<MedicalRecord | undefined> {
   if (!redisConfigured()) return memory.get(key);
