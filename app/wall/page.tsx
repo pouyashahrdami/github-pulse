@@ -31,14 +31,16 @@ export default async function Wall() {
         </h1>
         <p className="tagline">
           The most recently beating hearts on this deploy — live SVGs, not
-          screenshots. Embed your card anywhere and yours joins the wall.
+          screenshots. The wall is opt-in: add <code>?wall=1</code> to your own
+          embed (or flip &ldquo;join the wall&rdquo; in the builder) and yours
+          appears here.
         </p>
       </div>
 
       {beats.length === 0 ? (
         <p className="wall-empty">
-          The wall is dark — no beats recorded on this deploy yet. Embed a card
-          and come back.
+          The wall is dark — nobody has opted in on this deploy yet. Add
+          ?wall=1 to your embed and come back.
         </p>
       ) : (
         <div className="wall-grid">

@@ -76,6 +76,7 @@ export default function Builder() {
   const [scanlines, setScanlines] = useState(false);
   const [flip, setFlip] = useState(false);
   const [record, setRecord] = useState(false);
+  const [wall, setWall] = useState(false);
   const [full, setFull] = useState(false);
   const [goal, setGoal] = useState("");
   const [lang, setLang] = useState("en");
@@ -91,12 +92,13 @@ export default function Builder() {
     if (scanlines) params.set("scanlines", "1");
     if (flip) params.set("flip", "1");
     if (record) params.set("record", "1");
+    if (wall) params.set("wall", "1");
     if (full) params.set("w", "full");
     if (goal && Number(goal) > 0) params.set("goal", goal);
     if (lang !== "en") params.set("lang", lang);
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [mode, theme, size, wave, custom, scanlines, flip, record, full, goal, lang]);
+  }, [mode, theme, size, wave, custom, scanlines, flip, record, wall, full, goal, lang]);
 
   const base = cardPath(mode, username);
   const path = base ? `${base}${query}` : "";
@@ -275,6 +277,7 @@ export default function Builder() {
               ["scanlines", "📺 scanlines", scanlines, setScanlines],
               ["flip", "🔁 flip (RTL)", flip, setFlip],
               ["record", "⚕ medical record", record, setRecord],
+              ["wall", "🖼 join the wall", wall, setWall],
               ["full", "↔ full width", full, setFull],
             ] as const
           ).map(([key, label, value, setter]) => (

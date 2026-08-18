@@ -47,7 +47,11 @@ export async function GET(
     const now = parseNow(search);
     const days = parseDays(search);
     const data = await Promise.all(logins.map((l) => fetchGithubData(l)));
-    after(() => recordBeat("ward", [...logins].sort().join(",")));
+    after(() =>
+      recordBeat("ward", [...logins].sort().join(","), {
+        wall: search.get("wall") === "1",
+      }),
+    );
     const card = renderWardCard(
       data.map((d) => computePulse(d, now, days)),
       theme,

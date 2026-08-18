@@ -38,7 +38,7 @@ export async function GET(
 
   try {
     const data = await fetchOrgData(org);
-    after(() => recordBeat("o", org));
+    after(() => recordBeat("o", org, { wall: search.get("wall") === "1" }));
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);

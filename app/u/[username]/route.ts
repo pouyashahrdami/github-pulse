@@ -40,7 +40,7 @@ export async function GET(
 
   try {
     const data = await fetchGithubData(username);
-    after(() => recordBeat("u", username));
+    after(() => recordBeat("u", username, { wall: search.get("wall") === "1" }));
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);

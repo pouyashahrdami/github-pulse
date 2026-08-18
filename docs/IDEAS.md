@@ -40,9 +40,10 @@ Living list of customization + "do more" ideas. Ticked = shipped.
       fetchers, so every param variant of a card costs one upstream call
       (Next's data cache never covered the GraphQL POSTs), with stale-on-error
       fallback: rate-limit spikes serve slightly-old vitals, not an error card
-- [x] Wall of Hearts — `/wall`: live gallery of the most recently beating
-      cards, fed by the `pulse:hearts` set (no opt-in file needed); honest
-      empty state without Redis
+- [x] Wall of Hearts — `/wall`: live gallery of recently beating cards.
+      Opt-in only (`?wall=1` on your own embed → `pulse:wall` set); the
+      anonymous counter still counts every render via `pulse:hearts`.
+      Rendering someone else's card never publishes them
 - [x] Embed counter — `pulse:hearts` sorted set in Upstash (last-seen per
       subject), `/api/stats` JSON, "N hearts beating this week" hero stat
       (hidden until ≥5; requires Redis — instance memory can't aggregate

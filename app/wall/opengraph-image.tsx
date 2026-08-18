@@ -84,7 +84,7 @@ export default async function Image() {
           ))}
         </div>
         <div style={{ display: "flex", fontSize: 26, color: "#928DAD", marginTop: 44 }}>
-          github pulse · embed your card and join the wall
+          github pulse · add wall=1 to your embed to join
         </div>
       </div>
     ),

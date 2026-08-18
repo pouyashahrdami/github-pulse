@@ -142,6 +142,7 @@ And shape/behavior params:
 | `labels` | rename state pills: `radiant:ON FIRE,flatline:RIP` (16 chars each) | medical |
 | `goal` | daily contribution target `1`–`999`: dashed line on the wave + hit-rate | — |
 | `record` | `1` shows chart history: `⚕ flatlines† revivals⚡ best-streak` (persists in Redis when `UPSTASH_REDIS_REST_URL`/`TOKEN` are set) | `0` |
+| `wall` | `1` opts this card into the public [Wall of Hearts](https://github-pulse-topaz.vercel.app/wall) gallery | `0` |
 | `flip` | `1` mirrors the wave — newest beat on the left, for RTL READMEs | `0` |
 | `lang` | status strings in `en` `fa` `de` `es` `ja` (pair `fa` with `flip=1`) | `en` |
 | `blink` | `1` blinks the LED dot at your actual heart rate on every alive card | `0` |
@@ -272,8 +273,10 @@ https://github-pulse-topaz.vercel.app/s/YOUR_USERNAME
 
 Drop it in Slack, Discord, or a tweet and it unfurls into a vitals snapshot.
 
-Every card served also lights up the deploy's **[Wall of Hearts](https://github-pulse-topaz.vercel.app/wall)** —
-a live gallery of the most recently beating cards.
+There's also a **[Wall of Hearts](https://github-pulse-topaz.vercel.app/wall)** —
+a live gallery of recently beating cards. It's strictly opt-in: add `wall=1`
+to your own embed and your card joins the wall. Rendering someone else's card
+never puts them on it.
 
 And when someone's share page shows a critical or flatlined heart, it grows a
 **defibrillator**: charge the paddles, yell CLEAR!, and broadcast a prefilled

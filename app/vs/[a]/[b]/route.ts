@@ -40,7 +40,7 @@ export async function GET(
     const now = parseNow(search);
     const days = parseDays(search);
     const [da, db] = await Promise.all([fetchGithubData(a), fetchGithubData(b)]);
-    after(() => recordBeat("vs", `${a}/${b}`));
+    after(() => recordBeat("vs", `${a}/${b}`, { wall: search.get("wall") === "1" }));
     const card = renderDuetCard(
       computePulse(da, now, days),
       computePulse(db, now, days),

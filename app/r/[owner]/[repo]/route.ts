@@ -42,7 +42,7 @@ export async function GET(
 
   try {
     const data = await fetchRepoData(owner, repo);
-    after(() => recordBeat("r", slug));
+    after(() => recordBeat("r", slug, { wall: search.get("wall") === "1" }));
     let pulse = computePulse(data, parseNow(search), parseDays(search));
     const previewState = parseState(search);
     if (previewState) pulse = forceState(pulse, previewState);
