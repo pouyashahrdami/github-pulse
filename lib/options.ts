@@ -61,6 +61,11 @@ export function parseOptions(search: URLSearchParams): CardOptions {
 
   const label = search.get("label")?.slice(0, 32) || undefined;
 
+  // Sanitized so the family name can't escape the quoted CSS in fontOverride.
+  const font =
+    search.get("font")?.replace(/[^a-zA-Z0-9 \-]/g, "").trim().slice(0, 32) ||
+    undefined;
+
   // labels=radiant:ON FIRE,flatline:RIP — rename state pills (16 chars each)
   const labelsRaw = search.get("labels");
   let stateLabels: CardOptions["stateLabels"];
@@ -103,6 +108,7 @@ export function parseOptions(search: URLSearchParams): CardOptions {
     wave,
     width,
     stateLabels,
+    font,
     goal:
       search.get("goal") !== null
         ? clampInt(search.get("goal"), 1, 999, 0) || undefined

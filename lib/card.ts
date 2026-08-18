@@ -44,6 +44,8 @@ export interface CardOptions {
   scanlines: boolean;
   /** daily contribution target: dashed line + hit-rate (card/wide/compact) */
   goal?: number;
+  /** "serif" / "sans" presets, or any installed family (falls back to mono) */
+  font?: string;
 }
 
 export const DEFAULT_OPTIONS: CardOptions = {
@@ -305,6 +307,7 @@ function renderBadge(
         font-weight="400" fill="${theme.muted}" dx="3">bpm</tspan></text>
   ${trace}
   ${scanlineOverlay(lay, options)}
+  ${fontOverride(options)}
 </svg>`;
 }
 
@@ -504,6 +507,7 @@ function renderMonitor(
           right.text,
         )}</text>
   ${scanlineOverlay(lay, options)}
+  ${fontOverride(options)}
 </svg>`;
 }
 
@@ -526,6 +530,22 @@ function goalMarkup(
         stroke="${theme.accent}" stroke-width="1" stroke-dasharray="4 4" opacity="0.45"/>
   <text x="${lay.waveX1}" y="${y - 4}" text-anchor="end" font-family="${MONO}"
         font-size="8.5" fill="${theme.accent}" opacity="0.85">goal ${goal} · ${hits}/${counts.length}d</text>`;
+}
+
+/**
+ * ?font=: a <style> rule beats the per-element font-family attributes, so one
+ * injected rule reskins every text node. Values are sanitized to [a-zA-Z0-9 -]
+ * at parse time, so the quoted family below can't break out of the CSS.
+ */
+function fontOverride(options: CardOptions): string {
+  if (!options.font) return "";
+  const stack =
+    options.font === "serif"
+      ? "Georgia,'Times New Roman',serif"
+      : options.font === "sans"
+        ? "-apple-system,'Segoe UI',Helvetica,Arial,sans-serif"
+        : `'${options.font}',${MONO}`;
+  return `<style>text{font-family:${stack} !important}</style>`;
 }
 
 /** ?scanlines=1: CRT horizontal-line overlay drawn above everything else. */
@@ -713,6 +733,7 @@ function renderCardAtSize(
   ${statsText}
   ${statusText}
   ${scanlineOverlay(lay, options)}
+  ${fontOverride(options)}
 </svg>`;
 }
 

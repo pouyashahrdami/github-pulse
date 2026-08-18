@@ -142,6 +142,7 @@ And shape/behavior params:
 | `hide` | comma list: `pill` `bpm` `stats` `status` `header` `pacemaker` | — |
 | `anim` | `0` renders a fully static card | `1` |
 | `scanlines` | `1` adds a CRT scanline overlay (pairs well with `theme=phosphor`) | `0` |
+| `font` | `serif`, `sans`, or any installed family (`font=Courier New`) | mono |
 | `speed` | animation speed `0.25`–`3` | `1` |
 | `state` | preview a life state (see above) | live |
 | `wave` | `ecg` heartbeat, `smooth` aura wave, `bars` equalizer | `ecg` |
