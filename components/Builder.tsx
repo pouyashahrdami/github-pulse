@@ -19,7 +19,37 @@ const SIZES: { name: CardSize; w: number; h: number }[] = [
   { name: "badge", w: 260, h: 70 },
 ];
 
+type Mode = "user" | "repo" | "org" | "duet";
+
+const MODES: Record<Mode, { label: string; placeholder: string; prefix: string }> = {
+  user: { label: "user", placeholder: "username", prefix: "github.com/" },
+  repo: { label: "repo", placeholder: "owner/repo", prefix: "github.com/" },
+  org: { label: "org", placeholder: "organization", prefix: "github.com/" },
+  duet: { label: "duet", placeholder: "you,friend", prefix: "vs · " },
+};
+
+/** Build the card path for a mode from its raw input, or "" when incomplete. */
+function cardPath(mode: Mode, raw: string): string {
+  const clean = raw.trim().replace(/^@/, "");
+  if (!clean) return "";
+  switch (mode) {
+    case "user":
+      return `/u/${clean}`;
+    case "org":
+      return `/o/${clean}`;
+    case "repo": {
+      const [owner, repo] = clean.split("/");
+      return owner && repo ? `/r/${owner}/${repo}` : "";
+    }
+    case "duet": {
+      const [a, b] = clean.split(/[,/]/).map((s) => s.trim().replace(/^@/, ""));
+      return a && b ? `/vs/${a}/${b}` : "";
+    }
+  }
+}
+
 export default function Builder() {
+  const [mode, setMode] = useState<Mode>("user");
   const [input, setInput] = useState("");
   const [username, setUsername] = useState("");
   const [theme, setTheme] = useState(DEFAULT_THEME);
@@ -52,7 +82,8 @@ export default function Builder() {
     return s ? `?${s}` : "";
   }, [theme, size, wave, custom, scanlines, flip, record, full, goal, lang]);
 
-  const path = username ? `/u/${username}${query}` : "";
+  const base = cardPath(mode, username);
+  const path = base ? `${base}${query}` : "";
   const origin =
     typeof window !== "undefined" ? window.location.origin : "";
 
@@ -62,13 +93,13 @@ export default function Builder() {
     return `?${params.toString()}`;
   }, [query]);
 
-  const markdown = !username
+  const markdown = !base
     ? ""
     : adaptive
       ? [
           "<picture>",
-          `  <source media="(prefers-color-scheme: dark)" srcset="${origin}/u/${username}${query}">`,
-          `  <img alt="GitHub Pulse" src="${origin}/u/${username}${lightQuery}">`,
+          `  <source media="(prefers-color-scheme: dark)" srcset="${origin}${base}${query}">`,
+          `  <img alt="GitHub Pulse" src="${origin}${base}${lightQuery}">`,
           "</picture>",
         ].join("\n")
       : `[![GitHub Pulse](${origin}${path})](${origin})`;
@@ -77,7 +108,13 @@ export default function Builder() {
 
   function load(e: React.FormEvent) {
     e.preventDefault();
-    setUsername(input.trim().replace(/^@/, ""));
+    setUsername(input.trim());
+  }
+
+  function switchMode(m: Mode) {
+    setMode(m);
+    setInput("");
+    setUsername("");
   }
 
   async function copy() {
@@ -92,14 +129,26 @@ export default function Builder() {
 
   return (
     <div className="builder">
+      <div className="chips mode-chips">
+        {(Object.keys(MODES) as Mode[]).map((m) => (
+          <button
+            key={m}
+            type="button"
+            className={`chip${mode === m ? " active" : ""}`}
+            onClick={() => switchMode(m)}
+          >
+            {MODES[m].label}
+          </button>
+        ))}
+      </div>
       <form className="row-input" onSubmit={load}>
         <label className="username-box">
-          <span className="prefix">github.com/</span>
+          <span className="prefix">{MODES[mode].prefix}</span>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="username"
-            aria-label="GitHub username"
+            placeholder={MODES[mode].placeholder}
+            aria-label={`GitHub ${mode}`}
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
@@ -111,12 +160,12 @@ export default function Builder() {
       </form>
 
       <div className="preview">
-        {username ? (
+        {base ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={path}
             src={path}
-            alt={`GitHub Pulse card for @${username}`}
+            alt={`GitHub Pulse card for ${username}`}
             width={SIZES.find((s) => s.name === size)?.w}
             height={SIZES.find((s) => s.name === size)?.h}
             style={full ? { width: "100%", height: "auto" } : undefined}
@@ -266,7 +315,7 @@ export default function Builder() {
         </div>
       </div>
 
-      {username && (
+      {base && (
         <div className="embed">
           <span className="control-label">Add it to your README</span>
           <label className="adaptive-toggle">

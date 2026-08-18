@@ -218,6 +218,11 @@ h1 .beat {
   background: rgba(139, 92, 246, 0.10);
 }
 
+.mode-chips {
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
 .share {
   max-width: 620px;
   margin: 0 auto;
