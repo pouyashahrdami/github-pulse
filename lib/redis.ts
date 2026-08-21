@@ -1,19 +1,27 @@
 /**
  * Minimal Upstash Redis REST client (also speaks Vercel KV). Configured via
- * UPSTASH_REDIS_REST_URL/TOKEN; callers must check redisConfigured() first.
+ * UPSTASH_REDIS_REST_URL/TOKEN — or the KV_REST_API_URL/TOKEN names the
+ * Vercel marketplace integration injects. Callers must check
+ * redisConfigured() first.
  */
 
+function restUrl(): string | undefined {
+  return process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+}
+
+function restToken(): string | undefined {
+  return process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+}
+
 export function redisConfigured(): boolean {
-  return Boolean(
-    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
-  );
+  return Boolean(restUrl() && restToken());
 }
 
 export async function redis(cmd: string[]): Promise<unknown> {
-  const res = await fetch(process.env.UPSTASH_REDIS_REST_URL as string, {
+  const res = await fetch(restUrl() as string, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
+      Authorization: `Bearer ${restToken()}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(cmd),
