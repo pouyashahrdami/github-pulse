@@ -1,4 +1,5 @@
 import Builder from "@/components/Builder";
+import CliStrip from "@/components/CliStrip";
 import HeartsCounter from "@/components/HeartsCounter";
 
 export default function Home() {
@@ -69,6 +70,8 @@ export default function Home() {
         </div>
 
         <Builder />
+
+        <CliStrip />
 
         <footer>
           open source · MIT ·{" "}

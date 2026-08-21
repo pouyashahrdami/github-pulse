@@ -796,6 +796,73 @@ footer a:hover {
 
 /* --------------------------------------------------------------- responsive */
 
+/* ---------------------------------------------------------- cli strip */
+
+.cli-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  gap: 48px;
+  align-items: center;
+  margin-top: 72px;
+}
+
+.cli-strip h2 {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.cli-strip .snippet {
+  margin-top: 22px;
+}
+
+.term {
+  border: 1px solid var(--line-strong);
+  background: var(--panel);
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.term-body {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 16px 18px 18px;
+  overflow-x: auto;
+  color: var(--text);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.t-dim {
+  color: var(--faint);
+}
+
+.t-green {
+  color: var(--green);
+}
+
+.t-cyan {
+  color: var(--cyan);
+}
+
+.t-amber {
+  color: var(--amber);
+}
+
 @media (max-width: 860px) {
   .mon-hero {
     /* minmax(0,·): a bare 1fr floors at the card img's 520px min-content */
@@ -810,5 +877,15 @@ footer a:hover {
 
   .ecg-rule {
     margin-bottom: 40px;
+  }
+
+  .cli-strip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    margin-top: 56px;
+  }
+
+  .term {
+    max-width: 520px;
   }
 }
