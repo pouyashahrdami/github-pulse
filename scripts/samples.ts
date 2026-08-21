@@ -5,10 +5,12 @@
  *
  *   npx -y tsx scripts/samples.ts
  */
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   DEFAULT_OPTIONS,
+  renderCard,
+  renderDuetCard,
   renderHolterCard,
   renderReportCard,
   renderWardCard,
@@ -131,6 +133,39 @@ const holter = renderHolterCard(
 );
 writeFileSync(out("assets/sample-holter.svg"), holter);
 
+// Builder gallery: one sample per intake mode, served from /samples/<mode>.svg
+// so the empty preview can show what each card type looks like before a
+// visitor types anything. Same synthetic patients — no real accounts implied.
+mkdirSync(out("public/samples"), { recursive: true });
+const gallery: Record<string, string> = {
+  user: renderCard(
+    patient("nova", "radiant", 172, 7, 0.85),
+    THEMES.aura,
+    DEFAULT_OPTIONS,
+  ),
+  repo: renderCard(patient("acme/rocket", "steady", 96, 19, 0.6), THEMES.cyber, {
+    ...DEFAULT_OPTIONS,
+    label: "acme/rocket",
+  }),
+  org: renderCard(
+    patient("acme-inc", "steady", 128, 27, 0.75),
+    THEMES.ember,
+    DEFAULT_OPTIONS,
+  ),
+  duet: renderDuetCard(
+    patient("nova", "radiant", 172, 7, 0.85),
+    patient("lin", "steady", 96, 21, 0.6),
+    THEMES.aura,
+    DEFAULT_OPTIONS,
+  ),
+  ward,
+  report,
+  holter,
+};
+for (const [mode, svg] of Object.entries(gallery)) {
+  writeFileSync(out(`public/samples/${mode}.svg`), svg);
+}
+
 console.log(
-  "wrote assets/sample-ward.svg, assets/sample-report.svg, assets/sample-holter.svg",
+  "wrote assets/sample-{ward,report,holter}.svg + public/samples/{user,repo,org,duet,ward,report,holter}.svg",
 );

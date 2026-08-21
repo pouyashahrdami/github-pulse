@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="190"
+     viewBox="0 0 520 190" role="img" aria-labelledby="gp-title gp-desc">
+  <title id="gp-title">acme-inc's pulse — 128 bpm (steady)</title>
+  <desc id="gp-desc">GitHub activity heartbeat for @acme-inc: 0 contributions this week, 0 in the last year.</desc>
+  <style>.gp-sweep{animation:gp-sweep 3s linear infinite}
+       .gp-heart{animation:gp-thump 0.5s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+       .gp-dot{animation:gp-blink 1.8s ease-in-out infinite}
+       @keyframes gp-sweep{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+       @keyframes gp-thump{0%,100%{transform:scale(1)}15%{transform:scale(1.32)}30%{transform:scale(1)}}
+       @keyframes gp-blink{50%{opacity:.25}}@media (prefers-reduced-motion:reduce){*{animation:none !important}}</style>
+  <defs>
+    
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="gp-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="rgba(255,138,75,0.09)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="519" height="189"
+        rx="12" fill="#120704" stroke="rgba(255,138,75,0.09)"/>
+  <rect x="16" y="44" width="488" height="84" fill="url(#gp-grid)" opacity="0.9"/>
+
+  <text x="26" y="30" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="13"
+        font-weight="600" fill="#F6E8E0">@acme-inc</text>
+
+  <rect x="434.4" y="16" width="59.6" height="19"
+        rx="9.5" fill="none" stroke="#FF8A4B" opacity="0.85"/>
+  <text x="464.2" y="29" text-anchor="middle"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10" font-weight="600"
+        fill="#FF8A4B" letter-spacing="1">STEADY</text>
+  
+  <path d="M26 92 h5.1 q3 -0.7 6 0 l2 3 l4 -14 l4 22 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -18.1 l4 26.1 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -26.8 l4 34.8 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -24.5 l4 32.5 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -26.4 l4 34.4 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -19.1 l4 27.1 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -30.3 l4 38.3 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -34.2 l4 42.2 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -25.1 l4 33.1 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -37.8 l4 45.8 l2 -8 q3 -2.3 6 0 h5.1" fill="none" stroke="#FF8A4B" stroke-width="1.6" opacity="0.22"/>
+       <path class="gp-sweep" d="M26 92 h5.1 q3 -0.7 6 0 l2 3 l4 -14 l4 22 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -18.1 l4 26.1 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -21 l4 29 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -26.8 l4 34.8 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -24.5 l4 32.5 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -26.4 l4 34.4 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -19.1 l4 27.1 l2 -8 q3 -2.3 6 0 h5.1 h5.1 q3 -0.7 6 0 l2 3 l4 -30.3 l4 38.3 l2 -8 q3 -2.3 6 0 h4.4 h4.4 q3 -0.7 6 0 l2 3 l4 -34.2 l4 42.2 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -25.1 l4 33.1 l2 -8 q3 -2.3 6 0 h5.1 h33.4 h4.4 q3 -0.7 6 0 l2 3 l4 -37.8 l4 45.8 l2 -8 q3 -2.3 6 0 h5.1" pathLength="1000" fill="none"
+             stroke="#FF8A4B" stroke-width="2.2" stroke-linecap="round"
+             stroke-dasharray="140 860" filter="url(#gp-glow)"/>
+  
+  
+  <text class="gp-heart" x="26" y="168" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="16" fill="#FF8A4B">♥</text>
+  <text x="46" y="168" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+        font-size="22" font-weight="700" fill="#F6E8E0">128<tspan
+        font-size="10" font-weight="400" fill="#A38B7E" dx="4">bpm</tspan></text>
+  <text x="130" y="166" font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace"
+           font-size="10.5" fill="#A38B7E">TS+  ·  0 beats/yr</text>
+  <text x="494" y="166" text-anchor="end"
+        font-family="ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace" font-size="10.5" fill="#A38B7E"
+        >last beat 0d ago</text>
+  
+  
+</svg>

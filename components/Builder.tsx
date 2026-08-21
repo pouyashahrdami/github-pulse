@@ -21,14 +21,57 @@ const SIZES: { name: CardSize; w: number; h: number }[] = [
 
 type Mode = "user" | "repo" | "org" | "duet" | "ward" | "report" | "holter";
 
-const MODES: Record<Mode, { label: string; placeholder: string; prefix: string }> = {
-  user: { label: "user", placeholder: "username", prefix: "github.com/" },
-  repo: { label: "repo", placeholder: "owner/repo", prefix: "github.com/" },
-  org: { label: "org", placeholder: "organization", prefix: "github.com/" },
-  duet: { label: "duet", placeholder: "you,friend", prefix: "vs · " },
-  ward: { label: "ward", placeholder: "alice,bob,carol", prefix: "icu · " },
-  report: { label: "report", placeholder: "username", prefix: "checkup · " },
-  holter: { label: "holter", placeholder: "username", prefix: "24h · " },
+interface ModeInfo {
+  label: string;
+  placeholder: string;
+  prefix: string;
+  /** plain-words pitch shown under the chips, no jargon */
+  about: string;
+  /** dimensions of /samples/<mode>.svg, shown while the preview is empty */
+  sampleW: number;
+  sampleH: number;
+}
+
+const MODES: Record<Mode, ModeInfo> = {
+  user: {
+    label: "user", placeholder: "username", prefix: "github.com/",
+    about:
+      "your GitHub heartbeat — it beats every day you commit, slows down when you rest, and flatlines if you vanish",
+    sampleW: 520, sampleH: 190,
+  },
+  repo: {
+    label: "repo", placeholder: "owner/repo", prefix: "github.com/",
+    about: "the same heartbeat, for one repository — is the project still alive?",
+    sampleW: 520, sampleH: 190,
+  },
+  org: {
+    label: "org", placeholder: "organization", prefix: "github.com/",
+    about: "one shared heartbeat for a whole organization",
+    sampleW: 520, sampleH: 190,
+  },
+  duet: {
+    label: "duet", placeholder: "you,friend", prefix: "vs · ",
+    about:
+      "you and a friend on one monitor, with a score for how in-sync your rhythms are",
+    sampleW: 520, sampleH: 190,
+  },
+  ward: {
+    label: "ward", placeholder: "alice,bob,carol", prefix: "icu · ",
+    about:
+      "your team as hospital patients on one screen — sorted by who's most alive",
+    sampleW: 830, sampleH: 294,
+  },
+  report: {
+    label: "report", placeholder: "username", prefix: "checkup · ",
+    about: "the annual checkup — your whole year of coding on one printed chart",
+    sampleW: 830, sampleH: 330,
+  },
+  holter: {
+    label: "holter", placeholder: "username", prefix: "24h · ",
+    about:
+      "records when in the day you code — then delivers a diagnosis: night owl or early bird? it even guesses when you sleep",
+    sampleW: 830, sampleH: 310,
+  },
 };
 
 /** Card types with one fixed 830-wide layout — the size picker doesn't apply. */
@@ -186,6 +229,7 @@ export default function Builder() {
           </button>
         ))}
       </div>
+      <p className="mode-about">{MODES[mode].about}</p>
       <form className="row-input" onSubmit={load}>
         <label className="username-box">
           <span className="prefix">{MODES[mode].prefix}</span>
@@ -220,7 +264,18 @@ export default function Builder() {
             }
           />
         ) : (
-          <span className="hint">your card appears here — try your username</span>
+          <figure className="sample-peek">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/samples/${mode}.svg`}
+              alt={`sample ${mode} card`}
+              width={MODES[mode].sampleW}
+              height={MODES[mode].sampleH}
+            />
+            <figcaption>
+              sample — type yours above and it comes alive
+            </figcaption>
+          </figure>
         )}
       </div>
 

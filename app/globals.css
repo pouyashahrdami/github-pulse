@@ -339,6 +339,34 @@ h1 {
   margin-bottom: 0;
 }
 
+.mode-about {
+  margin: 12px 2px 14px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.sample-peek {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.sample-peek img {
+  max-width: 100%;
+  height: auto;
+  opacity: 0.88;
+}
+
+.sample-peek figcaption {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
 .row-input {
   display: flex;
   gap: 10px;
