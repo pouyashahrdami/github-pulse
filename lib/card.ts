@@ -1132,7 +1132,7 @@ export function renderReportCard(
   );
 }
 
-const CHRONOTYPE_LABEL: Record<HolterStats["chronotype"], string> = {
+export const CHRONOTYPE_LABEL: Record<HolterStats["chronotype"], string> = {
   nocturnal: "NOCTURNAL",
   "early bird": "EARLY BIRD",
   daywalker: "DAYWALKER",

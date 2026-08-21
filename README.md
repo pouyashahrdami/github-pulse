@@ -265,6 +265,9 @@ none, it prints `not observed`, which is its own diagnosis.
 
 <img src="./assets/sample-holter.svg" width="830" height="310" alt="holter monitor, aura theme — a nocturnal rhythm with 91% night load">
 
+Want to post the verdict? `https://github-pulse-topaz.vercel.app/s/YOU/holter`
+unfurls on Twitter/Discord/Slack with your histogram and diagnosis stamped on it.
+
 ## Dead man's switch
 
 Watch anyone; get pinged when they flatline — or rise again. Point it at a

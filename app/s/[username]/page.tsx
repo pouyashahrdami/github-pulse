@@ -70,6 +70,7 @@ export default async function SharePage({ params, searchParams }: Props) {
       </pre>
       <p>
         <a href="/">Take your own pulse →</a> ·{" "}
+        <a href={`/s/${username}/holter`}>The 24-hour tape →</a> ·{" "}
         <a href="/wall">See the wall of hearts →</a>
       </p>
     </main>
