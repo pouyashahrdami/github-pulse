@@ -463,6 +463,51 @@ async function fetchOrgUncached(org: string): Promise<GithubData> {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Holter cards: /holter/<user> — hour-of-day histogram from public events.
+// Works identically with or without a token (the events API is REST-only);
+// three pages ≈ the API's full 300-event / 90-day memory.
+
+const HOLTER_PAGES = 3;
+
+export interface HolterSample {
+  /** activity per UTC hour-of-day, 24 buckets */
+  utcHours: number[];
+  totalEvents: number;
+  oldest: string | null; // ISO timestamps bounding the sample
+  newest: string | null;
+}
+
+export async function fetchHolterSample(login: string): Promise<HolterSample> {
+  return cachedFetch(
+    `gh:h:${login.toLowerCase()}`,
+    CACHE_SECONDS,
+    () => fetchHolterUncached(login),
+    staleUnlessNotFound,
+  );
+}
+
+async function fetchHolterUncached(login: string): Promise<HolterSample> {
+  const utcHours = new Array<number>(24).fill(0);
+  let totalEvents = 0;
+  let oldest: string | null = null;
+  let newest: string | null = null;
+  for (let page = 1; page <= HOLTER_PAGES; page++) {
+    // newest-first; every event type counts — any activity means awake
+    const events = await rest<RestEvent[]>(
+      `/users/${login}/events/public?per_page=100&page=${page}`,
+    );
+    for (const ev of events) {
+      utcHours[new Date(ev.created_at).getUTCHours()]++;
+      totalEvents++;
+      newest ??= ev.created_at;
+      oldest = ev.created_at;
+    }
+    if (events.length < 100) break;
+  }
+  return { utcHours, totalEvents, oldest, newest };
+}
+
 export async function fetchRepoData(
   owner: string,
   repo: string,
