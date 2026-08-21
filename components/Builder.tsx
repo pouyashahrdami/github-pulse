@@ -19,7 +19,7 @@ const SIZES: { name: CardSize; w: number; h: number }[] = [
   { name: "badge", w: 260, h: 70 },
 ];
 
-type Mode = "user" | "repo" | "org" | "duet" | "ward" | "report";
+type Mode = "user" | "repo" | "org" | "duet" | "ward" | "report" | "holter";
 
 const MODES: Record<Mode, { label: string; placeholder: string; prefix: string }> = {
   user: { label: "user", placeholder: "username", prefix: "github.com/" },
@@ -28,10 +28,14 @@ const MODES: Record<Mode, { label: string; placeholder: string; prefix: string }
   duet: { label: "duet", placeholder: "you,friend", prefix: "vs · " },
   ward: { label: "ward", placeholder: "alice,bob,carol", prefix: "icu · " },
   report: { label: "report", placeholder: "username", prefix: "checkup · " },
+  holter: { label: "holter", placeholder: "username", prefix: "24h · " },
 };
 
 /** Card types with one fixed 830-wide layout — the size picker doesn't apply. */
-const FIXED_LAYOUT: ReadonlySet<Mode> = new Set(["ward", "report"]);
+const FIXED_LAYOUT: ReadonlySet<Mode> = new Set(["ward", "report", "holter"]);
+
+/** Card types that don't draw the daily wave — the wave picker doesn't apply. */
+const NO_WAVE: ReadonlySet<Mode> = new Set(["report", "holter"]);
 
 /** Build the card path for a mode from its raw input, or "" when incomplete. */
 function cardPath(mode: Mode, raw: string): string {
@@ -61,6 +65,8 @@ function cardPath(mode: Mode, raw: string): string {
     }
     case "report":
       return `/report/${clean}`;
+    case "holter":
+      return `/holter/${clean}`;
   }
 }
 
@@ -80,12 +86,13 @@ export default function Builder() {
   const [full, setFull] = useState(false);
   const [goal, setGoal] = useState("");
   const [lang, setLang] = useState("en");
+  const [tz, setTz] = useState("");
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
     if (theme !== DEFAULT_THEME) params.set("theme", theme);
     if (size !== "card" && !FIXED_LAYOUT.has(mode)) params.set("size", size);
-    if (wave !== "ecg" && mode !== "report") params.set("wave", wave);
+    if (wave !== "ecg" && !NO_WAVE.has(mode)) params.set("wave", wave);
     for (const [k, v] of Object.entries(custom)) {
       if (v) params.set(k, v.replace(/^#/, ""));
     }
@@ -96,9 +103,12 @@ export default function Builder() {
     if (full) params.set("w", "full");
     if (goal && Number(goal) > 0) params.set("goal", goal);
     if (lang !== "en") params.set("lang", lang);
+    if (mode === "holter" && tz && Number.isFinite(Number(tz))) {
+      params.set("tz", tz);
+    }
     const s = params.toString();
     return s ? `?${s}` : "";
-  }, [mode, theme, size, wave, custom, scanlines, flip, record, wall, full, goal, lang]);
+  }, [mode, theme, size, wave, custom, scanlines, flip, record, wall, full, goal, lang, tz]);
 
   const base = cardPath(mode, username);
   const path = base ? `${base}${query}` : "";
@@ -251,7 +261,7 @@ export default function Builder() {
           </>
         )}
 
-        {mode !== "report" && (
+        {!NO_WAVE.has(mode) && (
           <>
             <span className="control-label">Wave</span>
             <div className="chips">
@@ -306,6 +316,21 @@ export default function Builder() {
               aria-label="daily contribution goal"
             />
           </label>
+          {mode === "holter" && (
+            <label className="chip goal-chip">
+              utc offset
+              <input
+                type="number"
+                min={-12}
+                max={14}
+                step={0.5}
+                value={tz}
+                placeholder="0"
+                onChange={(e) => setTz(e.target.value)}
+                aria-label="UTC offset in hours, for local-time diagnosis"
+              />
+            </label>
+          )}
         </div>
 
         <span className="control-label">Language</span>

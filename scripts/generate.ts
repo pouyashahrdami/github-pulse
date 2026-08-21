@@ -9,6 +9,7 @@
 import { writeFileSync } from "node:fs";
 import {
   fetchGithubData,
+  fetchHolterSample,
   fetchOrgData,
   fetchRepoData,
 } from "../lib/github";
@@ -16,12 +17,20 @@ import { computePulse, forceState } from "../lib/pulse";
 import {
   renderCard,
   renderDuetCard,
+  renderHolterCard,
   renderReportCard,
   renderWardCard,
 } from "../lib/card";
+import { computeHolter } from "../lib/holter";
 import { computeReport } from "../lib/report";
 import { resolveTheme } from "../lib/themes";
-import { parseOptions, parseState, parseDays, parseNow } from "../lib/options";
+import {
+  parseOptions,
+  parseState,
+  parseDays,
+  parseNow,
+  parseTzMinutes,
+} from "../lib/options";
 
 function input(name: string): string | undefined {
   const v = process.env[`INPUT_${name.toUpperCase()}`]?.trim();
@@ -35,10 +44,11 @@ async function main() {
   const duet = input("duet"); // you,friend
   const ward = input("ward"); // alice,bob,carol (2-6)
   const report = input("report"); // username
-  const subject = username ?? repo ?? org ?? duet ?? ward ?? report;
+  const holter = input("holter"); // username
+  const subject = username ?? repo ?? org ?? duet ?? ward ?? report ?? holter;
   if (!subject) {
     console.error(
-      "error: one of INPUT_USERNAME, INPUT_REPO, INPUT_ORG, INPUT_DUET, INPUT_WARD, INPUT_REPORT is required",
+      "error: one of INPUT_USERNAME, INPUT_REPO, INPUT_ORG, INPUT_DUET, INPUT_WARD, INPUT_REPORT, INPUT_HOLTER is required",
     );
     process.exit(1);
   }
@@ -98,6 +108,20 @@ async function main() {
       now.toISOString().slice(0, 10),
     );
     logLine = `report: @${pulse.login}, ${stats.totalBeats} beats in ${stats.windowDays}d`;
+  } else if (holter) {
+    const login = holter.replace(/^@/, "");
+    const stats = computeHolter(
+      await fetchHolterSample(login),
+      parseTzMinutes(search),
+    );
+    svg = renderHolterCard(
+      login,
+      stats,
+      theme,
+      options,
+      now.toISOString().slice(0, 10),
+    );
+    logLine = `holter: @${login}, ${stats.chronotype} (n=${stats.totalEvents})`;
   } else {
     let data;
     if (repo) {
