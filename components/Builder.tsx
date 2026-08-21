@@ -145,8 +145,15 @@ export default function Builder() {
 
   const base = cardPath(mode, username);
   const path = base ? `${base}${query}` : "";
-  const origin =
-    typeof window !== "undefined" ? window.location.origin : "";
+  // Snippets must never point at a dev server — a localhost embed renders as
+  // a broken image the moment it lands in a README on GitHub.
+  const origin = (() => {
+    if (typeof window === "undefined") return "";
+    const o = window.location.origin;
+    return /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(o)
+      ? "https://github-pulse-topaz.vercel.app"
+      : o;
+  })();
 
   const lightQuery = useMemo(() => {
     const params = new URLSearchParams(query.replace(/^\?/, ""));
