@@ -200,6 +200,34 @@ h1 {
   color: var(--muted);
 }
 
+.mon-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+.mon-new a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.mon-new a:hover {
+  text-decoration: underline;
+}
+
+.new-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ground);
+  background: var(--cyan);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
 .mon-bezel {
   border: 1px solid var(--line-strong);
   background: var(--surface);

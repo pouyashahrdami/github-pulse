@@ -47,6 +47,12 @@ export default function Home() {
               revives when you come back.
             </p>
             <p className="mon-proof">free · no login · one line of markdown</p>
+            <p className="mon-new">
+              <span className="new-tag">new</span>
+              <a href="#holter">
+                holter monitor — the 24h tape that diagnoses your sleep →
+              </a>
+            </p>
           </div>
           <figure className="mon-bezel">
             <figcaption>

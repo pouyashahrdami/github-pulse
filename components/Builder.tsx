@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { THEMES, DEFAULT_THEME } from "@/lib/themes";
 import type { CardSize, WaveStyle } from "@/lib/card";
 
@@ -134,6 +134,18 @@ export default function Builder() {
 
   const [copied, setCopied] = useState(false);
 
+  // #holter etc. deep-links into a mode (the landing callout uses this);
+  // typed input survives the switch so the preview re-renders in place.
+  useEffect(() => {
+    const apply = () => {
+      const m = window.location.hash.slice(1);
+      if (m in MODES) setMode(m as Mode);
+    };
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, []);
+
   function load(e: React.FormEvent) {
     e.preventDefault();
     setUsername(input.trim());
@@ -156,7 +168,7 @@ export default function Builder() {
   }
 
   return (
-    <div className="builder">
+    <div className="builder" id="holter">
       <div className="intake-head">
         <strong>patient intake</strong>
         <span>no login · renders live</span>
