@@ -27,9 +27,6 @@ interface ModeInfo {
   prefix: string;
   /** plain-words pitch shown under the chips, no jargon */
   about: string;
-  /** dimensions of /samples/<mode>.svg, shown while the preview is empty */
-  sampleW: number;
-  sampleH: number;
 }
 
 const MODES: Record<Mode, ModeInfo> = {
@@ -37,40 +34,33 @@ const MODES: Record<Mode, ModeInfo> = {
     label: "user", placeholder: "username", prefix: "github.com/",
     about:
       "your GitHub heartbeat — it beats every day you commit, slows down when you rest, and flatlines if you vanish",
-    sampleW: 520, sampleH: 190,
   },
   repo: {
     label: "repo", placeholder: "owner/repo", prefix: "github.com/",
     about: "the same heartbeat, for one repository — is the project still alive?",
-    sampleW: 520, sampleH: 190,
   },
   org: {
     label: "org", placeholder: "organization", prefix: "github.com/",
     about: "one shared heartbeat for a whole organization",
-    sampleW: 520, sampleH: 190,
   },
   duet: {
     label: "duet", placeholder: "you,friend", prefix: "vs · ",
     about:
       "you and a friend on one monitor, with a score for how in-sync your rhythms are",
-    sampleW: 520, sampleH: 190,
   },
   ward: {
     label: "ward", placeholder: "alice,bob,carol", prefix: "icu · ",
     about:
       "your team as hospital patients on one screen — sorted by who's most alive",
-    sampleW: 830, sampleH: 294,
   },
   report: {
     label: "report", placeholder: "username", prefix: "checkup · ",
     about: "the annual checkup — your whole year of coding on one printed chart",
-    sampleW: 830, sampleH: 330,
   },
   holter: {
     label: "holter", placeholder: "username", prefix: "24h · ",
     about:
       "records when in the day you code — then delivers a diagnosis: night owl or early bird? it even guesses when you sleep",
-    sampleW: 830, sampleH: 310,
   },
 };
 
@@ -249,34 +239,38 @@ export default function Builder() {
       </form>
 
       <div className="preview">
-        {base ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={path}
-            src={path}
-            alt={`GitHub Pulse card for ${username}`}
-            width={FIXED_LAYOUT.has(mode) ? 830 : SIZES.find((s) => s.name === size)?.w}
-            height={FIXED_LAYOUT.has(mode) ? undefined : SIZES.find((s) => s.name === size)?.h}
-            style={
-              full || FIXED_LAYOUT.has(mode)
-                ? { width: full ? "100%" : undefined, height: "auto" }
-                : undefined
-            }
-          />
-        ) : (
-          <figure className="sample-peek">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+        {(() => {
+          const src = base ? path : `/demo/${mode}${query}`;
+          const img = (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`/samples/${mode}.svg`}
-              alt={`sample ${mode} card`}
-              width={MODES[mode].sampleW}
-              height={MODES[mode].sampleH}
+              key={src}
+              src={src}
+              alt={
+                base
+                  ? `GitHub Pulse card for ${username}`
+                  : `demo ${mode} card`
+              }
+              width={FIXED_LAYOUT.has(mode) ? 830 : SIZES.find((s) => s.name === size)?.w}
+              height={FIXED_LAYOUT.has(mode) ? undefined : SIZES.find((s) => s.name === size)?.h}
+              style={
+                full || FIXED_LAYOUT.has(mode)
+                  ? { width: full ? "100%" : undefined, height: "auto" }
+                  : undefined
+              }
             />
-            <figcaption>
-              sample — type yours above and it comes alive
-            </figcaption>
-          </figure>
-        )}
+          );
+          return base ? (
+            img
+          ) : (
+            <figure className="sample-peek">
+              {img}
+              <figcaption>
+                live demo — every option works · type yours above to make it real
+              </figcaption>
+            </figure>
+          );
+        })()}
       </div>
 
       <div className="controls">
