@@ -8,7 +8,9 @@
   load, and a `SUSPECTED SLEEP` window inferred from your quietest hours
   (`not observed` when there isn't one). Pass `tz=<utc-offset>` so the
   diagnosis lands on your local hours. Builder mode + `holter:` Action input
-  included.
+  included. `/s/<user>/holter` is the shareable verdict — it unfurls on
+  Twitter/Discord/Slack with the histogram and diagnosis stamped on it, and
+  the landing hero deep-links into the builder via `/#holter`.
 - **CLI on the landing page** — the terminal strip shows
   `npx github-pulse-cli`, which is now actually on npm.
 - Redis client also accepts the `KV_REST_API_*` env names the Vercel
