@@ -1,3 +1,4 @@
+import type { HolterStats } from "./holter";
 import type { Pulse, PulseState } from "./pulse";
 import type { ReportStats } from "./report";
 import type { Theme } from "./themes";
@@ -1124,6 +1125,168 @@ export function renderReportCard(
   ${cellMarkup}
   <text x="${x0}" y="${lay.footerY}" font-family="${MONO}" font-size="9.5"
         fill="${theme.muted}">github-pulse</text>
+  ${scanlineOverlay({ ...lay, h }, options)}
+  ${fontOverride(options)}
+</svg>`,
+    options.width,
+  );
+}
+
+const CHRONOTYPE_LABEL: Record<HolterStats["chronotype"], string> = {
+  nocturnal: "NOCTURNAL",
+  "early bird": "EARLY BIRD",
+  daywalker: "DAYWALKER",
+  "after hours": "AFTER HOURS",
+  arrhythmic: "ARRHYTHMIC",
+  inconclusive: "INCONCLUSIVE",
+};
+
+function hh(h: number): string {
+  return `${String(h).padStart(2, "0")}:00`;
+}
+
+function tzLabel(minutes: number): string {
+  if (!minutes) return "UTC";
+  const sign = minutes < 0 ? "-" : "+";
+  const abs = Math.abs(minutes);
+  return `UTC${sign}${String(Math.floor(abs / 60)).padStart(2, "0")}:${String(abs % 60).padStart(2, "0")}`;
+}
+
+/** 24-hour circadian strip — when in the day this heart actually beats. */
+export function renderHolterCard(
+  login: string,
+  stats: HolterStats,
+  theme: Theme,
+  options: CardOptions = DEFAULT_OPTIONS,
+  examDate: string = new Date().toISOString().slice(0, 10),
+): string {
+  const w = 830;
+  const h = 310;
+  const x0 = 26;
+  const x1 = w - x0;
+  const histTop = 96;
+  const baseline = 208;
+  const lay: Layout = { ...LAYOUTS.wide, w, h, footerY: h - 14 };
+  const glowFilter = options.glow ? 'filter="url(#gp-glow)"' : "";
+
+  const slotW = (x1 - x0) / 24;
+  const maxCount = Math.max(...stats.hours, 1);
+  const bars = stats.hours
+    .map((c, hr) => {
+      const bh = c ? Math.max(2, ((baseline - histTop) * c) / maxCount) : 1;
+      const color = hr === stats.peakHour ? theme.accent : theme.trace;
+      const opacity = hr === stats.peakHour ? 1 : 0.82;
+      return `<rect x="${round(x0 + hr * slotW + 2)}" y="${round(baseline - bh)}"
+        width="${round(slotW - 4)}" height="${round(bh)}" fill="${color}"
+        opacity="${opacity}" ${c === maxCount && c > 0 ? glowFilter : ""}/>`;
+    })
+    .join("\n  ");
+
+  const sleepRects = (() => {
+    if (!stats.sleep) return "";
+    const { from, to } = stats.sleep;
+    const spans =
+      from < to
+        ? [[from, to]]
+        : [
+            [from, 24],
+            [0, to],
+          ];
+    const rects = spans
+      .filter(([a, b]) => b > a)
+      .map(
+        ([a, b]) => `<rect x="${round(x0 + a * slotW)}" y="${histTop - 14}"
+        width="${round((b - a) * slotW)}" height="${baseline - histTop + 14}"
+        fill="${theme.muted}" opacity="0.08"/>`,
+      )
+      .join("\n  ");
+    const labelX =
+      x0 + (((from + stats.sleep.hours / 2) % 24) * slotW + slotW / 2);
+    return `${rects}
+  <text x="${round(labelX)}" y="${histTop - 20}" text-anchor="middle"
+        font-family="${MONO}" font-size="8.5" letter-spacing="1.5"
+        fill="${theme.muted}">SUSPECTED SLEEP</text>`;
+  })();
+
+  const hourTicks = [0, 4, 8, 12, 16, 20]
+    .map(
+      (hr) => `<text x="${round(x0 + hr * slotW + 2)}" y="${baseline + 18}"
+        font-family="${MONO}" font-size="8.5" fill="${theme.muted}">${hh(hr)}</text>`,
+    )
+    .join("\n  ");
+
+  const diagColor =
+    stats.chronotype === "inconclusive"
+      ? theme.muted
+      : stats.chronotype === "arrhythmic"
+        ? theme.warn
+        : theme.accent;
+  const cells: { label: string; value: string; color?: string }[] = [
+    {
+      label: "DIAGNOSIS",
+      value: CHRONOTYPE_LABEL[stats.chronotype],
+      color: diagColor,
+    },
+    {
+      label: "PEAK HOUR",
+      value: stats.peakHour === null ? "—" : hh(stats.peakHour),
+    },
+    { label: "NIGHT LOAD", value: `${stats.nightPct}%` },
+    {
+      label: "SUSPECTED SLEEP",
+      value: stats.sleep
+        ? `${hh(stats.sleep.from)}–${hh(stats.sleep.to)}`
+        : "not observed",
+      color: stats.sleep ? undefined : theme.warn,
+    },
+  ];
+  const colW = (x1 - x0) / 4;
+  const cellMarkup = cells
+    .map((c, i) => {
+      const cx = x0 + i * colW;
+      return `<text x="${round(cx)}" y="252" font-family="${MONO}" font-size="8.5"
+        letter-spacing="1.5" fill="${theme.muted}">${esc(c.label)}</text>
+  <text x="${round(cx)}" y="272" font-family="${MONO}" font-size="15"
+        font-weight="600" fill="${c.color ?? theme.text}">${esc(c.value)}</text>`;
+    })
+    .join("\n  ");
+
+  const tzHint =
+    stats.tzMinutes === 0
+      ? `clock UTC · add ?tz=your-offset for local hours`
+      : `clock ${tzLabel(stats.tzMinutes)}`;
+  const title = `holter monitor — @${login}, diagnosis ${CHRONOTYPE_LABEL[stats.chronotype].toLowerCase()}`;
+  return applyWidth(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"
+     viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}">
+  <defs>
+    <filter id="gp-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="0.5" y="0.5" width="${w - 1}" height="${h - 1}"
+        rx="${options.radius}" fill="${theme.bg}" stroke="${theme.border ?? theme.grid}"/>
+  ${
+    options.hide.has("header")
+      ? ""
+      : `<text x="${x0}" y="34" font-family="${MONO}" font-size="13" letter-spacing="3"
+        font-weight="600" fill="${theme.text}">HOLTER MONITOR</text>
+  <text x="${x1}" y="34" text-anchor="end" font-family="${MONO}" font-size="10"
+        fill="${theme.muted}">printed ${esc(examDate)}</text>`
+  }
+  <text x="${x0}" y="60" font-family="${MONO}" font-size="11" fill="${theme.muted}"
+        >patient <tspan fill="${theme.text}" font-weight="600">${esc(options.label ?? `@${login}`)}</tspan> · 24-hour rhythm · n=${stats.totalEvents} events${stats.windowDays ? ` over ~${stats.windowDays}d` : ""}</text>
+  ${sleepRects}
+  <line x1="${x0}" y1="${baseline}" x2="${x1}" y2="${baseline}"
+        stroke="${theme.grid}" stroke-width="0.5"/>
+  ${bars}
+  ${hourTicks}
+  ${cellMarkup}
+  <text x="${x0}" y="${lay.footerY}" font-family="${MONO}" font-size="9.5"
+        fill="${theme.muted}">github-pulse</text>
+  <text x="${x1}" y="${lay.footerY}" text-anchor="end" font-family="${MONO}"
+        font-size="9.5" fill="${theme.muted}">${esc(tzHint)}</text>
   ${scanlineOverlay({ ...lay, h }, options)}
   ${fontOverride(options)}
 </svg>`,

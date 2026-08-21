@@ -139,9 +139,14 @@ export function parseDays(search: URLSearchParams): number {
 
 /** ?tz= shifts the "today" boundary in hours (e.g. 3.5 for Tehran). */
 export function parseNow(search: URLSearchParams): Date {
+  return new Date(Date.now() + parseTzMinutes(search) * 60_000);
+}
+
+/** The same ?tz= hours, as minutes — the holter histogram shift. */
+export function parseTzMinutes(search: URLSearchParams): number {
   const tzRaw = Number.parseFloat(search.get("tz") ?? "");
   const tzHours = Number.isFinite(tzRaw)
     ? Math.min(14, Math.max(-12, tzRaw))
     : 0;
-  return new Date(Date.now() + tzHours * 3_600_000);
+  return Math.round(tzHours * 60);
 }

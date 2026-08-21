@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { renderHolterCard } from "@/lib/card";
 import type { HolterSample } from "@/lib/github";
 import { computeHolter } from "@/lib/holter";
+import { parseOptions } from "@/lib/options";
+import { THEMES } from "@/lib/themes";
 
 const sample = (
   fill: (hour: number) => number,
@@ -71,5 +74,37 @@ describe("computeHolter", () => {
     expect(stats.peakHour).toBeNull();
     expect(stats.sleep).toBeNull();
     expect(stats.windowDays).toBe(0);
+  });
+});
+
+describe("renderHolterCard", () => {
+  it("prints the strip with diagnosis, sleep window, and tz clock", () => {
+    const stats = computeHolter(
+      sample((h) => (h >= 22 || h < 4 ? 10 : h >= 9 && h < 17 ? 1 : 0)),
+      210,
+    );
+    const svg = renderHolterCard(
+      "alice",
+      stats,
+      THEMES.aura,
+      parseOptions(new URLSearchParams("")),
+      "2026-08-20",
+    );
+    expect(svg).toContain("HOLTER MONITOR");
+    expect(svg).toContain("printed 2026-08-20");
+    expect(svg).toContain("@alice");
+    expect(svg).toContain("DIAGNOSIS");
+    expect(svg).toContain("SUSPECTED SLEEP");
+    expect(svg).toContain("clock UTC+03:30");
+    expect((svg.match(/<rect/g) ?? []).length).toBeGreaterThanOrEqual(25);
+  });
+
+  it("nudges UTC viewers toward ?tz=", () => {
+    const svg = renderHolterCard(
+      "alice",
+      computeHolter(sample(() => 3)),
+      THEMES.aura,
+    );
+    expect(svg).toContain("add ?tz=your-offset");
   });
 });
