@@ -7,8 +7,14 @@
  */
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { DEFAULT_OPTIONS, renderReportCard, renderWardCard } from "../lib/card";
-import type { DayCount } from "../lib/github";
+import {
+  DEFAULT_OPTIONS,
+  renderHolterCard,
+  renderReportCard,
+  renderWardCard,
+} from "../lib/card";
+import type { DayCount, HolterSample } from "../lib/github";
+import { computeHolter } from "../lib/holter";
 import type { Pulse, PulseState } from "../lib/pulse";
 import { computeReport } from "../lib/report";
 import { THEMES } from "../lib/themes";
@@ -101,4 +107,30 @@ const report = renderReportCard(
 );
 writeFileSync(out("assets/sample-report.svg"), report);
 
-console.log("wrote assets/sample-ward.svg, assets/sample-report.svg");
+// a committed night owl: beats pile up from 22:00 to 04:59, quiet 06:00–13:59
+const holterSample: HolterSample = (() => {
+  const r = rng(13);
+  const utcHours = Array.from({ length: 24 }, (_, h) => {
+    if (h >= 22 || h < 5) return 18 + Math.floor(r() * 14);
+    if (h >= 6 && h < 14) return 0;
+    return Math.floor(r() * 5);
+  });
+  return {
+    utcHours,
+    totalEvents: utcHours.reduce((a, b) => a + b, 0),
+    oldest: "2026-07-21T02:11:00Z",
+    newest: "2026-08-18T03:40:00Z",
+  };
+})();
+const holter = renderHolterCard(
+  "nova",
+  computeHolter(holterSample),
+  THEMES.aura,
+  DEFAULT_OPTIONS,
+  "2026-08-18",
+);
+writeFileSync(out("assets/sample-holter.svg"), holter);
+
+console.log(
+  "wrote assets/sample-ward.svg, assets/sample-report.svg, assets/sample-holter.svg",
+);

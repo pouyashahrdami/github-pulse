@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.0 — the 24-hour tape (2026-08-20)
+
+- **Holter monitor** — `/holter/<user>`: your circadian rhythm as a 24-hour
+  histogram of recent public activity, with a diagnosis stamp (`NOCTURNAL`,
+  `EARLY BIRD`, `DAYWALKER`, `AFTER HOURS`, `ARRHYTHMIC`), peak hour, night
+  load, and a `SUSPECTED SLEEP` window inferred from your quietest hours
+  (`not observed` when there isn't one). Pass `tz=<utc-offset>` so the
+  diagnosis lands on your local hours. Builder mode + `holter:` Action input
+  included.
+- **CLI on the landing page** — the terminal strip shows
+  `npx github-pulse-cli`, which is now actually on npm.
+- Redis client also accepts the `KV_REST_API_*` env names the Vercel
+  marketplace Upstash integration injects.
+
 ## v1.1.0 — the ward opens (2026-08-18)
 
 Built in the 24 hours after launch. Existing embeds are untouched — every

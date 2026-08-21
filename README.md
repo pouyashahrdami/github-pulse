@@ -2,9 +2,9 @@
 
 [![ci](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/pouyashahrdami/github-pulse/actions/workflows/ci.yml)
 
-**New in [v1.1.0](./CHANGELOG.md):** ward cards, the cardiology report, the
-opt-in Wall of Hearts, a dead man's switch, a terminal CLI — and a landing
-page that became a patient monitor.
+**New in [v1.2.0](./CHANGELOG.md):** the Holter monitor — a 24-hour tape of
+*when* you actually code, with a diagnosis stamp: `NOCTURNAL`, `EARLY BIRD`,
+`ARRHYTHMIC`… and a `SUSPECTED SLEEP` window inferred from your quiet hours.
 
 **A living EKG card for your GitHub README.** One username in, a beating heart out —
 it beats faster when you ship, dims when you rest, flatlines when you vanish, and
@@ -247,6 +247,24 @@ real thing. Post yours at the end of December.
 
 <img src="./assets/sample-report.svg" width="830" height="330" alt="cardiology report, paper theme — a year of vitals">
 
+## Holter monitor
+
+The 24-hour tape. Every card so far asks *how much* you ship — this one asks
+*when*. It buckets your recent public activity by hour of day and hands down
+a diagnosis: `NOCTURNAL`, `EARLY BIRD`, `DAYWALKER`, `AFTER HOURS`, or — for
+rhythms with no pattern at all — `ARRHYTHMIC`:
+
+```md
+![holter](https://github-pulse-topaz.vercel.app/holter/YOUR_USERNAME?tz=YOUR_UTC_OFFSET)
+```
+
+GitHub timestamps are UTC, so tell the monitor where your body actually is —
+`tz=3.5`, `tz=-8` — or the diagnosis lands on the wrong hours. It also finds
+your longest quiet stretch and prints it as `SUSPECTED SLEEP`; if you have
+none, it prints `not observed`, which is its own diagnosis.
+
+<img src="./assets/sample-holter.svg" width="830" height="310" alt="holter monitor, aura theme — a nocturnal rhythm with 91% night load">
+
 ## Dead man's switch
 
 Watch anyone; get pinged when they flatline — or rise again. Point it at a
@@ -368,7 +386,7 @@ jobs:
       - uses: pouyashahrdami/github-pulse@v1
         with:
           username: YOUR_USERNAME  # or repo: owner/repo · org: my-org · duet: you,friend
-                                   # or ward: a,b,c · report: username
+                                   # or ward: a,b,c · report: username · holter: username
           theme: aura            # optional
           size: card             # optional
           params: "tz=3.5"       # optional: any URL param
